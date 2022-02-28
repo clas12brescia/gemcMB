@@ -5,7 +5,7 @@ Clone the repository and download a copy of the ccdb sqlite file:
 git clone git@github.com:clas12brescia/gemcMB.git
 wget https://bsinfn2.unibs.it/GEMC/clas12.sqlite -O gemcMB/clasdb/clas12.sqlite
 ```
-Pull the docker container
+Pull the docker image
 ```bash
 docker pull maskass/gemcdimarco
 ```
