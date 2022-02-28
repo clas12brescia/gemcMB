@@ -10,3 +10,5 @@ devel-2.6/source/gemc
 *.dblite
 devel-2.6/source/gui
 devel-2.6/source/utilities
+clasdb/*.sqlite
+core
