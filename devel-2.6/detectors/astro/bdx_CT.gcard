@@ -1,0 +1,39 @@
+
+<gcard>
+	<!--INIZIO -  NON TOCCARE -->
+<option name="DBHOST" value="clasdb.jlab.org"/>
+<option name="DATABASE" value="clas12_simulation"/>
+<option name="HIT_PROCESS_LIST" value="BDX"/>
+<detector name="bdx" factory="TEXT" variation="CT"/>
+<option name="INTEGRATEDRAW" value="cormo flux veto crs"/>
+<option name="geometry" value="900x600"/>
+<option name="OUTPUT" value="evio, out.evio"/>
+<option name="HALL_MATERIAL"   value="Vacuum" />
+<option name="HALL_DIMENSIONS" value="100.*m,100.*m,100.*m" />
+<option name="MAX_X_POS"   value="50000." />
+<option name="MAX_Y_POS"   value="30000." />
+<option name="MAX_Z_POS"   value="40000." />
+	<!-- FINE -NON TOCCARE -->
+
+    <!-- option name="PRINT_EVENT"   value="1" />-->
+    <!--<option name="ENERGY_CUT"   value="100.*eV" />-->
+
+	<!--<option name="SAVE_ALL_MOTHERS" value="1"/>-->
+<option name="RECORD_PASSBY" value="1" />
+
+	<!--<option name="PHYSICS"   value="FTFP_BERT_HP + STD + HP" />-->
+<option name="PHYSICS"   value="STD + HP" />
+	
+<option name="BEAM_P"   value="mu+,10*GeV, 90*deg, -90*deg"/>
+   <!-- <option name="SPREAD_P" value="100*MeV, 10*deg, 10*deg"/>-->
+    <!--<option name="SPREAD_V" value="(2.,0.)cm"/>-->
+<option name="BEAM_V" value="(20,100., 2.)cm"/>
+
+
+	<!--<option name="COSMICRAYS"   value="default,0.445,1.697,neutron,default"/>-->
+<!--<option name="COSMICRAYS"   value="default,10,100.,muon,default"/>-->
+<!--<option name="COSMICAREA"   value="0*cm, 20.*cm, 0.*cm, .50*m,sph"/>-->
+<!--<option name="COSMICAREA"   value="0*cm, -50.*cm, 0.*cm, 1.50*m,sph"/>-->
+	<!--<option name="COSMICAREA"   value="0*cm, -70*cm, 0*cm, 2.0*m,sph"/>-->
+
+</gcard> 

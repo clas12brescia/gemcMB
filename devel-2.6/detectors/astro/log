@@ -1,0 +1,112 @@
+Entering initializeCNDConstants
+Entering initializeCTOF
+  > Data loaded in translation table dcTT
+ > bmt pre-initizialization. 
+
+ >> Parsing bdx_CT.gcard for options: 
+  > mysql server host name set to: clasdb.jlab.org
+  > mysql Database set to: clas12_simulation
+  > Registers Hit Process Routines. set to: BDX
+  > Activates integrated geant4 raw output for system(s) set to: cormo flux veto crs
+  > geometry set to: 900x600
+  > Type of output, output filename.  set to: evio, out.evio
+  > Composition of the Experimental Hall set to: Vacuum
+  > (x,y,z) semi-dimensions of the experimental Hall. set to: 100.*m,100.*m,100.*m
+  > Max X Position in millimeters. Beyond this the track will be killed. set to: 50000
+  > Max Y Position in millimeters. Beyond this the track will be killed. set to: 30000
+  > Max Z Position in millimeters. Beyond this the track will be killed. set to: 40000
+  > Set to one if you want to save zero energy hits in the output set to: 1
+  > Choice of Physics List set to: STD + HP
+  > Primary particle, Energy, Theta, Phi set to: mu+,10*GeV, 90*deg, -90*deg
+  > Primary Particle Vertex set to: (20,100., 2.)cm
+
+  > QT Gui set to: 0
+  > Number of events to be simulated set to: 1000
+  > Print Event Modulus set to: 100
+  > Activates step-by-step output for system(s).  set to: VETO
+
+
+  > Initializing GEant4 MonteCarlo:  gemc 2.6
+
+
+*************************************************************
+ Geant4 version Name: geant4-10-02-patch-02    (17-June-2016)
+                      Copyright : Geant4 Collaboration
+                      Reference : NIM A 506 (2003), 250-303
+                            WWW : http://cern.ch/geant4
+*************************************************************
+
+
+ TEXT Factory: >>  Importing Detector: bdx with TEXT factory, variation CT
+
+
+  > gemc Init: MYSQL Parameters Factory is Initialized 
+  > gemc Init: TEXT Parameters Factory is Initialized 
+
+  >> Registering experiment "BDX" hit processes 
+
+
+ Beam Settings >>  Beam Type: mu+
+ Beam Settings >>  Beam Momentum: 10 GeV
+ Beam Settings >>  Beam Direction: (theta, phi) = (90, -90) deg
+ Beam Settings >>  Beam Vertex: (20, 100, 2) cm (radius, z-spread) = (0, 0) cm, flat spread
+ Beam Settings >>  Beam polarization: 100%
+ Beam Settings >>  Polarization Direction: (theta, phi) = (0, 0)
+ Output File: >>  Opening output file "out.evio".
+ >> Construction: Building Detector from Geometry STL Map...
+
+GammaToMuPair:  gamma->mu+mu- Bethe Heitler process, SubType= 15
+        good cross section parametrization from 422.633 MeV to 1e+12 GeV for all Z.
+ Event Action: >>  Begin of event 100  Run Number: 1
+ Event Action: >>  Random Number: 0.404169
+ Event Action: >>  Starting Event Action Routine 100  Run Number: 1
+ Event Action: >>  End of Event 100 Routine...
+
+ Event Action: >>  Begin of event 200  Run Number: 1
+ Event Action: >>  Random Number: 0.608874
+ Event Action: >>  Starting Event Action Routine 200  Run Number: 1
+ Event Action: >>  End of Event 200 Routine...
+
+ Event Action: >>  Begin of event 300  Run Number: 1
+ Event Action: >>  Random Number: 0.436726
+ Event Action: >>  Starting Event Action Routine 300  Run Number: 1
+ Event Action: >>  End of Event 300 Routine...
+
+ Event Action: >>  Begin of event 400  Run Number: 1
+ Event Action: >>  Random Number: 0.680703
+ Event Action: >>  Starting Event Action Routine 400  Run Number: 1
+ Event Action: >>  End of Event 400 Routine...
+
+ Event Action: >>  Begin of event 500  Run Number: 1
+ Event Action: >>  Random Number: 0.328541
+ Event Action: >>  Starting Event Action Routine 500  Run Number: 1
+ Event Action: >>  End of Event 500 Routine...
+
+ Event Action: >>  Begin of event 600  Run Number: 1
+ Event Action: >>  Random Number: 0.845893
+ Event Action: >>  Starting Event Action Routine 600  Run Number: 1
+ Event Action: >>  End of Event 600 Routine...
+
+ Event Action: >>  Begin of event 700  Run Number: 1
+ Event Action: >>  Random Number: 0.725941
+ Event Action: >>  Starting Event Action Routine 700  Run Number: 1
+ Event Action: >>  End of Event 700 Routine...
+
+ Event Action: >>  Begin of event 800  Run Number: 1
+ Event Action: >>  Random Number: 0.637186
+ Event Action: >>  Starting Event Action Routine 800  Run Number: 1
+ Event Action: >>  End of Event 800 Routine...
+
+ Event Action: >>  Begin of event 900  Run Number: 1
+ Event Action: >>  Random Number: 0.212896
+ Event Action: >>  Starting Event Action Routine 900  Run Number: 1
+ Event Action: >>  End of Event 900 Routine...
+
+ Event Action: >>  Begin of event 1000  Run Number: 1
+ Event Action: >>  Random Number: 0.611599
+ Event Action: >>  Starting Event Action Routine 1000  Run Number: 1
+ Event Action: >>  End of Event 1000 Routine...
+
+ > Total gemc time: 7.34703 seconds.  Events only time: 6.65258 seconds. 
+ > Closing Stepping Action.
+ Closing  out.evio.
