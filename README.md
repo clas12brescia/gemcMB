@@ -42,8 +42,8 @@ Transform the created evio file into a root file:
 evio2root -B=bdx -INPUTF=out.evio
 ```
 
-### Analysis
-1st time only: produce the needed classes, shared libraries and ROOT dictionaries by running this macro on the `out.root` file:
+### Analysis (on the host machine, NOT on the container!)
+1st time only: produce the needed classes, shared libraries and ROOT dictionaries by running this macro on the `out.root` file (tested with ROOT Version: 6.24/06):
 ```bash
 ss
 ```
