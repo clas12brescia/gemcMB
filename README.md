@@ -28,8 +28,22 @@ In the `misc` folder some useful scripts/macros are provided.
 
 ### Run the simulation
 
-Fromt the host machine, go into the container (see in the `misc` folder a template for defning aliases in your host `.bashrc` file) and then execute the perl script to create txt files for gemc:
+From the host machine, go into the container (see in the `misc` folder a template for defning aliases in your host `.bashrc` file) and then execute the perl script to create txt files for gemc:
 ```bash
 cd nVeto
 ./bdx.pl config_CT.dat
+```
+Then run the `gemc` executable on the gcard file (10 events, no gui):
+```bash
+/GEMC/devel-2.6/source/gemc bdx_CT.gcard -USE_GUI=0 -N=10
+```
+Transform the created evio file into a root file:
+```bash
+evio2root -B=bdx -INPUTF=out.evio
+```
+
+### Analysis
+1st time only: produce the needed classes, shared libraries and ROOT dictionaries by running this macro on the `out.root` file:
+```bash
+ss
 ```
