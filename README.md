@@ -1,6 +1,6 @@
 # gemcMB
 
-Clone the repository and download a copy of the ccdb sqlite file:
+Clone the repositori and download a copy of the ccdb sqlite file:
 ```bash
 git clone git@github.com:clas12brescia/gemcMB.git
 mkdir gemcMB/cladb
