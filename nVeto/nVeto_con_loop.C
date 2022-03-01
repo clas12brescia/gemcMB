@@ -13,7 +13,7 @@
 
 bool Debug = false;
 
-void nVeto_con_loop_G(){
+void nVeto_con_loop(){
 	
 
 	// Open the file
