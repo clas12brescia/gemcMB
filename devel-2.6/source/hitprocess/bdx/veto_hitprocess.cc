@@ -88,7 +88,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
         for(unsigned int s=0; s<nsteps; s++) Etot = Etot + Edep[s];
         if(Etot>0)
         {
-            for(unsigned int s=0; s<nsteps; s++)
+            for(unsigned int s=0; s<nsteps; s++) // ciclo sugli nstep di ogni hit che formano l'evento
             {
                 etot_g4=etot_g4+Edep[s];
                 
@@ -125,34 +125,34 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 //for nVeto: using directly the extracted pe from ps_sipm 
 //////////////////////////////////////////////////////////
 
-            double pe_ave_astro=0.; 
-            double T_ave_astro =0.;
+            double pe_ave=0.; 
+            double T_ave =0.;
             att_length = 6000.; // 6m
             
             if( veto_id==500)
             {
                 if (sector==0)	// Up and down - SiPm on the front
                 {
-                    pe_ave_astro=67*exp(-dRight/att_length);
-                    T_ave_astro =timeR;
+                    pe_ave=67*exp(-dRight/att_length);
+                    T_ave =timeR;
                 } 
                 else if (sector==1)	// Right and Left- SiPm on the front
                 {
-                    pe_ave_astro=67*exp(-dRight/att_length);
-                    T_ave_astro =timeR;
+                    pe_ave=67*exp(-dRight/att_length);
+                    T_ave =timeR;
                 }
                 else if (sector==2)	// Front and Back - SiPm on the front
                 {
-                    pe_ave_astro=67*exp(dRight/att_length);
-                    T_ave_astro =timeR;
+                    pe_ave=67*exp(dRight/att_length);
+                    T_ave =timeR;
                 }
                 
                 
-                ADC1=G4Poisson(pe_ave_astro*etot_g4/4.1) ; // Scaling for more/less energy release)
+                ADC1=G4Poisson(pe_ave*etot_g4/4.1) ; // Scaling for more/less energy release)
                 
-                double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(pe_ave_astro+1.));
+                double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(pe_ave+1.));
                 sigmaTL=0.;
-                TDC1=(T_ave_astro+G4RandGauss::shoot(0.,sigmaTL))*1000.;//time in ps
+                TDC1=(T_ave+G4RandGauss::shoot(0.,sigmaTL))*1000.;//time in ps
                
                 //cout <<  " ++ HIT BEGIN ++++++" << endl ;
                 //cout <<  " chan: " << channel << endl ;
@@ -165,15 +165,15 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
             
 	    else if( veto_id==550)
             {
-                pe_ave_astro=67*exp(-dRight/att_length);
-                T_ave_astro =timeR;
+                pe_ave=67*exp(-dRight/att_length);
+                T_ave =timeR;
              
-                ADC6=G4Poisson(pe_ave_astro*etot_g4/4.1) ;
-                ADC1=G4Poisson(pe_ave_astro*etot_B/4.1) ; // Scaling for more/less energy release)
+                ADC6=G4Poisson(pe_ave*etot_g4/4.1) ;
+                ADC1=G4Poisson(pe_ave*etot_B/4.1) ; // Scaling for more/less energy release)
                 
-                double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(pe_ave_astro+1.));
+                double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(pe_ave+1.));
                 sigmaTL=0.;
-                TDC1=(T_ave_astro+G4RandGauss::shoot(0.,sigmaTL))*1000.;//time in ps
+                TDC1=(T_ave+G4RandGauss::shoot(0.,sigmaTL))*1000.;//time in ps
                
                 //cout <<  " ++ HIT BEGIN ++++++" << endl ;
                 //cout <<  " chan: " << channel << endl ;
