@@ -43,7 +43,12 @@ evio2root -B=bdx -INPUTF=out.evio
 ```
 
 ### Analysis (on the host machine, NOT on the container!)
-1st time only: produce the needed classes, shared libraries and ROOT dictionaries by running this macro on the `out.root` file (tested with ROOT Version: 6.24/06):
+
+**Only once**: create the needed classes header files, shared libraries and ROOT dictionaries by running this macro on the `out.root` file (tested with ROOT Version: 6.24/06):
 ```bash
-ss
+root -l -b -q ../misc/make_classes.C
+```
+After that, the analysis macro can be run (and a histo file is saved in the Output folder):
+```bash
+root -l nVeto_con_loop.C
 ```
