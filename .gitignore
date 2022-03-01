@@ -2,7 +2,7 @@
 *.evio
 *.so
 *.d
-*.pcb
+*.pcm
 *.a
 *.o
 devel-2.6/source/gemc
@@ -13,4 +13,6 @@ devel-2.6/source/utilities
 clasdb/*.sqlite
 core
 *.dblite
+*Class.C
+*Class.h
 
