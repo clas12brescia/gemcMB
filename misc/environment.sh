@@ -14,4 +14,4 @@ set autolist
 alias l='ls -l'
 alias lt='ls -lt'
 alias ll='ls -l'
-alias gemc='/sync/devel-2.6/source/gemc'
+alias gemc='/GEMC/devel-2.6/source/gemc'
