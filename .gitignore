@@ -12,3 +12,5 @@ devel-2.6/source/gui
 devel-2.6/source/utilities
 clasdb/*.sqlite
 core
+*.dblite
+
