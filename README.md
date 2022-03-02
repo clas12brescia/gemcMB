@@ -3,7 +3,6 @@
 Clone the repository and download a copy of the ccdb sqlite file:
 ```bash
 git clone git@github.com:clas12brescia/gemcMB.git
-mkdir gemcMB/clasdb
 wget https://bsinfn2.unibs.it/GEMC/clas12.sqlite -O gemcMB/clasdb/clas12.sqlite
 ```
 Pull the docker image
