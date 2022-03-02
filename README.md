@@ -9,11 +9,11 @@ Pull the docker image
 ```bash
 docker pull maskass/gemcdimarco
 ```
-Run the container mounting the repo as shared volume between the host and the container:
+Run the container mounting the repo as shared volume between the host and the container (replace /YOUR/ABSOLUTE/PATH with your absolute path to the repo folder):
 ```bash
 docker run -it --rm \
 -e CCDB_CONNECTION="sqlite:////GEMC/clasdb/clas12.sqlite" \
--v gemcMB:/GEMC \
+-v /YOUR/ABSOLUTE/PATH/gemcMB:/GEMC \
 --workdir /GEMC \
 --rm maskass/gemcdimarco bash
 ```
