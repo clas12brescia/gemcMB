@@ -70,7 +70,7 @@ my $shX=0.;
 my $shY=0.;
 my $shZ=0.;
 
-my $thickness=3./2;
+my $thickness=5./2;
 my $dim=15.;
 
 
@@ -228,7 +228,7 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 90*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lz*cm $csi_pad_ly*cm $csi_pad_lx*cm";
-    $detector{"material"}    = "LAr";			
+    $detector{"material"}    = "ScintillatorB";			
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 3 veto manual 550 channel manual 0";
