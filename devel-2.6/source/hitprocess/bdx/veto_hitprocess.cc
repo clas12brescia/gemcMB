@@ -92,7 +92,9 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
             {
                 etot_g4=etot_g4+Edep[s];
                 
-                double birks_constant_lAr = 0.00486;
+                double birks_constant_lAr = 0.00046;		//P. Agnes et al. (DarkSide), J. Instrum. 12, P10015 (2017)
+              //  double birks_constant_lAr = 0.00125;	//V.I. Tretyak / Astroparticle Physics 33 (2010) 4053
+              //  double birks_constant_lAr = 0.00074;	//D.-M. Mei, Astropart. Phys. 30, 12 (2008).
                 double Edep_B_lAr = BirksAttenuation(Edep[s],Dx[s],charge[s],birks_constant_lAr);
                 etot_B=etot_B+Edep_B_lAr;
                 
@@ -243,14 +245,29 @@ double veto_HitProcess::BirksAttenuation2(double destep,double stepl,int charge,
 	// see G.V. O'Rielly et al. Nucl. Instr and Meth A368(1996)745
 	// 
 	//
-	double C=9.59*1E-4*mm*mm/MeV/MeV;
-	double response = destep;
+	double C=9.59*1E-4*mm*mm/MeV/MeV;	//C=9.59*1E-6 g^2cm^-4 MeV^-2 dall'articolo è cosi
+	double response = destep;		//kb=0,0129 g cm^-2 MeV^-1
 	if (birks*destep*stepl*charge != 0.)
 	{
 		response = destep/(1. + birks*destep/stepl + C*pow(destep/stepl,2.));
 	}
 	return response;
 }
+
+double veto_HitProcess::BirksAttenuation3(double destep,double stepl,int charge,double birks)
+{
+	//Extension of Birk attenuation law proposed by Chou
+	// see G.V. O'Rielly et al. Nucl. Instr and Meth A368(1996)745
+	// 
+	//
+	double C=-2*1E-7*mm*mm/MeV/MeV;	//C=-2*1E-7 g^2cm^-4 MeV^-2 
+	double response = destep;		//kb=5.2*1E-4 g cm^-2 MeV^-1
+	if (birks*destep*stepl*charge != 0.)
+	{
+		response = destep/(1. + birks*destep/stepl + C*pow(destep/stepl,2.));
+	}
+	return response;
+	
 
 
 map< string, vector <int> >  veto_HitProcess :: multiDgt(MHit* aHit, int hitn)
