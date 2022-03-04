@@ -75,7 +75,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
         double sy=aHit->GetDetector().dimensions[1];
         double sz=aHit->GetDetector().dimensions[2];
                
-        cout << "Detecort Id = "<< chan<<" Detector size:    Xsize = " << sx << " " << "Ysize = " << sy<< " " << "Zsize = " << sz 	<< " "<< endl;
+        //cout << "Detecort Id = "<< chan<<" Detector size:    Xsize = " << sx << " " << "Ysize = " << sy<< " " << "Zsize = " << sz 	<< " "<< endl;
 
         vector<G4ThreeVector> Lpos = aHit->GetLPos(); // Interaction position relative to the detector center
         vector<G4double>      Edep = aHit->GetEdep(); // Deposited energy
@@ -117,7 +117,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
             timeL= dLeft/veff+T_hit_ave;	// time between interaction and readout on the left side
             timeR= dRight/veff+T_hit_ave; 	// time between interaction and readout on the right side
             
-            cout << "AVE X = " << X_hit_ave << " ,Y " << Y_hit_ave << " ,Z " << Z_hit_ave << " ,dRight " << dRight << " ,dLeft " << dLeft << "  ,Etot_B " <<etot_B  << "  ,Etot " <<etot_g4 << endl;
+            //cout << "AVE X = " << X_hit_ave << " ,Y " << Y_hit_ave << " ,Z " << Z_hit_ave << " ,dRight " << dRight << " ,dLeft " << dLeft << "  ,Etot_B " <<etot_B  << "  ,Etot " <<etot_g4 << endl;
       
            
            
@@ -177,7 +177,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
                
                 //cout <<  " ++ HIT BEGIN ++++++" << endl ;
                 //cout <<  " chan: " << channel << endl ;
-                cout <<  " ADC1 con Briks per lAr: " << ADC1 <<  " ADC6:senza Briks per lAr solo per confronto " << ADC6 <<endl ;
+                //cout <<  " ADC1 con Briks per lAr: " << ADC1 <<  " ADC6:senza Briks per lAr solo per confronto " << ADC6 <<endl ;
                 //cout <<  " TDC1: " << TDC1 << endl ;
                 //cout <<  " Channel: " << chan << endl ;
                 //cout <<  " ++ HIT END ++++++" << endl ;
