@@ -7,6 +7,7 @@
 #include "G4UnitsTable.hh"
 #include "Randomize.hh"
 #include "G4RunManager.hh"
+#include "G4SystemOfUnits.hh"
 
 // gemc headers
 #include "MPrimaryGeneratorAction.h"
@@ -305,7 +306,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         {
             bool cosmicNeutrons = true;
             if (cosmicParticle == "muon") cosmicNeutrons = false;
-            
+                     
             double thisMom;
             double thisKinE, KinEmin, KinEmax;
             double thisthe;
@@ -347,9 +348,8 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             //cout << cosmicVX  << " "<< cosmicVY  << " "<< cosmicVZ  << " " << endl;
             
             if (cosmicNeutrons) {
-                // if (cminp<0.1 || cmaxp>10000) cout <<"WARNING !!!! COSMIC NEUTRONS E (MeV) is OUT OF THE VALID RANGE !!!"<<endl;
+            	 if (cminp<0.1 || cmaxp>10000) cout <<"WARNING !!!! COSMIC NEUTRONS E (MeV) is OUT OF THE VALID RANGE !!!"<<endl;
                 // Model by Ashton (1973)
-                
                 double cosmicProbMax = cosmicNeutBeam(0., cminp / GeV);
                 double cosmicProbMin = cosmicNeutBeam(pi / 2., cmaxp / GeV);
                 double cosmicProb = G4UniformRand()* (cosmicProbMax - cosmicProbMin) + cosmicProbMin;
@@ -368,7 +368,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
                     thisthe = pi * G4UniformRand()/ 2.0;
                     cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
                 }
-                //cout<< thisMom<< " "<< cosmic <<" "<< cosmicProb <<endl;
+               // cout<< "thisMom"<< thisMom << "thisMom gev" << thisMom / GeV <<endl;
                 if (Nextr > 999999) cout << " !!!! LOOPING IN N EXTRACTION !!! exceeded " << Nextr << " extractions !!!" << Nextr << endl;
                 thisPhi = -pi + 2 * pi * G4UniformRand();
                 
@@ -1004,7 +1004,7 @@ void MPrimaryGeneratorAction::setBeam()
 	string units;
 
 	if(input_gen == "gemc_internal")
-	{
+	{ 
 		if(cosmics == "no")
 		{
 			// Getting particle name,  momentum from option value
@@ -1118,19 +1118,20 @@ void MPrimaryGeneratorAction::setBeam()
 			vector<string> csettings = get_info(cosmics, string(",\""));
 			int len = csettings.size();
 			// parsing information for COSMIC RAYS option
-            if (cosmicParticle == "muon") cout << " Muon decay flag (1 for 100% BR, 0 for correct BR)-- " << muonDecay << endl;
+            		if (cosmicParticle == "muon") cout << " Muon decay flag (1 for 100% BR, 0 for correct BR)-- " << muonDecay << endl;
 			if(csettings[0] == "default")
 			{
 				cosmicA = 55.6;
 				cosmicB = 1.04;
 				cosmicC = 64;
 
-				cminp = get_number(csettings[1], 0)*GeV;
+				cminp = get_number(csettings[1], 0)*GeV; //GeV*1000 = MeV
 				cmaxp = get_number(csettings[2], 0)*GeV;
-
-				// model is valid only starting at 1 GeV for now
+				
+				// model is valid only starting at 1 GeV for now ----> G.G. secondo me starting from 1 MeV
 				if(cminp < 1) cminp = 1;
-
+				
+				
 				// select cosmic ray particle from data card
 				if(len>3){
 					cosmicParticle = csettings[3];
@@ -1146,10 +1147,9 @@ void MPrimaryGeneratorAction::setBeam()
 
 				cminp = get_number(csettings[3], 0)*GeV;
 				cmaxp = get_number(csettings[4], 0)*GeV;
-
 				// model is valid only starting at 1 GeV for now
 				if(cminp < 1) cminp = 1;
-
+				
 				// select cosmic ray particle from data card
 				if(len>5){
 					cosmicParticle = csettings[5];
@@ -1384,9 +1384,9 @@ double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
     // cosmic neutrons spectrum as a function of kinetic energy (GeV) and
     // zenith angle
     double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
-    double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.;
+    double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.; // from GeV to MeV
     double I0 = 0;
-    
+    //cout << "En"<< En<< "  p"<< p<< "  massNeut="<< massNeut<<endl;
     // double I0 = pow(En, (double)-2.95);
     //double f = I0*pow(cos(t), (double)3.5);
     //return f;
