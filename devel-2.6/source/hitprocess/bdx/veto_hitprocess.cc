@@ -254,7 +254,7 @@ double veto_HitProcess::BirksAttenuation2(double destep,double stepl,int charge,
 	return response;
 }
 
-double veto_HitProcess::BirksAttenuation3(double destep,double stepl,int charge,double birks)
+/*double veto_HitProcess::BirksAttenuation3(double destep,double stepl,int charge,double birks)
 {
 	//Extension of Birk attenuation law proposed by Chou
 	// see G.V. O'Rielly et al. Nucl. Instr and Meth A368(1996)745
@@ -268,7 +268,7 @@ double veto_HitProcess::BirksAttenuation3(double destep,double stepl,int charge,
 	}
 	return response;
 	
-
+}*/
 
 map< string, vector <int> >  veto_HitProcess :: multiDgt(MHit* aHit, int hitn)
 {

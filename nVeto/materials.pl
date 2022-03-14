@@ -26,6 +26,15 @@ sub define_bdx_materials
     $mat{"ncomponents"}   = "1";
     $mat{"components"}    = "G4_lAr 1."; #1. è la percentuale del componente (100%)
     print_mat(\%configuration, \%mat);
+    
+    # Gadolinium
+    %mat = init_mat();
+    $mat{"name"}          = "Gd";
+    $mat{"description"}   = "Gd veto cover";
+    $mat{"density"}       = "7.9004";
+    $mat{"ncomponents"}   = "1";
+    $mat{"components"}    = "G4_Gd 1."; #1. è la percentuale del componente (100%)
+    print_mat(\%configuration, \%mat);
 
     # Iron
     %mat = init_mat();

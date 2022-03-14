@@ -1124,13 +1124,12 @@ void MPrimaryGeneratorAction::setBeam()
 				cosmicA = 55.6;
 				cosmicB = 1.04;
 				cosmicC = 64;
-
+				
 				cminp = get_number(csettings[1], 0)*GeV; //GeV*1000 = MeV
 				cmaxp = get_number(csettings[2], 0)*GeV;
-				
+
 				// model is valid only starting at 1 GeV for now ----> G.G. secondo me starting from 1 MeV
 				if(cminp < 1) cminp = 1;
-				
 				
 				// select cosmic ray particle from data card
 				if(len>3){
@@ -1381,10 +1380,9 @@ double MPrimaryGeneratorAction::cosmicMuBeam(double c, double e) {
 }
 
 double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
-    // cosmic neutrons spectrum as a function of kinetic energy (GeV) and
-    // zenith angle
+    // cosmic neutrons spectrum as a function of kinetic energy (GeV) and zenith angle
     double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
-    double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.; // from GeV to MeV
+    double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.; //gg- from GeV to MeV
     double I0 = 0;
     //cout << "En"<< En<< "  p"<< p<< "  massNeut="<< massNeut<<endl;
     // double I0 = pow(En, (double)-2.95);

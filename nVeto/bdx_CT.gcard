@@ -15,24 +15,26 @@
 <option name="MAX_Z_POS"   value="40000." />
 	<!-- FINE -NON TOCCARE -->
 
-    <!-- option name="PRINT_EVENT"   value="1" />-->
-    <!--<option name="ENERGY_CUT"   value="100.*eV" />-->
+<!-- option name="PRINT_EVENT"   value="1" />-->
+<!--<option name="ENERGY_CUT"   value="100.*eV" />-->
 
-	<!--<option name="SAVE_ALL_MOTHERS" value="1"/>-->
+<!--<option name="SAVE_ALL_MOTHERS" value="1"/>-->
 <option name="RECORD_PASSBY" value="1" />
 
-	<!--<option name="PHYSICS"   value="FTFP_BERT_HP + STD + HP" />-->
-<option name="PHYSICS"   value="STD + HP" />
+<option name="PHYSICS"   value="FTFP_BERT_HP + STD + HP" />
+<!--<option name="PHYSICS"   value="STD + HP" />-->
 	
 <option name="BEAM_P"   value="mu+,10*GeV, 90*deg, -90*deg"/>
-   <!-- <option name="SPREAD_P" value="100*MeV, 10*deg, 10*deg"/>-->
-    <!--<option name="SPREAD_V" value="(2.,0.)cm"/>-->
+<!-- <option name="SPREAD_P" value="100*MeV, 10*deg, 10*deg"/>-->
+<!--<option name="SPREAD_V" value="(2.,0.)cm"/>-->
 <option name="BEAM_V" value="(20,100., 2.)cm"/>
 
 
-<!--<option name="COSMICRAYS"   value="default,0.00969,0.137,neutron,default"/>-->		<!--  momento In GeV-->
+<option name="COSMICRAYS"   value="default,0.00969,0.0433,neutron,default"/>	<!--  momento In GeV-> da 50 keV a 1 MeV di energia -->
+<!--<option name="COSMICRAYS"   value="default,0.043,0.444,neutron,default"/>-->
 <!--<option name="COSMICRAYS"   value="default,10,100.,muon,default"/>-->
-	<!--<option name="COSMICAREA"   value="0*cm, 20.*cm, 0.*cm, .50*m,sph"/>-->
+
+<option name="COSMICAREA"   value="0*cm, 30.*cm, 0.*cm, .70*m,sph"/>
 <!--<option name="COSMICAREA"   value="0*cm, -50.*cm, 0.*cm, 1.50*m,sph"/>-->
 <!--<option name="COSMICAREA"   value="0*cm, -70*cm, 0*cm, 2.0*m,sph"/>-->
 
