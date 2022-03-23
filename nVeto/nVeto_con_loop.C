@@ -41,18 +41,18 @@ void nVeto_con_loop(){
 	
 	//nVeto
 	TH1D *veto_chan = new TH1D("chan","chan",7,-0.5,6.5);
-	TH1D *veto_Energy_tot = new TH1D("veto_Energy_tot","veto_Energy_tot",100,-0.5,1000.5);
-	TH1D *veto_totEdep_tot = new TH1D("veto_totEdep_tot","veto_totEdep_tot",100,-0.5,1000.5);
+	TH1D *veto_Energy_tot = new TH1D("veto_Energy_tot","veto_Energy_tot",500,-0.05,49.95);
+	TH1D *veto_totEdep_tot = new TH1D("veto_totEdep_tot","veto_totEdep_tot",500,-0.05,49.95);
 	
 	TH1D *veto_Energy[6];
   	for(int jj=0;jj<6;jj++) {
    	sprintf(name,"veto_Energy_%d",jj);
-    	veto_Energy[jj] = new TH1D(name,name,100,-0.5,1000.5);}
+    	veto_Energy[jj] = new TH1D(name,name,500,-0.05,49.95);}
     	
     	TH1D *veto_totEdep[6];
   	for(int jj=0;jj<6;jj++) {
    	sprintf(name,"veto_totEdep_%d",jj);
-    	veto_totEdep[jj] = new TH1D(name,name,100,-0.5,1000.5);}
+    	veto_totEdep[jj] = new TH1D(name,name,500,-0.05,49.95);}
 
 	//lAr
 	TH1D *lAr_Energy_tot = new TH1D("lAr_Energy_tot","lAr_Energy_tot",100,-0.5,1000.5);
