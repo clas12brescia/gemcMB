@@ -7,7 +7,6 @@
 #include "G4UnitsTable.hh"
 #include "Randomize.hh"
 #include "G4RunManager.hh"
-#include "G4SystemOfUnits.hh"
 
 // gemc headers
 #include "MPrimaryGeneratorAction.h"
@@ -197,17 +196,34 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 			Theta = theta/rad + (2.0*G4UniformRand()-1.0)*dtheta/rad;
 			double Phi   = phi/rad   + (2.0*G4UniformRand()-1.0)*dphi/rad;
             
-            Theta = theta/rad+acos(1-G4UniformRand()*(1-cos(dtheta/rad)));
-            Phi   = phi/rad   + (2.0*G4UniformRand()-1.0)*dphi/rad;
-            //cout <<  "Theta =  :" << Theta << endl;
-            //cout <<  "dTheta =  :" << acos(1-G4UniformRand()*(1-cos(dtheta/rad))) << endl;
-            //cout <<  "Theta =  :" << Theta << endl;
-            //cout <<  "Theta =  :" << Theta << endl;
-           double rand = G4UniformRand();
-           double prob =0.5;// Prob of high energy peak; Low energy peak will be 1-prob
-            Mom = int(1-prob+rand)*1.1732/MeV + int(1-rand+prob)* 1.3325/MeV;
+                //Theta = theta/rad+acos(1-G4UniformRand()*(1-cos(dtheta/rad)));
+                // Phi   = phi/rad   + (2.0*G4UniformRand()-1.0)*dphi/rad;
+                //cout <<  "Theta =  :" << Theta << endl;
+                //cout <<  "dTheta =  :" << acos(1-G4UniformRand()*(1-cos(dtheta/rad))) << endl;
+                //cout <<  "Theta =  :" << Theta << endl;
+                //cout <<  "Theta =  :" << Theta << endl;
+                //Uniform between 180 and 180-XX
+        
+            // MB: Compton source generation
+                //double rand = G4UniformRand();//Theta =  (180.-10.*rand)*3.1415/180.;
+                //Theta = acos(-1+rand*(1+cos(175*3.1415/180.)));
+                // Uniform between 0-180
+                //rand = G4UniformRand();
+                //Phi   = (0+360.*rand)*3.1415/180.;
+                // cout <<  "rand2 =  :" << rand<< endl;
+                // cout <<  "C =  :" << Theta<<" "<< Phi<< endl;
+                //rand = G4UniformRand();
+                //double prob =0.5;// Prob of high energy peak; Low energy peak will be 1-prob
+                //Mom = int(1-prob+rand)*1.1732/MeV + int(1-rand+prob)* 1.3325/MeV;
+ 			// Stop Compton generation
+  
+            // MB: Polar source generation
+            //double rand = G4UniformRand();
+            //Mom=(1-rand)*100./MeV;
+            // Stop Compton generation
+
             
-			double mass = Particle->GetPDGMass();
+            double mass = Particle->GetPDGMass();
 			double akine = sqrt(Mom*Mom + mass*mass) - mass ;
 			if(gemcOpt->optMap["ALIGN_ZAXIS"].args == "no")
 			beam_dir = G4ThreeVector(cos(Phi/rad)*sin(Theta/rad), sin(Phi/rad)*sin(Theta/rad), cos(Theta/rad));
@@ -218,6 +234,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 				const G4ThreeVector rotx1(cos(phi/rad), -sin(phi/rad), 0);
 				beam_dir.rotate((2.0*G4UniformRand()-1.0)*dtheta/rad, rotx1);
 				beam_dir.rotate((2.0*G4UniformRand()-1.0)*dphi/rad, beam_axis);
+                //cout <<  "Theta =  :" << Theta << endl;
 			}
 			else
 			{
@@ -228,6 +245,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 				beam_dir.rotate(Theta, rotx1);
 				beam_dir.rotate(Phi, beam_axis);
 			}
+           // cout <<  "CIAOUUUUUU =  :"<<gemcOpt->optMap["ALIGN_ZAXIS"].args<<" " << Theta<<" "<< Phi<<" "<<cos(Phi/rad)*sin(Theta/rad)<<" "<< sin(Phi/rad)*sin(Theta/rad)<<" "<< cos(Theta/rad) << endl;
 
 			particleGun->SetParticleEnergy(akine);
 			particleGun->SetParticleMomentumDirection(beam_dir);
@@ -306,7 +324,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
         {
             bool cosmicNeutrons = true;
             if (cosmicParticle == "muon") cosmicNeutrons = false;
-                     
+            
             double thisMom;
             double thisKinE, KinEmin, KinEmax;
             double thisthe;
@@ -348,8 +366,9 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             //cout << cosmicVX  << " "<< cosmicVY  << " "<< cosmicVZ  << " " << endl;
             
             if (cosmicNeutrons) {
-            	 if (cminp<0.1 || cmaxp>10000) cout <<"WARNING !!!! COSMIC NEUTRONS E (MeV) is OUT OF THE VALID RANGE !!!"<<endl;
+                // if (cminp<0.1 || cmaxp>10000) cout <<"WARNING !!!! COSMIC NEUTRONS E (MeV) is OUT OF THE VALID RANGE !!!"<<endl;
                 // Model by Ashton (1973)
+                
                 double cosmicProbMax = cosmicNeutBeam(0., cminp / GeV);
                 double cosmicProbMin = cosmicNeutBeam(pi / 2., cmaxp / GeV);
                 double cosmicProb = G4UniformRand()* (cosmicProbMax - cosmicProbMin) + cosmicProbMin;
@@ -368,7 +387,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
                     thisthe = pi * G4UniformRand()/ 2.0;
                     cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
                 }
-               // cout<< "thisMom"<< thisMom << "thisMom gev" << thisMom / GeV <<endl;
+                //cout<< thisMom<< " "<< cosmic <<" "<< cosmicProb <<endl;
                 if (Nextr > 999999) cout << " !!!! LOOPING IN N EXTRACTION !!! exceeded " << Nextr << " extractions !!!" << Nextr << endl;
                 thisPhi = -pi + 2 * pi * G4UniformRand();
                 
@@ -1004,7 +1023,7 @@ void MPrimaryGeneratorAction::setBeam()
 	string units;
 
 	if(input_gen == "gemc_internal")
-	{ 
+	{
 		if(cosmics == "no")
 		{
 			// Getting particle name,  momentum from option value
@@ -1118,19 +1137,19 @@ void MPrimaryGeneratorAction::setBeam()
 			vector<string> csettings = get_info(cosmics, string(",\""));
 			int len = csettings.size();
 			// parsing information for COSMIC RAYS option
-            		if (cosmicParticle == "muon") cout << " Muon decay flag (1 for 100% BR, 0 for correct BR)-- " << muonDecay << endl;
+            if (cosmicParticle == "muon") cout << " Muon decay flag (1 for 100% BR, 0 for correct BR)-- " << muonDecay << endl;
 			if(csettings[0] == "default")
 			{
 				cosmicA = 55.6;
 				cosmicB = 1.04;
 				cosmicC = 64;
-				
-				cminp = get_number(csettings[1], 0)*GeV; //GeV*1000 = MeV
+
+				cminp = get_number(csettings[1], 0)*GeV;
 				cmaxp = get_number(csettings[2], 0)*GeV;
 
-				// model is valid only starting at 1 GeV for now ----> G.G. secondo me starting from 1 MeV
+				// model is valid only starting at 1 GeV for now
 				if(cminp < 1) cminp = 1;
-				
+
 				// select cosmic ray particle from data card
 				if(len>3){
 					cosmicParticle = csettings[3];
@@ -1146,9 +1165,10 @@ void MPrimaryGeneratorAction::setBeam()
 
 				cminp = get_number(csettings[3], 0)*GeV;
 				cmaxp = get_number(csettings[4], 0)*GeV;
+
 				// model is valid only starting at 1 GeV for now
 				if(cminp < 1) cminp = 1;
-				
+
 				// select cosmic ray particle from data card
 				if(len>5){
 					cosmicParticle = csettings[5];
@@ -1380,11 +1400,12 @@ double MPrimaryGeneratorAction::cosmicMuBeam(double c, double e) {
 }
 
 double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
-    // cosmic neutrons spectrum as a function of kinetic energy (GeV) and zenith angle
+    // cosmic neutrons spectrum as a function of kinetic energy (GeV) and
+    // zenith angle
     double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
-    double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.; //gg- from GeV to MeV
+    double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.;
     double I0 = 0;
-    //cout << "En"<< En<< "  p"<< p<< "  massNeut="<< massNeut<<endl;
+    
     // double I0 = pow(En, (double)-2.95);
     //double f = I0*pow(cos(t), (double)3.5);
     //return f;
