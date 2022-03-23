@@ -38,7 +38,8 @@ sub make_main_volume
         my $par2 = 400.+$wallthk;
         my $par3 = 600.+$wallthk;
         $detector{"dimensions"}  = "$par1*cm $par2*cm $par3*cm";
-        $detector{"material"}    = "G4_CONCRETE";
+        $detector{"material"}    = "G4_Galactic";
+       # $detector{"material"}    = "Gd";
         print_det(\%configuration, \%detector);
  
 
@@ -70,9 +71,9 @@ my $shX=0.;
 my $shY=0.;
 my $shZ=0.;
 
-my $thickness=1./2;
+my $thickness=2./2;
 my $dim=32./2;
-my $Gd_thickness=0.5;
+my $Gd_thickness=0.02./2.;
 
 
 sub make_nVeto
@@ -240,7 +241,7 @@ sub make_nVeto
     $detector{"identifiers"} = "sector manual 3 veto manual 550 channel manual 0";
      print_det(\%configuration, \%detector);
   
-  #q{  
+  q{  
  ################################### Gadolinium #####################################    
       # Gd_up
     $detector{"name"}        = "Gd_up";
@@ -364,7 +365,7 @@ sub make_nVeto
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 2 veto manual 580 channel manual 1";
      print_det(\%configuration, \%detector); 
- # };   
+  };   
   
 }
 
