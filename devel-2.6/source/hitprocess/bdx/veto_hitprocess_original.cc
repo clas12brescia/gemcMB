@@ -21,10 +21,10 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 		
 	// Digitization Parameters
 
- std::cout << "veto_id === " << veto_id << std::endl;   
+ // std::cout << "veto_id === " << veto_id << std::endl;   
   
   double birks_constant=aHit->GetDetector().GetLogical()->GetMaterial()->GetIonisation()->GetBirksConstant();
-  std::cout << " Birks constant is: " << birks_constant << endl;
+  // std::cout << " Birks constant is: " << birks_constant << endl;
 
 //	double adc_conv=10;                 // conversion factor from pC to ADC (typical sensitivy of CAEN VME QDC is of 0.1 pC/ch)
 //	double adc_ped=0;                   // ADC Pedestal

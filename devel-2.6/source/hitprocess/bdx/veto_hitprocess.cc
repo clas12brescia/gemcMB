@@ -84,14 +84,14 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
         vector<G4double> times = aHit->GetTime();     // Time for each step
         
         unsigned int nsteps = Edep.size();
-
+	
         for(unsigned int s=0; s<nsteps; s++) Etot = Etot + Edep[s];
+        cout<< "Etot="<< Etot<<endl;
         if(Etot>0)
         {
             for(unsigned int s=0; s<nsteps; s++) // ciclo sugli nstep di ogni hit che formano l'evento
             {
                 etot_g4=etot_g4+Edep[s];
-                
                 double birks_constant_lAr = 0.00046;		//P. Agnes et al. (DarkSide), J. Instrum. 12, P10015 (2017)
               //  double birks_constant_lAr = 0.00125;	//V.I. Tretyak / Astroparticle Physics 33 (2010) 4053
               //  double birks_constant_lAr = 0.00074;	//D.-M. Mei, Astropart. Phys. 30, 12 (2008).

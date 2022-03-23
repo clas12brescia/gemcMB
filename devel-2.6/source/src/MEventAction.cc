@@ -528,6 +528,7 @@ void MEventAction::EndOfEventAction(const G4Event* evt)
 						}
 						for(unsigned ss =0; ss<edeps.size(); ss++)
 						{
+						
 							if(otids[ss] == (int) pi+1)
 							{
 								MPrimaries[pi].pSum.back().etot += edeps[ss];
