@@ -39,7 +39,6 @@ sub make_main_volume
         my $par3 = 600.+$wallthk;
         $detector{"dimensions"}  = "$par1*cm $par2*cm $par3*cm";
         $detector{"material"}    = "G4_CONCRETE";
-        #$detector{"material"}    = "G4_Galactic";
         print_det(\%configuration, \%detector);
  
 
@@ -71,7 +70,7 @@ my $shX=0.;
 my $shY=0.;
 my $shZ=0.;
 
-my $thickness=5./2;
+my $thickness=1./2;
 my $dim=32./2;
 my $Gd_thickness=0.5;
 
@@ -89,7 +88,7 @@ sub make_nVeto
  # down  
     $detector{"name"}        = "down";
     $detector{"description"} = "down side";
-    $detector{"color"}       = "0000ff"; #blue + trasparency
+    $detector{"color"}       = "0000ff3"; #blue + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
@@ -112,7 +111,7 @@ sub make_nVeto
     # up
     $detector{"name"}        = "up";
     $detector{"description"} = "up side ";
-    $detector{"color"}       = "0000ff"; #blue + trasparency
+    $detector{"color"}       = "0000ff3"; #blue + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
@@ -131,7 +130,7 @@ sub make_nVeto
     # right  
     $detector{"name"}        = "right";
     $detector{"description"} = "right side  ";
-    $detector{"color"}       = "ff0000"; #red + trasparency
+    $detector{"color"}       = "ff00003"; #red + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
@@ -153,7 +152,7 @@ sub make_nVeto
        # left 
     $detector{"name"}        = "left";
     $detector{"description"} = "left side ";
-    $detector{"color"}       = "ff0000"; #red + trasparency
+    $detector{"color"}       = "ff00003"; #red + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
@@ -175,7 +174,7 @@ sub make_nVeto
      # front  
     $detector{"name"}        = "front";
     $detector{"description"} = "front side ";
-    $detector{"color"}       = "ffd700"; #giallo + trasparency
+    $detector{"color"}       = "ffd7003"; #giallo + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
@@ -197,7 +196,7 @@ sub make_nVeto
        # back 
     $detector{"name"}        = "back";
     $detector{"description"} = "back side ";
-    $detector{"color"}       = "ffd700"; #giallo + trasparency
+    $detector{"color"}       = "ffd7003"; #giallo + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
@@ -217,7 +216,8 @@ sub make_nVeto
      print_det(\%configuration, \%detector);
  
  ################################### Liquid argon ##################################### 
-    
+  
+   
        # lAr 
     $detector{"name"}        = "liquid argon";
     $detector{"description"} = "detector inside";
@@ -234,12 +234,13 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 90*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lz*cm $csi_pad_ly*cm $csi_pad_lx*cm";
-    $detector{"material"}    = "ScintillatorB";			
+    $detector{"material"}    = "LAr";			
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 3 veto manual 550 channel manual 0";
      print_det(\%configuration, \%detector);
-     
+  
+  #q{  
  ################################### Gadolinium #####################################    
       # Gd_up
     $detector{"name"}        = "Gd_up";
@@ -257,7 +258,7 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$Gd_lx*cm $Gd_ly*cm $Gd_lz*cm";
-    $detector{"material"}    = "Gd";
+    $detector{"material"}    = "G4_Galactic";
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 0 veto manual 580 channel manual 0";
@@ -363,6 +364,8 @@ sub make_nVeto
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 2 veto manual 580 channel manual 1";
      print_det(\%configuration, \%detector); 
+ # };   
+  
 }
 
 
