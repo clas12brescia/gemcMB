@@ -55,8 +55,8 @@ void nVeto_con_loop(){
     	veto_totEdep[jj] = new TH1D(name,name,500,-0.05,49.95);}
 
 	//lAr
-	TH1D *lAr_Energy_tot = new TH1D("lAr_Energy_tot","lAr_Energy_tot",100,-0.5,1000.5);
-	TH1D *lAr_totEdep_tot = new TH1D("lAr_totEdep_tot","lAr_totEdep_tot",100,-0.5,1000.5);
+	TH1D *lAr_Energy_tot = new TH1D("lAr_Energy_tot","lAr_Energy_tot",500,-0.05,49.95);
+	TH1D *lAr_totEdep_tot = new TH1D("lAr_totEdep_tot","lAr_totEdep_tot",500,-0.05,49.95);
 
 
 	//////////////////////
@@ -132,7 +132,7 @@ void nVeto_con_loop(){
         
         TFile *g;
   	if(Debug) g = new TFile("Output/Debug.root","RECREATE");
- 	else g = new TFile("Output/Sort.root","RECREATE");
+ 	else g = new TFile("Output/Sort_10000n_lAr_Sci_1cm.root","RECREATE");
  	
  	g-> mkdir("veto");
  	g-> cd("veto");
