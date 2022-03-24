@@ -337,6 +337,11 @@ int main( int argc, char **argv )
 		nEventsToProcess = 1000000000;
 	}
 
+	// Valerio & Giulia, March 2022, manual deactivation of n killer
+	// source https://geant4-forum.web.cern.ch/t/deactivation-of-the-neutron-killer-nkiller-process/6125
+	
+	UImanager->ApplyCommand("/process/inactivate nKiller");
+
 	if(use_gui) {
 		gemc_splash.message("Starting GUI...");
 		qApp->processEvents();
