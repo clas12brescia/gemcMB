@@ -27,12 +27,12 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 	
     	// initialize ADC and TDC
    	double timeL = 0;
-    	double timeR = 0;
-    	int ADC1 = 0;
-    	int ADC2 = 0;
-    	int ADC3 = 0;
+    double timeR = 0;
+    int ADC1 = 0;
+    int ADC2 = 0;
+    int ADC3 = 0;
    	int ADC4 = 0;
-    	int ADC5 = 0;
+    int ADC5 = 0;
    	int ADC6 = 0;
   	int ADC7 = 0;
   	int ADC8 = 0;
@@ -86,7 +86,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
         unsigned int nsteps = Edep.size();
 	
         for(unsigned int s=0; s<nsteps; s++) Etot = Etot + Edep[s];
-        cout<< "Etot="<< Etot<<endl;
+        //cout<<"id="<<veto_id<< ",  Etot="<< Etot<<endl;
         if(Etot>0)
         {
             for(unsigned int s=0; s<nsteps; s++) // ciclo sugli nstep di ogni hit che formano l'evento
@@ -131,7 +131,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
             double T_ave =0.;
             att_length = 6000.; // 6m
             
-            if( veto_id==500)
+            if( veto_id==100)
             {
                 if (sector==0)	// Up and down - SiPm on the front
                 {
@@ -165,7 +165,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 
             }
             
-	    else if( veto_id==550)
+	    else if( veto_id==200)
             {
                 pe_ave=67*exp(-dRight/att_length);
                 T_ave =timeR;
@@ -201,15 +201,14 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
   	dgtz["adc6"]    = ADC6;// ignore
   	dgtz["adc7"]    = ADC7;// ignore
   	dgtz["adc8"]    = ADC8;// ignore
-
 	dgtz["tdc1"]    = TDC1;// output in ps
 	dgtz["tdc2"]    = TDC2;// ignore
-    	dgtz["tdc3"]    = TDC3;// ignore
-    	dgtz["tdc4"]    = TDC4;// ignore
-    	dgtz["tdc5"]    = TDC5;// ignore
-    	dgtz["tdc6"]    = TDC6;// ignore
-    	dgtz["tdc7"]    = TDC7;// ignore
-    	dgtz["tdc8"]    = TDC8;// ignore
+    dgtz["tdc3"]    = TDC3;// ignore
+    dgtz["tdc4"]    = TDC4;// ignore
+    dgtz["tdc5"]    = TDC5;// ignore
+    dgtz["tdc6"]    = TDC6;// ignore
+    dgtz["tdc7"]    = TDC7;// ignore
+    dgtz["tdc8"]    = TDC8;// ignore
 
 	return dgtz;
 }
