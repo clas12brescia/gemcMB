@@ -38,7 +38,7 @@ sub make_main_volume
         my $par2 = 400.+$wallthk;
         my $par3 = 600.+$wallthk;
         $detector{"dimensions"}  = "$par1*cm $par2*cm $par3*cm";
-        $detector{"material"}    = "G4_Galactic";
+        $detector{"material"}    = "G4_AIR";
        # $detector{"material"}    = "Gd";
         print_det(\%configuration, \%detector);
  
@@ -71,9 +71,11 @@ my $shX=0.;
 my $shY=0.;
 my $shZ=0.;
 
-my $thickness=2./2;
-my $dim=32./2;
-my $Gd_thickness=0.02./2.;
+
+my $LAr_dim=35.6/2.;
+my $Sci_thickness=1./2;
+my $Sci_dim=$LAr_dim;
+my $Gd_thickness=1./2.;
 
 
 sub make_nVeto
@@ -93,11 +95,11 @@ sub make_nVeto
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    my $csi_pad_lx =$dim+2.*$thickness; 
-    my $csi_pad_ly =$thickness; 
-    my $csi_pad_lz =$dim; 
+    my $csi_pad_lx =$Sci_dim+2.*$Sci_thickness; 
+    my $csi_pad_ly =$Sci_thickness; 
+    my $csi_pad_lz =$Sci_dim; 
     my $X = 0.;
-    my $Y = -$dim -$thickness;
+    my $Y = -$Sci_dim -$Sci_thickness;
     my $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
@@ -105,7 +107,7 @@ sub make_nVeto
     $detector{"material"}    = "ScintillatorB";	#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 0 veto manual 500 channel manual 0";
+    $detector{"identifiers"} = "sector manual 0 veto manual 100 channel manual 0";
      print_det(\%configuration, \%detector);
      
       
@@ -117,7 +119,7 @@ sub make_nVeto
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
     $X = 0.;
-    $Y = +$dim+ $thickness;
+    $Y = +$Sci_dim+ $Sci_thickness;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
@@ -125,7 +127,7 @@ sub make_nVeto
     $detector{"material"}    = "ScintillatorB";
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 0 veto manual 500 channel manual 1";
+    $detector{"identifiers"} = "sector manual 0 veto manual 100 channel manual 1";
     print_det(\%configuration, \%detector);
     
     # right  
@@ -135,10 +137,10 @@ sub make_nVeto
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $csi_pad_lx =$thickness; 
-    $csi_pad_ly =$dim;
-    $csi_pad_lz =$dim; 
-    $X = $dim+$thickness;
+    $csi_pad_lx =$Sci_thickness; 
+    $csi_pad_ly =$Sci_dim;
+    $csi_pad_lz =$Sci_dim; 
+    $X = $Sci_dim+$Sci_thickness;
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
@@ -147,7 +149,7 @@ sub make_nVeto
     $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 1 veto manual 500 channel manual 1";
+    $detector{"identifiers"} = "sector manual 1 veto manual 100 channel manual 1";
      print_det(\%configuration, \%detector);
      
        # left 
@@ -157,10 +159,10 @@ sub make_nVeto
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $csi_pad_lx =$thickness; 
-    $csi_pad_ly =$dim; 
-    $csi_pad_lz =$dim; 
-    $X = - $dim-$thickness;
+    $csi_pad_lx =$Sci_thickness; 
+    $csi_pad_ly =$Sci_dim; 
+    $csi_pad_lz =$Sci_dim; 
+    $X = - $Sci_dim-$Sci_thickness;
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
@@ -169,7 +171,7 @@ sub make_nVeto
     $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 1 veto manual 500 channel manual 0";
+    $detector{"identifiers"} = "sector manual 1 veto manual 100 channel manual 0";
      print_det(\%configuration, \%detector);
      
      # front  
@@ -179,19 +181,19 @@ sub make_nVeto
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $csi_pad_lx =$dim +2.*$thickness; 
-    $csi_pad_ly =$dim + 2.*$thickness; 
-    $csi_pad_lz =$thickness; 
+    $csi_pad_lx =$Sci_dim +2.*$Sci_thickness; 
+    $csi_pad_ly =$Sci_dim + 2.*$Sci_thickness; 
+    $csi_pad_lz =$Sci_thickness; 
     $X = 0.;
     $Y = 0.;
-    $Z = $dim+$thickness;
+    $Z = $Sci_dim+$Sci_thickness;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
     $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 2 veto manual 500 channel manual 0";
+    $detector{"identifiers"} = "sector manual 2 veto manual 100 channel manual 0";
      print_det(\%configuration, \%detector);
      
        # back 
@@ -201,19 +203,19 @@ sub make_nVeto
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $csi_pad_lx =$dim+2.*$thickness; 
-    $csi_pad_ly =$dim + 2.*$thickness; 
-    $csi_pad_lz =$thickness; 
+    $csi_pad_lx =$Sci_dim+2.*$Sci_thickness; 
+    $csi_pad_ly =$Sci_dim + 2.*$Sci_thickness; 
+    $csi_pad_lz =$Sci_thickness; 
     $X = 0.;
     $Y = 0.;
-    $Z = -$dim-$thickness;
+    $Z = -$Sci_dim-$Sci_thickness;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
     $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 2 veto manual 500 channel manual 1";
+    $detector{"identifiers"} = "sector manual 2 veto manual 100 channel manual 1";
      print_det(\%configuration, \%detector);
  
  ################################### Liquid argon ##################################### 
@@ -225,20 +227,22 @@ sub make_nVeto
     $detector{"color"}       = "00ff00"; #verde
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $csi_pad_lx =$dim;  
-    $csi_pad_ly =$dim; 
-    $csi_pad_lz =$dim; 
+    $detector{"type"}        = "Tube";
+    my $LAr_Rmin =0.; 
+    my $LAr_Rmax =$LAr_dim; 
+    my $LAr_d =$LAr_dim;
+    my $LAr_phi_min =0.;
+    my $LAr_phi_max =2*pi; 
     $X = 0.;
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
-    $detector{"rotation"}    = "0*deg 90*deg 0*deg";
-    $detector{"dimensions"}  = "$csi_pad_lz*cm $csi_pad_ly*cm $csi_pad_lx*cm";
+    $detector{"rotation"}    = "90*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$LAr_Rmin*cm $LAr_Rmax*cm $LAr_d*cm $LAr_phi_min*rad $LAr_phi_max*rad";
     $detector{"material"}    = "LAr";			
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 3 veto manual 550 channel manual 0";
+    $detector{"identifiers"} = "sector manual 3 veto manual 200 channel manual 0";
      print_det(\%configuration, \%detector);
   
   q{  
@@ -250,11 +254,11 @@ sub make_nVeto
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    my $Gd_lx =$dim+2.*$thickness; 
+    my $Gd_lx =$Sci_dim+2.*$Sci_thickness; 
     my $Gd_ly =$Gd_thickness; 
-    my $Gd_lz =$dim+2.*$thickness; 
+    my $Gd_lz =$Sci_dim+2.*$Sci_thickness; 
     $X = 0.;
-    $Y = +$dim+ 2.*$thickness + $Gd_thickness ;
+    $Y = +$Sci_dim+ 2.*$Sci_thickness + $Gd_thickness ;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
@@ -262,7 +266,7 @@ sub make_nVeto
     $detector{"material"}    = "G4_Galactic";
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 0 veto manual 580 channel manual 0";
+    $detector{"identifiers"} = "sector manual 0 veto manual 300 channel manual 0";
     print_det(\%configuration, \%detector);
     
      # Gd_down
@@ -273,7 +277,7 @@ sub make_nVeto
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
     $X = 0.;
-    $Y = -$dim- 2.*$thickness - $Gd_thickness ;
+    $Y = -$Sci_dim- 2.*$Sci_thickness - $Gd_thickness ;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
@@ -281,7 +285,7 @@ sub make_nVeto
     $detector{"material"}    = "Gd";
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 0 veto manual 580 channel manual 1";
+    $detector{"identifiers"} = "sector manual 0 veto manual 300 channel manual 1";
     print_det(\%configuration, \%detector);
   
    #  Gd_right  
@@ -292,9 +296,9 @@ sub make_nVeto
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
     $csi_pad_lx =$Gd_thickness; 
-    $csi_pad_ly =$dim +2.*$thickness + 2.*$Gd_thickness;
-    $csi_pad_lz =$dim+2.*$thickness ; 
-    $X = $dim+2.*$thickness + $Gd_thickness;
+    $csi_pad_ly =$Sci_dim +2.*$Sci_thickness + 2.*$Gd_thickness;
+    $csi_pad_lz =$Sci_dim+2.*$Sci_thickness ; 
+    $X = $Sci_dim+2.*$Sci_thickness + $Gd_thickness;
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	
@@ -303,7 +307,7 @@ sub make_nVeto
     $detector{"material"}    = "Gd";			
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 1 veto manual 580 channel manual 1";
+    $detector{"identifiers"} = "sector manual 1 veto manual 300 channel manual 1";
      print_det(\%configuration, \%detector);
      
        #  Gd_left 
@@ -313,7 +317,7 @@ sub make_nVeto
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $X = - $dim-2.*$thickness - $Gd_thickness;
+    $X = - $Sci_dim-2.*$Sci_thickness - $Gd_thickness;
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
@@ -322,7 +326,7 @@ sub make_nVeto
     $detector{"material"}    = "Gd";			
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 1 veto manual 580 channel manual 0";
+    $detector{"identifiers"} = "sector manual 1 veto manual 300 channel manual 0";
      print_det(\%configuration, \%detector);
      
      # Gd_front  
@@ -332,19 +336,19 @@ sub make_nVeto
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $csi_pad_lx =$dim +2.*$thickness + 2.*$Gd_thickness; 
-    $csi_pad_ly =$dim + 2.*$thickness+ 2.*$Gd_thickness; 
+    $csi_pad_lx =$Sci_dim +2.*$Sci_thickness + 2.*$Gd_thickness; 
+    $csi_pad_ly =$Sci_dim + 2.*$Sci_thickness+ 2.*$Gd_thickness; 
     $csi_pad_lz =$Gd_thickness; 
     $X = 0.;
     $Y = 0.;
-    $Z = $dim+2.*$thickness +$Gd_thickness;
+    $Z = $Sci_dim+2.*$Sci_thickness +$Gd_thickness;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
     $detector{"material"}    = "Gd";			
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 2 veto manual 580 channel manual 0";
+    $detector{"identifiers"} = "sector manual 2 veto manual 300 channel manual 0";
      print_det(\%configuration, \%detector);
      
        # Gd_back 
@@ -356,14 +360,14 @@ sub make_nVeto
     $detector{"type"}        = "Box";
     $X = 0.;
     $Y = 0.;
-    $Z = -$dim-2.*$thickness - $Gd_thickness;
+    $Z = -$Sci_dim-2.*$Sci_thickness - $Gd_thickness;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
     $detector{"material"}    = "Gd";			
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 2 veto manual 580 channel manual 1";
+    $detector{"identifiers"} = "sector manual 2 veto manual 300Sci channel manual 1";
      print_det(\%configuration, \%detector); 
   };   
   
@@ -374,10 +378,10 @@ sub make_nVeto
 sub make_flux_cosmic_sph
 {
     my %detector = init_det();
-    my $cosmicradius=70.;
+    my $cosmicradius=50.;
     
     my $X = $shX + 0. ;
-    my $Y = $shY  +30. ;
+    my $Y = $shY  -10. ;
     my $Z = $shZ +  0.;
     
     my $par1 = $cosmicradius;
@@ -390,7 +394,7 @@ sub make_flux_cosmic_sph
     $detector{"name"}        = "flux_cosmic_sph";
     $detector{"mother"}      = "bdx_main_volume";
     $detector{"description"} = "Beamdump flux detector";
-    $detector{"color"}       = "cc00ff";
+    $detector{"color"}       = "cc00ff3";
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Sphere";
