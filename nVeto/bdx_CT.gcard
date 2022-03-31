@@ -21,21 +21,20 @@
 <!--<option name="SAVE_ALL_MOTHERS" value="1"/>-->
 <option name="RECORD_PASSBY" value="1" />
 
-<option name="PHYSICS"   value="FTFP_BERT_HP + STD + HP" />
-<!--<option name="PHYSICS"   value="QGSP_BERT_HP + STD + HP" />-->
+<!--<option name="PHYSICS"   value="FTFP_BERT_HP + STD + HP" />-->
+<option name="PHYSICS"   value="QGSP_BERT_HP + STD + HP" />
 <!--<option name="PHYSICS"   value="STD + HP" />-->
 
-<option name="BEAM_P"   value="neutron,1*MeV, 90*deg, -90*deg"/>
+<option name="BEAM_P"   value="neutron,13.7*MeV, 90*deg, -90*deg"/>
 <!--<option name="SPREAD_P" value="100*MeV, 10*deg, 10*deg"/>-->
 <!--<option name="SPREAD_V" value="(2.,0.)cm"/>-->
-<!--<option name="BEAM_V" value="(0.,100., 0.)cm"/>-->
+<option name="BEAM_V" value="(0.,1000., 0.)cm"/>
 
 
-<option name="COSMICRAYS"   value="default,0.00969,0.0433,neutron,default"/>		<!--  momento In GeV-> da 50 keV a 1 MeV di energia -->
-<!--<option name="COSMICRAYS"   value="default,0.043,0.444,neutron,default"/>-->		<!--  momento In GeV-> da 1 MeV a 100 MeV di energia -->
+<!--<option name="COSMICRAYS"   value="default,0.00969,0.0433,neutron,default"/>-->	<!--  momento In GeV-> da 50 keV a 1 MeV di energia -->
 <!--<option name="COSMICRAYS"   value="default,10,100.,muon,default"/>-->
 
-<option name="COSMICAREA"   value="0*cm, 30.*cm, 0.*cm, .70*m,sph"/>
+<!--<option name="COSMICAREA"   value="0*cm, -10.*cm, 0.*cm, .50*m,sph"/>-->
 <!--<option name="COSMICAREA"   value="0*cm, -50.*cm, 0.*cm, 1.50*m,sph"/>-->
 <!--<option name="COSMICAREA"   value="0*cm, -70*cm, 0*cm, 2.0*m,sph"/>-->
 
