@@ -20,6 +20,9 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 	int channel = identity[2].id;
 		
 	// Digitization Parameters
+  
+  // double birks_constant=aHit->GetDetector().GetLogical()->GetMaterial()->GetIonisation()->GetBirksConstant();
+   // G4cout << " Birks constant is: " << aHit->GetDetector().GetLogical()->GetMaterial()->GetIonisation()->GetBirksConstant() << endl;
 
  //	double adc_conv=10;                 // conversion factor from pC to ADC (typical sensitivy of CAEN VME QDC is of 0.1 pC/ch)
 //	double adc_ped=0;                   // ADC Pedestal
@@ -28,6 +31,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
     	// initialize ADC and TDC
    	double timeL = 0;
     double timeR = 0;
+    double dig_Edep = 0;
     int ADC1 = 0;
     int ADC2 = 0;
     int ADC3 = 0;
@@ -55,8 +59,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
   	double att_length      ;               // light at tenuation length
     	double peL=0.;
     	double peR;
-    	double etot_g4=0.;
-    	double etot_B=0.;
+    	double etot=0.;
         double Etot   = 0;
         double X_hit_ave=0.;
         double Y_hit_ave=0.;
@@ -91,13 +94,18 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
         {
             for(unsigned int s=0; s<nsteps; s++) // ciclo sugli nstep di ogni hit che formano l'evento
             {
-                etot_g4=etot_g4+Edep[s];
-                double birks_constant_lAr = 0.00046;		//P. Agnes et al. (DarkSide), J. Instrum. 12, P10015 (2017)
-              //  double birks_constant_lAr = 0.00125;	//V.I. Tretyak / Astroparticle Physics 33 (2010) 4053
-              //  double birks_constant_lAr = 0.00074;	//D.-M. Mei, Astropart. Phys. 30, 12 (2008).
-                double Edep_B_lAr = BirksAttenuation(Edep[s],Dx[s],charge[s],birks_constant_lAr);
-                etot_B=etot_B+Edep_B_lAr;
-                
+                if( veto_id==100)
+                {
+                    etot=etot+Edep[s];
+                }
+                else if (veto_id==200)
+                {
+                    double birks_constant_lAr = 0.0089; //mm/Mev //V.I. Tretyak / Astroparticle Physics 33 (2010) 4053
+                    double Edep_B_lAr = BirksAttenuation(Edep[s],Dx[s],charge[s],birks_constant_lAr);
+                    //cout<< "dx = "<<Dx[s]<< "   Edep[s] = "<<Edep[s]<<"  B1 = "<<Edep_B_lAr<<endl;
+                    etot=etot+Edep_B_lAr;
+                }
+                                
                 // average hit position XYZ
                 X_hit_ave=X_hit_ave+Lpos[s].x();
                 Y_hit_ave=Y_hit_ave+Lpos[s].y();
@@ -119,7 +127,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
             timeL= dLeft/veff+T_hit_ave;	// time between interaction and readout on the left side
             timeR= dRight/veff+T_hit_ave; 	// time between interaction and readout on the right side
             
-            //cout << "AVE X = " << X_hit_ave << " ,Y " << Y_hit_ave << " ,Z " << Z_hit_ave << " ,dRight " << dRight << " ,dLeft " << dLeft << "  ,Etot_B " <<etot_B  << "  ,Etot " <<etot_g4 << endl;
+            //cout << "AVE X = " << X_hit_ave << " ,Y " << Y_hit_ave << " ,Z " << Z_hit_ave << " ,dRight " << dRight << " ,dLeft " << dLeft << "  ,etot " <<etot  << "  ,Etot " <<etot << endl;
       
            
            
@@ -149,8 +157,8 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
                     T_ave =timeR;
                 }
                 
-                
-                ADC1=G4Poisson(pe_ave*etot_g4/4.1) ; // Scaling for more/less energy release)
+                dig_Edep=etot;  
+                ADC2=G4Poisson(pe_ave*etot/4.1) ; // Scaling for more/less energy release)
                 
                 double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(pe_ave+1.));
                 sigmaTL=0.;
@@ -170,8 +178,8 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
                 pe_ave=67*exp(-dRight/att_length);
                 T_ave =timeR;
              
-                ADC6=G4Poisson(pe_ave*etot_g4/4.1) ;
-                ADC1=G4Poisson(pe_ave*etot_B/4.1) ; // Scaling for more/less energy release)
+                dig_Edep=etot;  
+                ADC2=G4Poisson(pe_ave*etot/4.1) ; // Scaling for more/less energy release)
                 
                 double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(pe_ave+1.));
                 sigmaTL=0.;
@@ -179,7 +187,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
                
                 //cout <<  " ++ HIT BEGIN ++++++" << endl ;
                 //cout <<  " chan: " << channel << endl ;
-                //cout <<  " ADC1 con Briks per lAr: " << ADC1 <<  " ADC6:senza Briks per lAr solo per confronto " << ADC6 <<endl ;
+                //cout <<  " ADC2 con Briks per lAr: " << ADC2 <<  " ADC6:senza Briks per lAr solo per confronto " << ADC6 <<endl ;
                 //cout <<  " TDC1: " << TDC1 << endl ;
                 //cout <<  " Channel: " << chan << endl ;
                 //cout <<  " ++ HIT END ++++++" << endl ;
@@ -193,8 +201,9 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 	dgtz["sector"]  = sector;
 	dgtz["veto"]    = veto_id;
 	dgtz["channel"] = channel;
-	dgtz["adc1"]    = ADC1;// output in pe
-	dgtz["adc2"]    = ADC2;//deposited energy in keV
+    dgtz["dig_Edep"]  = dig_Edep;
+	dgtz["adc1"]    = ADC1;// deposited energy in MeV
+	dgtz["adc2"]    = ADC2;//output in pe
   	dgtz["adc3"]    = ADC3;// ignore
   	dgtz["adc4"]    = ADC4;// ignore
   	dgtz["adc5"]    = ADC5;// ignore
@@ -209,6 +218,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
     dgtz["tdc6"]    = TDC6;// ignore
     dgtz["tdc7"]    = TDC7;// ignore
     dgtz["tdc8"]    = TDC8;// ignore
+
 
 	return dgtz;
 }
@@ -253,13 +263,13 @@ double veto_HitProcess::BirksAttenuation2(double destep,double stepl,int charge,
 	return response;
 }
 
-/*double veto_HitProcess::BirksAttenuation3(double destep,double stepl,int charge,double birks)
+double veto_HitProcess::BirksAttenuation3(double destep,double stepl,int charge,double birks)
 {
 	//Extension of Birk attenuation law proposed by Chou
 	// see G.V. O'Rielly et al. Nucl. Instr and Meth A368(1996)745
 	// 
 	//
-	double C=-2*1E-7*mm*mm/MeV/MeV;	//C=-2*1E-7 g^2cm^-4 MeV^-2 
+	double C=-2*1E-3*mm*mm/MeV/MeV;	//C=-2*1E-7 g^2cm^-4 MeV^-2 
 	double response = destep;		//kb=5.2*1E-4 g cm^-2 MeV^-1
 	if (birks*destep*stepl*charge != 0.)
 	{
@@ -267,7 +277,7 @@ double veto_HitProcess::BirksAttenuation2(double destep,double stepl,int charge,
 	}
 	return response;
 	
-}*/
+}
 
 map< string, vector <int> >  veto_HitProcess :: multiDgt(MHit* aHit, int hitn)
 {
