@@ -57,6 +57,7 @@ sub define_bdx_bank
 	insert_bank_variable(\%configuration, $bankname, "tdc2",         9, "Di", "tdc2");
     insert_bank_variable(\%configuration, $bankname, "tdc3",        10, "Di", "tdc3");
     insert_bank_variable(\%configuration, $bankname, "tdc4",        11, "Di", "tdc4");
+    insert_bank_variable(\%configuration, $bankname, "dig_Edep",    12, "Dd", "deposited energy");
 	insert_bank_variable(\%configuration, $bankname, "hitn",        99, "Di", "hit number");
 
     $bankId   = 300;
