@@ -13,10 +13,7 @@
 
 bool Debug = false;
 
-//string name ("Sci1cm_Cosmics_p9,69-43,3MeV");
-
-
-void nVeto_con_loop(string inputname="Sci1cm_Cosmics_p9,69-43,3MeV"){
+void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
 	
 	string filename("out_" + inputname + ".root");
 	string outname("Output/Sort_" + inputname + ".root");
@@ -98,9 +95,13 @@ void nVeto_con_loop(string inputname="Sci1cm_Cosmics_p9,69-43,3MeV"){
 		lAr_time->GetXaxis()->SetTitle("Time [ns]");
 	  	lAr_time->GetYaxis()->SetTitle("Counts");
 
-	TH1D *lAr_totEdep_tot = new TH1D("lAr_totEdep_tot","lAr_totEdep_tot",1000,-0.5,999.5);
-		lAr_totEdep_tot->GetXaxis()->SetTitle("Energy [keV]");
-	  	lAr_totEdep_tot->GetYaxis()->SetTitle("Counts");
+	TH1D *lAr_totEdep_g4 = new TH1D("lAr_totEdep_g4 ","lAr_totEdep_g4 ",1000,-0.5,999.5);
+		lAr_totEdep_g4 ->GetXaxis()->SetTitle("Energy [keV]");
+	  	lAr_totEdep_g4 ->GetYaxis()->SetTitle("Counts");
+
+	TH1D *lAr_totEdep_B = new TH1D("lAr_totEdep_B","lAr_totEdep_B",1000,-0.5,999.5);
+		lAr_totEdep_B->GetXaxis()->SetTitle("Energy [keV]");
+	  	lAr_totEdep_B->GetYaxis()->SetTitle("Counts"); 	
 
 
 	//matrix
@@ -173,8 +174,9 @@ void nVeto_con_loop(string inputname="Sci1cm_Cosmics_p9,69-43,3MeV"){
 				else if (chan==6)  //lAr
 				{		 
 					lAr_Energy=lAr_Energy + myVe->totEdep->at(ihit)*1000;  
-					//lAr_Energy_tot->Fill(myVe->adc1->at(ihit));
-					lAr_totEdep_tot->Fill(myVe->totEdep->at(ihit)*1000);
+					//lAr_Energy_tot->Fill(myVe->adc2->at(ihit));
+					lAr_totEdep_g4->Fill(myVe->totEdep->at(ihit)*1000);
+					lAr_totEdep_B->Fill(myVe->dig_Edep->at(ihit)*1000);
 					lAr_time->Fill(myVe->avg_t->at(ihit)/1000);
 					lAr_Energy_time->Fill(myVe->totEdep->at(ihit)*1000,myVe->avg_t->at(ihit)/1000);
 				}
@@ -211,7 +213,8 @@ void nVeto_con_loop(string inputname="Sci1cm_Cosmics_p9,69-43,3MeV"){
  	//veto_Energy_tot->Write(0,TObject::kOverwrite);
     	veto_totEdep_tot->Write(0,TObject::kOverwrite);
     //	lAr_Energy_tot->Write(0,TObject::kOverwrite);
-    	lAr_totEdep_tot->Write(0,TObject::kOverwrite);
+    	lAr_totEdep_g4->Write(0,TObject::kOverwrite);
+    	lAr_totEdep_B->Write(0,TObject::kOverwrite);
     	lAr_time->Write(0,TObject::kOverwrite);
     	veto_time_tot->Write(0,TObject::kOverwrite);
     	veto_lAr_Energy->Write(0,TObject::kOverwrite);
@@ -250,4 +253,4 @@ void nVeto_con_loop(string inputname="Sci1cm_Cosmics_p9,69-43,3MeV"){
 //   vector<double>  *avg_t;
 //   vector<double>  *nsteps;
 //   vector<double>  *procID;
-
+// variabili definite in devel-2.6/source/sensitivity/HitProcess.cc
