@@ -240,9 +240,9 @@ sub make_nVeto
     $detector{"rotation"}    = "90*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$LAr_Rmin*cm $LAr_Rmax*cm $LAr_d*cm $LAr_phi_min*rad $LAr_phi_max*rad";
     $detector{"material"}    = "LAr";			
-    $detector{"sensitivity"} = "veto";
-    $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 3 veto manual 200 channel manual 0";
+    $detector{"sensitivity"} = "det";
+    $detector{"hit_type"}    = "det";
+    $detector{"identifiers"} = "sector manual 3 det manual 200 channel manual 0";
      print_det(\%configuration, \%detector);
   
   q{  

@@ -11,7 +11,7 @@ sub define_bdx_materials
 
     # scintillator
     my %mat = init_mat();
-    $mat{"name"}          = "scintillator";
+    $mat{"name"}          = "scintillator";   #Polyvinyltoluene (PVT)
     $mat{"description"}   = "ft scintillator material C9H10 1.032 g/cm3";
     $mat{"density"}       = "1.032";
     $mat{"ncomponents"}   = "2";

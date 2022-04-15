@@ -128,6 +128,7 @@ hitp_sources = Split("""
 	hitprocess/clas12/rich_hitprocess.cc
 	hitprocess/bdx/cormo_hitprocess.cc
 	hitprocess/bdx/veto_hitprocess.cc
+	hitprocess/bdx/det_hitprocess.cc
 	hitprocess/bdx/crs_hitprocess.cc
 	hitprocess/eic/eic_compton_hitprocess.cc
 	hitprocess/eic/eic_dirc_hitprocess.cc

@@ -1,8 +1,6 @@
-//#define vetoClass_cxx
 #include "vetoClass.h"
-//#define generatedClass_cxx
+#include "detClass.h"
 #include "generatedClass.h"
-//#define fluxClass_cxx
 #include "fluxClass.h"
 #include <TH2.h>
 #include <TH3.h>
@@ -23,10 +21,12 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
 
 	// Get the tree(s)
 	TTree * veto = (TTree * ) f->Get("veto");
+	TTree * det = (TTree * ) f->Get("det");
 	TTree * generated = (TTree * ) f->Get("generated");
 	TTree * flux = (TTree * ) f->Get("flux");
 
 	// new objects 
+	detClass * myDet = new detClass(det);
 	vetoClass * myVe = new vetoClass(veto);
 	generatedClass * myGen= new generatedClass(generated);
 	fluxClass * myFl = new fluxClass(flux);
@@ -173,12 +173,12 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
 				} 
 				else if (chan==6)  //lAr
 				{		 
-					lAr_Energy=lAr_Energy + myVe->totEdep->at(ihit)*1000;  
-					//lAr_Energy_tot->Fill(myVe->adc2->at(ihit));
-					lAr_totEdep_g4->Fill(myVe->totEdep->at(ihit)*1000);
-					lAr_totEdep_B->Fill(myVe->dig_Edep->at(ihit)*1000);
-					lAr_time->Fill(myVe->avg_t->at(ihit)/1000);
-					lAr_Energy_time->Fill(myVe->totEdep->at(ihit)*1000,myVe->avg_t->at(ihit)/1000);
+					lAr_Energy=lAr_Energy + myDet->totEdep->at(ihit)*1000;  
+					//lAr_Energy_tot->Fill(myDet->adc2->at(ihit));
+					lAr_totEdep_g4->Fill(myDet->totEdep->at(ihit)*1000);
+					lAr_totEdep_B->Fill(myDet->dig_Edep->at(ihit)*1000);
+					lAr_time->Fill(myDet->avg_t->at(ihit)/1000);
+					lAr_Energy_time->Fill(myDet->totEdep->at(ihit)*1000,myDet->avg_t->at(ihit)/1000);
 				}
 			}	 
 		}
