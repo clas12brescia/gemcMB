@@ -11,10 +11,27 @@
 
 bool Debug = false;
 
+/*
+	Import the bin list and content from
+	a singole file using a TGraph, then
+	get the arrays from the TGraph 
+
+*/
+
 void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	
 	string filename("out_" + inputname + ".root");
 	string outname("Output/Sort_" + inputname + ".root");
+
+
+	// Use a TGraph just to import bin (values and contents)
+	// from a text file. The resulting arrays will be used
+	// later to compute weigths based on neutron flux 
+	TGraph tempGraph = TGraph("tabelle_corrette/bin_flux_table.dat");
+	Int_t fluxBinNumber = tempGraph.GetN();
+	Double_t * fluxBinLeftEdge = tempGraph.GetX();
+	Double_t * fluxBinContent = tempGraph.GetY();
+
 
 	// Open the file
 	TFile * f = new TFile(filename.c_str());
@@ -80,6 +97,14 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		lAr_totEdep_B_6->GetXaxis()->SetTitle("Energy [GeV]");
 	  	lAr_totEdep_B_6->GetYaxis()->SetTitle("Counts"); 	
 
+	 // generate totEdep histogram clones to be filled with weights
+	 // based on neutron flux 
+	 TH1D *lAr_totEdep_B_1_w = (TH1D *)lAr_totEdep_B_1->Clone("lAr_totEdep_B_1_w");
+	 TH1D *lAr_totEdep_B_2_w = (TH1D *)lAr_totEdep_B_2->Clone("lAr_totEdep_B_2_w");
+	 TH1D *lAr_totEdep_B_3_w = (TH1D *)lAr_totEdep_B_3->Clone("lAr_totEdep_B_3_w");
+	 TH1D *lAr_totEdep_B_4_w = (TH1D *)lAr_totEdep_B_4->Clone("lAr_totEdep_B_4_w");
+	 TH1D *lAr_totEdep_B_5_w = (TH1D *)lAr_totEdep_B_5->Clone("lAr_totEdep_B_5_w");
+	 TH1D *lAr_totEdep_B_6_w = (TH1D *)lAr_totEdep_B_6->Clone("lAr_totEdep_B_6_w");
 
 
 	//////////////////////
@@ -112,11 +137,25 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		int det_nhit = myDet->hitn->size();	
 		int gen_nhit = myGen->px->size();	
 
-		for (int ihit=0; ihit < gen_nhit; ihit++) {
-			double mom = sqrt(pow(myGen->px->at(ihit),2) +pow(myGen->py->at(ihit),2) + pow(myGen->pz->at(ihit),2) );	
-			Gen_mom->Fill(mom/1000);	 
+		double mom = sqrt(pow(myGen->px->at(0),2) +pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2) );	
+		Gen_mom->Fill(mom/1000);	 
+
+		// Get the weigth from the flux histograms
+		// -> Scan the bins from left to right and
+		// exit the loop as soon as the correct bin
+		// is found.
+		// MEMO: energy bins are in GeV, mom is in MeV
+		Double_t weight = 0;
+		for (int i=0; i<fluxBinNumber; i++) {
+			if ((mom/1000 > fluxBinLeftEdge[i]) && (mom/1000 < fluxBinLeftEdge[i+1])) {
+				cout << "mom "<<mom<<" -> bin found at "<< fluxBinLeftEdge[i] << " with content "<<fluxBinContent[i]<<endl;
+				weight = fluxBinContent[i] ;
+				break; 
+			}
 		}
-			
+
+
+
 		for (int ihit=0; ihit < det_nhit; ihit++) {
 			if (myDet->totEdep->at(ihit)>0){		
 				lAr_totEdep_B_1->Fill(myDet->dig_Edep->at(ihit)/1000);
@@ -125,6 +164,14 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 				lAr_totEdep_B_4->Fill(myDet->dig_Edep->at(ihit)/1000);
 				lAr_totEdep_B_5->Fill(myDet->dig_Edep->at(ihit)/1000);
 				lAr_totEdep_B_6->Fill(myDet->dig_Edep->at(ihit)/1000);
+
+
+				lAr_totEdep_B_1_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
+				lAr_totEdep_B_2_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
+				lAr_totEdep_B_3_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
+				lAr_totEdep_B_4_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
+				lAr_totEdep_B_5_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
+				lAr_totEdep_B_6_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
 
 				lAr_time->Fill(myDet->avg_t->at(ihit)/1000);
 				if (myDet->dig_Edep->at(ihit)*1000 >10 && myDet->dig_Edep->at(ihit)*1000<100){
@@ -166,6 +213,13 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
  	  	lAr_totEdep_B_4->Write(0,TObject::kOverwrite);
  	  	lAr_totEdep_B_5->Write(0,TObject::kOverwrite);
  	  	lAr_totEdep_B_6->Write(0,TObject::kOverwrite);
+
+ 	  	lAr_totEdep_B_1_w->Write(0,TObject::kOverwrite);
+ 	  	lAr_totEdep_B_2_w->Write(0,TObject::kOverwrite);
+ 	  	lAr_totEdep_B_3_w->Write(0,TObject::kOverwrite);
+ 	  	lAr_totEdep_B_4_w->Write(0,TObject::kOverwrite);
+ 	  	lAr_totEdep_B_5_w->Write(0,TObject::kOverwrite);
+ 	  	lAr_totEdep_B_6_w->Write(0,TObject::kOverwrite);
 
     	lAr_time->Write(0,TObject::kOverwrite);	
     	Gen_mom->Write(0,TObject::kOverwrite);
