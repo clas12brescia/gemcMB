@@ -24,6 +24,8 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
+bool NeutFlatDistr = true;
+
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
 	gemcOpt = opts;
@@ -387,6 +389,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
                     thisthe = pi * G4UniformRand()/ 2.0;
                     cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
                 }
+                //cout<<" theta = " <<thisthe <<" cosmic = " <<cosmic <<endl;
                 //cout<< thisMom<< " "<< cosmic <<" "<< cosmicProb <<endl;
                 if (Nextr > 999999) cout << " !!!! LOOPING IN N EXTRACTION !!! exceeded " << Nextr << " extractions !!!" << Nextr << endl;
                 thisPhi = -pi + 2 * pi * G4UniformRand();
@@ -1148,7 +1151,7 @@ void MPrimaryGeneratorAction::setBeam()
 				cmaxp = get_number(csettings[2], 0)*GeV;
 
 				// model is valid only starting at 1 GeV for now
-				if(cminp < 1) cminp = 1;
+				//if(cminp < 1) cminp = 1;
 
 				// select cosmic ray particle from data card
 				if(len>3){
@@ -1167,7 +1170,7 @@ void MPrimaryGeneratorAction::setBeam()
 				cmaxp = get_number(csettings[4], 0)*GeV;
 
 				// model is valid only starting at 1 GeV for now
-				if(cminp < 1) cminp = 1;
+				//if(cminp < 1) cminp = 1;
 
 				// select cosmic ray particle from data card
 				if(len>5){
@@ -1410,7 +1413,7 @@ double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
     //double f = I0*pow(cos(t), (double)3.5);
     //return f;
     //MB From L.Faure Thesis
-    // Total normalization (neutrons/cm2/s:
+    // Total normalization (neutrons/cm2/s):
     // 10-9 - 10-6:     2.0e-3
     // 10-6 - 2 MeV    30.0e-3
     // 2MeV - 1 GeV     4.6e-3
@@ -1419,17 +1422,20 @@ double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
     double A = 1.006 * pow(10, -6);
     double B = 1.011 * pow(10, -3);
     double C = 1.53023e-7;
-    if (En < 1e-6 && En > 1e-9) {
-        I0 = 2e3;
-    } else if (En < 2 && En > 1e-6) {
-        I0 = 2e-3 / En;
-    } else if (En < 1000 && En > 2) {
-        I0 = A * exp(2.1451 * log(En) - 0.35 * pow(log(En), 2)) + B * exp(-0.667 * log(En) - 0.4106 * pow(log(En), 2));
-    } else if (En < 10000 && En >= 1000) {
-        I0 = C * pow(En / 1000., (double) -2.95);
+    if  (NeutFlatDistr == false){ 
+	    if (En < 1e-6 && En > 1e-9) {
+	        I0 = 2e3;
+	    } else if (En < 2 && En > 1e-6) {
+	        I0 = 2e-3 / En;
+	    } else if (En < 1000 && En > 2) {
+	        I0 = A * exp(2.1451 * log(En) - 0.35 * pow(log(En), 2)) + B * exp(-0.667 * log(En) - 0.4106 * pow(log(En), 2));
+	    } else if (En < 10000 && En >= 1000) {
+	        I0 = C * pow(En / 1000., (double) -2.95);
+	    }
     }
-    //cout <<En<<" "<< I0<<endl;
+    else I0 = G4UniformRand();
     double f = I0 * pow(cos(t), (double) 3.5);
+    //cout <<" En = "<<En<<" I0 = "<< I0<<" f = "<< f<<endl;
     return f;
     
 }
