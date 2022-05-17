@@ -93,14 +93,16 @@ map<string, double> det_HitProcess :: integrateDgt(MHit* aHit, int hitn)
             {
                 for(unsigned int s=0; s<nsteps; s++) // ciclo sugli nstep di ogni hit che formano l'evento
                 {
-                        double birks_constant_lAr = 0.0089; //mm/Mev //V.I. Tretyak / Astroparticle Physics 33 (2010) 4053
+                       // double birks_constant_lAr = 0.0089; //mm/Mev //V.I. Tretyak / Astroparticle Physics 33 (2010) 4053
+                        double birks_constant_lAr = 0.0033; //mm/Mev //P. Agnes et al. (DarkSide), J. Instrum. 12, P10015 (2017)
                         double birks_constant_lAr_2ord = 0.0037; //mm/Mev //P. Agnes PHYSICAL REVIEW D 97, 112005 (2018)
                         double Edep_B_lAr = BirksAttenuation(Edep[s],Dx[s],charge[s],birks_constant_lAr);
-                        double Edep_B_lAr_2ord = BirksAttenuation3(Edep[s],Dx[s],charge[s],birks_constant_lAr_2ord);
-                        //cout<<"sono nel det_id!!!!!!!!!!!!!!!!!!"<<endl;
+                        double Edep_B_lAr_2ord = BirksAttenuation2(Edep[s],Dx[s],charge[s],birks_constant_lAr_2ord);
+                        
                         //cout<< "dx = "<<Dx[s]<<"   charge[s] = "<< charge[s]<<"   Edep[s] = "<<Edep[s]<<"  B1 = "<<Edep_B_lAr<<"  B2 = "<<Edep_B_lAr_2ord<<endl;
-                        etot=etot+Edep_B_lAr;
-                          
+                        //etot=etot+Edep_B_lAr;
+                        etot=etot+Edep_B_lAr_2ord;
+                                                  
                         // average hit position XYZ
                         X_hit_ave=X_hit_ave+Lpos[s].x();
                         Y_hit_ave=Y_hit_ave+Lpos[s].y();
@@ -206,21 +208,6 @@ double det_HitProcess::BirksAttenuation(double destep, double stepl, int charge,
 
 
 double det_HitProcess::BirksAttenuation2(double destep,double stepl,int charge,double birks)
-{
-	//Extension of Birk attenuation law proposed by Chou
-	// see G.V. O'Rielly et al. Nucl. Instr and Meth A368(1996)745
-	// 
-	//
-	double C=9.59*1E-4*mm*mm/MeV/MeV;	//C=9.59*1E-6 g^2cm^-4 MeV^-2 dall'articolo è cosi
-	double response = destep;		//kb=0,0129 g cm^-2 MeV^-1
-	if (birks*destep*stepl*charge != 0.)
-	{
-		response = destep/(1. + birks*destep/stepl + C*pow(destep/stepl,2.));
-	}
-	return response;
-}
-
-double det_HitProcess::BirksAttenuation3(double destep,double stepl,int charge,double birks)
 {
 	//Extension of Birk attenuation law proposed by Chou
 	// see G.V. O'Rielly et al. Nucl. Instr and Meth A368(1996)745
