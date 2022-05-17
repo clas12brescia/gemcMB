@@ -32,7 +32,6 @@ public:
 
     double BirksAttenuation(double,double,int,double);
     double BirksAttenuation2(double,double,int,double);
-    double BirksAttenuation3(double,double,int,double);
     double* IVresponse(        int, double, double, double, double sx, double sy, double sz);
     double* IVresponseProposal(int, double, double, double, double sx, double sy, double sz);
     double* OVresponse(int, double, double, double);
