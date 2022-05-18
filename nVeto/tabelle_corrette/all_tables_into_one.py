@@ -12,7 +12,7 @@ for file in sys.argv[1:]:
         for i,line in enumerate(f.readlines()):
             if "Bin width" in line:
                 bin_width = float(line.split()[2])
-            if i>6:
+            if i>5:
                 bin_center = float(line.split()[1])
                 bin_content = float(line.split()[2])
                 all_bin_dict[bin_center-bin_width/2] = bin_content 
