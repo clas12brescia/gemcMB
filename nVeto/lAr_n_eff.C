@@ -122,6 +122,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
   	Long64_t nbytes = 0, nb = 0;
   
   	int int_lAr_totEdep_B=0;
+  	
 	
   	cout<< "start of loop"<<endl;
 
@@ -145,43 +146,46 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		// exit the loop as soon as the correct bin
 		// is found.
 		// MEMO: energy bins are in GeV, mom is in MeV
+		
 		Double_t weight = 0;
 		for (int i=0; i<fluxBinNumber; i++) {
 			if ((mom/1000 > fluxBinLeftEdge[i]) && (mom/1000 < fluxBinLeftEdge[i+1])) {
-				cout << "mom "<<mom<<" -> bin found at "<< fluxBinLeftEdge[i] << " with content "<<fluxBinContent[i]<<endl;
+				//cout << "mom "<<mom<<" -> bin found at "<< fluxBinLeftEdge[i] << " with content "<<fluxBinContent[i]<<endl;
 				weight = fluxBinContent[i] ;
 				break; 
 			}
 		}
 
 
-
+		double E_dep_tot =0;
 		for (int ihit=0; ihit < det_nhit; ihit++) {
-			if (myDet->totEdep->at(ihit)>0){		
-				lAr_totEdep_B_1->Fill(myDet->dig_Edep->at(ihit)/1000);
-				lAr_totEdep_B_2->Fill(myDet->dig_Edep->at(ihit)/1000);
-				lAr_totEdep_B_3->Fill(myDet->dig_Edep->at(ihit)/1000);
-				lAr_totEdep_B_4->Fill(myDet->dig_Edep->at(ihit)/1000);
-				lAr_totEdep_B_5->Fill(myDet->dig_Edep->at(ihit)/1000);
-				lAr_totEdep_B_6->Fill(myDet->dig_Edep->at(ihit)/1000);
-
-
-				lAr_totEdep_B_1_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
-				lAr_totEdep_B_2_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
-				lAr_totEdep_B_3_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
-				lAr_totEdep_B_4_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
-				lAr_totEdep_B_5_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
-				lAr_totEdep_B_6_w->Fill(myDet->dig_Edep->at(ihit)/1000, weight);
-
+			//if (myDet->totEdep->at(ihit)>0){	
+				E_dep_tot = E_dep_tot + myDet->dig_Edep->at(ihit);
+				//cout<< " "<< myDet->dig_Edep->at(ihit)<<" "<< E_dep_tot<<" "<< det_nhit<<endl;
 				lAr_time->Fill(myDet->avg_t->at(ihit)/1000);
-				if (myDet->dig_Edep->at(ihit)*1000 >10 && myDet->dig_Edep->at(ihit)*1000<100){
-
-				 int_lAr_totEdep_B = int_lAr_totEdep_B +1;
-				 Gen_mom_lAr2->Fill(sqrt(pow(myGen->px->at(ihit),2) +pow(myGen->py->at(ihit),2) + pow(myGen->pz->at(ihit),2) )/1000);
-
-				}
-		    }	 
+								
+		   // }	 
 		}
+
+		if (E_dep_tot*1000 >10 && E_dep_tot*1000<100){
+			int_lAr_totEdep_B = int_lAr_totEdep_B + 1;
+			Gen_mom_lAr2->Fill(mom/1000);
+		}
+
+		lAr_totEdep_B_1->Fill(E_dep_tot/1000);
+		lAr_totEdep_B_2->Fill(E_dep_tot/1000);
+		lAr_totEdep_B_3->Fill(E_dep_tot/1000);
+		lAr_totEdep_B_4->Fill(E_dep_tot/1000);
+		lAr_totEdep_B_5->Fill(E_dep_tot/1000);
+		lAr_totEdep_B_6->Fill(E_dep_tot/1000);
+
+		lAr_totEdep_B_1_w->Fill(E_dep_tot, weight);
+		lAr_totEdep_B_2_w->Fill(E_dep_tot, weight);
+		lAr_totEdep_B_3_w->Fill(E_dep_tot, weight);
+		lAr_totEdep_B_4_w->Fill(E_dep_tot, weight);
+		lAr_totEdep_B_5_w->Fill(E_dep_tot, weight);
+		lAr_totEdep_B_6_w->Fill(E_dep_tot, weight);
+
 		
 
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
@@ -191,13 +195,33 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
       	std::cout << round((float) jentry / nentries * 100.)
 		<< " % " ;
       		std::cout.flush();
-    		}
-
+    	}
+	
 	}
 
-		cout<< "int_totEdep_B = "<<int_lAr_totEdep_B<<endl;
 
-        cout<< "end of loop  "<< endl;
+	Double_t int_1 = lAr_totEdep_B_1->Integral();
+	Double_t int_1_w = lAr_totEdep_B_1_w->Integral();
+	Double_t int_2 = lAr_totEdep_B_2->Integral();
+	Double_t int_2_w = lAr_totEdep_B_2_w->Integral();
+	Double_t int_3 = lAr_totEdep_B_3->Integral();
+	Double_t int_3_w = lAr_totEdep_B_3_w->Integral();
+	Double_t int_4 = lAr_totEdep_B_4->Integral();
+	Double_t int_4_w = lAr_totEdep_B_4_w->Integral();
+	Double_t int_5 = lAr_totEdep_B_5->Integral();
+	Double_t int_5_w = lAr_totEdep_B_5_w->Integral();
+	Double_t int_6 = lAr_totEdep_B_6->Integral();
+	Double_t int_6_w = lAr_totEdep_B_6_w->Integral();
+
+	cout<<"int tot= " << int_1 + int_2 + int_3+ int_4+ int_5+ int_6 <<endl; 
+	cout<< "int1=" << int_1<< endl;
+	cout<< "int2=" << int_2<< endl;
+	cout<< "int3=" << int_3<< endl;
+	cout<< "int4=" << int_4<< endl;
+	cout<< "int5=" << int_5<< endl;
+	cout<< "int6=" << int_6<< endl;
+	cout<< "int_totEdep_B = "<<int_lAr_totEdep_B<<endl;
+       cout<< "end of loop  "<< endl;
         
         ////////////////////////
         //WRITE ON OUTPUT FILE
@@ -207,11 +231,22 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
   	if(Debug) g = new TFile("Output/Debug.root","RECREATE");
  	else g = new TFile(outname.c_str(),"RECREATE");
 
- 	  	lAr_totEdep_B_1->Write(0,TObject::kOverwrite);
+ 		lAr_totEdep_B_1-> Scale(int_1_w/int_1);
+ 		lAr_totEdep_B_1->Write(0,TObject::kOverwrite);
+
+ 	  	lAr_totEdep_B_2->Scale(int_2_w/int_2);
  	  	lAr_totEdep_B_2->Write(0,TObject::kOverwrite);
+
+ 		lAr_totEdep_B_3->Scale(int_3_w/int_3);
  	  	lAr_totEdep_B_3->Write(0,TObject::kOverwrite);
+
+ 	  	lAr_totEdep_B_4->Scale(int_4_w/int_4);
  	  	lAr_totEdep_B_4->Write(0,TObject::kOverwrite);
+
+ 	  	lAr_totEdep_B_5->Scale(int_5_w/int_5);
  	  	lAr_totEdep_B_5->Write(0,TObject::kOverwrite);
+
+ 	  	lAr_totEdep_B_6->Scale(int_6_w/int_6);
  	  	lAr_totEdep_B_6->Write(0,TObject::kOverwrite);
 
  	  	lAr_totEdep_B_1_w->Write(0,TObject::kOverwrite);
