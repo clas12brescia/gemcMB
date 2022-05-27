@@ -70,6 +70,9 @@ sub make_main_volume
 my $shX=0.;
 my $shY=0.;
 my $shZ=0.;
+my $X = 0.;
+my $Y = 0.;
+my $Z = 0.;
 
 
 my $LAr_dim=35.6/2.;
@@ -87,7 +90,7 @@ sub make_nVeto
     {$detector{"mother"}      = "Det_house_inner";}
  
  ################################### Scintillator ##################################### 
-    
+   q{ 
  # down  
     $detector{"name"}        = "down";
     $detector{"description"} = "down side";
@@ -218,6 +221,7 @@ sub make_nVeto
     $detector{"identifiers"} = "sector manual 2 veto manual 100 channel manual 1";
      print_det(\%configuration, \%detector);
  
+ };
  ################################### Liquid argon ##################################### 
   
    
@@ -240,9 +244,9 @@ sub make_nVeto
     $detector{"rotation"}    = "90*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$LAr_Rmin*cm $LAr_Rmax*cm $LAr_d*cm $LAr_phi_min*rad $LAr_phi_max*rad";
     $detector{"material"}    = "LAr";			
-    $detector{"sensitivity"} = "veto";
-    $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 3 veto manual 200 channel manual 0";
+    $detector{"sensitivity"} = "det";
+    $detector{"hit_type"}    = "det";
+    $detector{"identifiers"} = "sector manual 3 det manual 200 channel manual 0";
      print_det(\%configuration, \%detector);
   
   q{  

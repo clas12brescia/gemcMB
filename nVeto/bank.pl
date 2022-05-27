@@ -60,7 +60,25 @@ sub define_bdx_bank
     insert_bank_variable(\%configuration, $bankname, "dig_Edep",    12, "Dd", "deposited energy");
 	insert_bank_variable(\%configuration, $bankname, "hitn",        99, "Di", "hit number");
 
-    $bankId   = 300;
+	$bankId   = 300;
+	$bankname = "det";
+	
+	insert_bank_variable(\%configuration, $bankname, "bankid", $bankId, "Di", "$bankname bank ID");
+	insert_bank_variable(\%configuration, $bankname, "sector",       1, "Di", "sector number");
+	insert_bank_variable(\%configuration, $bankname, "det",          2, "Di", "detector number");
+	insert_bank_variable(\%configuration, $bankname, "channel",      3, "Di", "channel number");
+	insert_bank_variable(\%configuration, $bankname, "adc1",         4, "Di", "adc1");
+	insert_bank_variable(\%configuration, $bankname, "adc2",         5, "Di", "adc2");
+    insert_bank_variable(\%configuration, $bankname, "adc3",         6, "Di", "adc3");
+    insert_bank_variable(\%configuration, $bankname, "adc4",         7, "Di", "adc4");
+	insert_bank_variable(\%configuration, $bankname, "tdc1",         8, "Di", "tdc1");
+	insert_bank_variable(\%configuration, $bankname, "tdc2",         9, "Di", "tdc2");
+    insert_bank_variable(\%configuration, $bankname, "tdc3",        10, "Di", "tdc3");
+    insert_bank_variable(\%configuration, $bankname, "tdc4",        11, "Di", "tdc4");
+    insert_bank_variable(\%configuration, $bankname, "dig_Edep",    12, "Dd", "deposited energy");
+	insert_bank_variable(\%configuration, $bankname, "hitn",        99, "Di", "hit number");
+
+    $bankId   = 400;
     $bankname = "crs";
     
     insert_bank_variable(\%configuration, $bankname, "bankid", $bankId, "Di", "$bankname bank ID");

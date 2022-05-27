@@ -40,12 +40,27 @@ sub define_cormo_hit
 	print_hit(\%configuration, \%hit);
 
     %hit = init_hit();
+    $hit{"name"}            = "det";
+    $hit{"description"}     = "liquid argon";
+    $hit{"identifiers"}     = "sector det channel";
+    $hit{"signalThreshold"} = "200.0*KeV";
+    $hit{"timeWindow"}      = "1000*ns";
+    $hit{"prodThreshold"}   = "0.01*um";	 			#se scendo al di sotto non lo considera
+    $hit{"maxStep"}         = "1*mm";
+    $hit{"delay"}           = "10*ns";
+    $hit{"riseTime"}        = "1*ns";
+    $hit{"fallTime"}        = "1*ns";
+    $hit{"mvToMeV"}         = 100;
+    $hit{"pedestal"}        = -20;
+    print_hit(\%configuration, \%hit);
+
+    %hit = init_hit();
     $hit{"name"}            = "crs";
     $hit{"description"}     = "BDX crystals";
     $hit{"identifiers"}     = "sector layer paddle";
     $hit{"signalThreshold"} = "200.0*KeV";
     $hit{"timeWindow"}      = "1000*ns";
-    $hit{"prodThreshold"}   = "100*um";
+    $hit{"prodThreshold"}   = "10*um";
     $hit{"maxStep"}         = "1*mm";
     $hit{"delay"}           = "10*ns";
     $hit{"riseTime"}        = "1*ns";

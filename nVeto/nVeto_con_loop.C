@@ -1,8 +1,6 @@
-//#define vetoClass_cxx
 #include "vetoClass.h"
-//#define generatedClass_cxx
+#include "detClass.h"
 #include "generatedClass.h"
-//#define fluxClass_cxx
 #include "fluxClass.h"
 #include <TH2.h>
 #include <TH3.h>
@@ -23,10 +21,12 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
 
 	// Get the tree(s)
 	TTree * veto = (TTree * ) f->Get("veto");
+	TTree * det = (TTree * ) f->Get("det");
 	TTree * generated = (TTree * ) f->Get("generated");
 	TTree * flux = (TTree * ) f->Get("flux");
 
 	// new objects 
+	detClass * myDet = new detClass(det);
 	vetoClass * myVe = new vetoClass(veto);
 	generatedClass * myGen= new generatedClass(generated);
 	fluxClass * myFl = new fluxClass(flux);
@@ -51,11 +51,11 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
 	TH1D *veto_Energy[6];
   		for(int jj=0;jj<6;jj++) {
    		sprintf(name,"veto_Energy_%d",jj);
-    	veto_Energy[jj] = new TH1D(name,name,1000,-0.5,999.5);
+    	veto_Energy[jj] = new TH1D(name,name,1000,-0.5,99.5);
     	veto_Energy[jj]->GetXaxis()->SetTitle("Energy [keV]");
 	  	veto_Energy[jj]->GetYaxis()->SetTitle("Counts");}
  	
-	TH1D *veto_Energy_tot = new TH1D("veto_Energy_tot","veto_Energy_tot",1000,-0.5,999.5);
+	TH1D *veto_Energy_tot = new TH1D("veto_Energy_tot","veto_Energy_tot",1000,-0.5,99.5);
 		veto_Energy_tot->GetXaxis()->SetTitle("Energy [keV]");
 	  	veto_Energy_tot->GetYaxis()->SetTitle("Counts");
 
@@ -124,7 +124,7 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
 	//////////////////////
 	// START OF THE LOOP
 	//////////////////////
-	
+
 	Long64_t nentries = veto->GetEntries();
 	if (Debug){
 		cout << "How many nentries?" <<endl;
@@ -135,7 +135,11 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
   	cout << "WORKING ON nentries =" << nentries << endl;
   	Long64_t nbytes = 0, nb = 0;
   
-  
+  	int int_lAr_totEdep_B=0;
+	int int_lAr_totEdep_g4=0;
+	int int2_lAr_totEdep_B=0;
+	int int2_lAr_totEdep_g4=0;
+
   	cout<< "start of loop"<<endl;
 
 	for (int jentry=0; jentry<nentries; jentry++) {
@@ -144,19 +148,17 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
 		veto->GetEntry(jentry);
 		generated->GetEntry(jentry);
 		flux->GetEntry(jentry);
-		
-		int nhit = myVe->hitn->size(); // Considero solo gli eventi con nhit >0 
+		det->GetEntry(jentry);
+
+
+		int veto_nhit = myVe->hitn->size(); // Considero solo gli eventi con nhit >0 
+		int det_nhit = myDet->hitn->size();
 		double veto_Energy=0;
 		double lAr_Energy=0;
+		
 
-		for (int ihit=0; ihit < nhit ; ihit++) {
-			//cout << "     on sector "<<myVe->sector->at(ihit)<<
-			// " channel "<<myVe->channel->at(ihit) << 
-			// " (ene "<< myVe->totEdep->at(ihit) <<
-			// ", adc "<< myVe->adc1->at(ihit)<<
-			// ", pid "<< myVe->pid->at(ihit)<<")" << endl;
+		for (int ihit=0; ihit < veto_nhit ; ihit++) {
 			int chan = 2*myVe->sector->at(ihit)+myVe->channel->at(ihit); // 0 down, 1 Up, 2 left, 3 right, 4 back, 5 front, 6 lAr
-			//cout<<"ihit "<<ihit<<" chan "<<chan<<endl;
 			veto_chan->Fill(chan);
 			if (myVe->totEdep->at(ihit)>0){		// considero solo gli eventi con energia depositata maggiore di zero
 				if (chan>=0 & chan<=5)	//veto
@@ -171,31 +173,40 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
 				    veto_Energy_time[chan]->Fill(myVe->totEdep->at(ihit)*1000,myVe->avg_t->at(ihit)/1000);
 			  	    
 				} 
-				else if (chan==6)  //lAr
-				{		 
-					lAr_Energy=lAr_Energy + myVe->totEdep->at(ihit)*1000;  
-					//lAr_Energy_tot->Fill(myVe->adc2->at(ihit));
-					lAr_totEdep_g4->Fill(myVe->totEdep->at(ihit)*1000);
-					lAr_totEdep_B->Fill(myVe->dig_Edep->at(ihit)*1000);
-					lAr_time->Fill(myVe->avg_t->at(ihit)/1000);
-					lAr_Energy_time->Fill(myVe->totEdep->at(ihit)*1000,myVe->avg_t->at(ihit)/1000);
-				}
-			}	 
+			}
+		}
+			
+		for (int ihit=0; ihit < det_nhit ; ihit++) {
+			//if (myDet->totEdep->at(ihit)>0){			
+					lAr_Energy=lAr_Energy + myDet->totEdep->at(ihit)*1000;  
+					//lAr_Energy_tot->Fill(myDet->adc2->at(ihit));
+					lAr_totEdep_g4->Fill(myDet->totEdep->at(ihit)*1000);
+					lAr_totEdep_B->Fill(myDet->dig_Edep->at(ihit)*1000);
+					lAr_time->Fill(myDet->avg_t->at(ihit)/1000);
+					lAr_Energy_time->Fill(myDet->totEdep->at(ihit)*1000,myDet->avg_t->at(ihit)/1000);
+
+					if (myDet->totEdep->at(ihit)*1000 >10) int_lAr_totEdep_g4 = int_lAr_totEdep_g4 +1;
+					if (myDet->dig_Edep->at(ihit)*1000 >10) int_lAr_totEdep_B = int_lAr_totEdep_B +1;
+					if (myDet->totEdep->at(ihit)*1000 >10 && myDet->totEdep->at(ihit)*1000<100) int2_lAr_totEdep_g4 = int2_lAr_totEdep_g4 +1;
+					if (myDet->dig_Edep->at(ihit)*1000 >10 && myDet->dig_Edep->at(ihit)*1000<100) int2_lAr_totEdep_B = int2_lAr_totEdep_B +1;
+			//}	 
 		}
 		
 		veto_lAr_Energy->Fill(veto_Energy,lAr_Energy);
 
-		//if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
-      		//std::cout << "                      \r" << jentry << " / " << nentries
-		//<< " ====> " << round((float) jentry / nentries * 100.)
-		//<< " % " ;
-      		//std::cout << round((float) jentry / nentries * 100.)
-		//<< " % " ;
-      		//std::cout.flush();
-    		//}
+		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
+      	std::cout << "                      \r" << jentry << " / " << nentries
+		<< " ====> " << round((float) jentry / nentries * 100.)
+		<< " % " ;
+      	std::cout << round((float) jentry / nentries * 100.)
+		<< " % " ;
+      		std::cout.flush();
+    		}
 	}
-	
-	
+
+		cout<< "int_totEdep_g4 = "<<int_lAr_totEdep_g4<<" , "<<int2_lAr_totEdep_g4<<endl;
+		cout<< "int_totEdep_B = "<<int_lAr_totEdep_B<<" , "<<int2_lAr_totEdep_B<<endl;
+
         cout<< "end of loop  "<< endl;
         
         ////////////////////////
@@ -212,22 +223,29 @@ void nVeto_con_loop(string inputname="Sci1cm_p33,6MeV"){
  	veto_chan->Write(0,TObject::kOverwrite);
  	//veto_Energy_tot->Write(0,TObject::kOverwrite);
     	veto_totEdep_tot->Write(0,TObject::kOverwrite);
-    //	lAr_Energy_tot->Write(0,TObject::kOverwrite);
-    	lAr_totEdep_g4->Write(0,TObject::kOverwrite);
-    	lAr_totEdep_B->Write(0,TObject::kOverwrite);
-    	lAr_time->Write(0,TObject::kOverwrite);
     	veto_time_tot->Write(0,TObject::kOverwrite);
-    	veto_lAr_Energy->Write(0,TObject::kOverwrite);
-    	lAr_Energy_time->Write(0,TObject::kOverwrite);
 
-    	
-  	for (int k=0 ; k<6 ; k++){
+    for (int k=0 ; k<6 ; k++){
     	//veto_Energy[k]->Write(0,TObject::kOverwrite);
     	veto_totEdep[k]->Write(0,TObject::kOverwrite);
     	veto_time[k]->Write(0,TObject::kOverwrite);
     	veto_Energy_time[k]->Write(0,TObject::kOverwrite);
-   	}
-   	
+   	}	
+    g-> mkdir("det");
+ 	g-> cd("det");
+
+ 	//	lAr_Energy_tot->Write(0,TObject::kOverwrite);
+    	lAr_totEdep_g4->Write(0,TObject::kOverwrite);
+    	lAr_totEdep_B->Write(0,TObject::kOverwrite);
+    	lAr_time->Write(0,TObject::kOverwrite);	
+    	lAr_Energy_time->Write(0,TObject::kOverwrite);
+
+  	
+   	g-> mkdir("mix");
+ 	g-> cd("mix");
+
+ 	veto_lAr_Energy->Write(0,TObject::kOverwrite);
+    	
 	g->Close();
 }
 

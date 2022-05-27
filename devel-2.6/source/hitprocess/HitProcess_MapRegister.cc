@@ -26,6 +26,7 @@
 #include "bdx/cormo_hitprocess.h"               ///< Cormorino detector
 #include "bdx/veto_hitprocess.h"                ///< Cormorino vetos
 #include "bdx/crs_hitprocess.h"                ///< Cormorino vetos
+#include "bdx/det_hitprocess.h"                ///< Cormorino vetos
 
 // APrime
 #include "HPS/ECAL_hitprocess.h"       ///< Calorimeter Crystals
@@ -114,6 +115,7 @@ map<string, HitProcess_Factory> HitProcess_Map(string experiments)
 			hitMap["cormo"]      = &cormo_HitProcess::createHitClass;
 			hitMap["veto"]       = &veto_HitProcess::createHitClass;
 			hitMap["crs"]        = &crs_HitProcess::createHitClass;
+			hitMap["det"]        = &det_HitProcess::createHitClass;
 		}
 		else if( EXP == "injector" )
 		{

@@ -24,6 +24,8 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
+bool NeutFlatDistr = true;
+
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
 	gemcOpt = opts;
@@ -368,28 +370,48 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             if (cosmicNeutrons) {
                 // if (cminp<0.1 || cmaxp>10000) cout <<"WARNING !!!! COSMIC NEUTRONS E (MeV) is OUT OF THE VALID RANGE !!!"<<endl;
                 // Model by Ashton (1973)
-                
-                double cosmicProbMax = cosmicNeutBeam(0., cminp / GeV);
-                double cosmicProbMin = cosmicNeutBeam(pi / 2., cmaxp / GeV);
+                double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
+                KinEmin= sqrt(cminp / GeV * cminp / GeV + massNeut * massNeut) - massNeut;
+                KinEmax= sqrt(cmaxp / GeV * cmaxp / GeV + massNeut * massNeut) - massNeut;
+
+                double cosmicProbMax = cosmicNeutBeam(0., KinEmin);
+                double cosmicProbMin = cosmicNeutBeam(pi / 2., KinEmax);
                 double cosmicProb = G4UniformRand()* (cosmicProbMax - cosmicProbMin) + cosmicProbMin;
-                thisMom = cminp + (cmaxp - cminp) * G4UniformRand(); // momentum in MeV/c
+              //  double cosmicProbMax = cosmicNeutBeam(0., cminp / GeV);
+              //  double cosmicProbMin = cosmicNeutBeam(pi / 2., cmaxp / GeV);
+              //  double cosmicProb = G4UniformRand()* (cosmicProbMax - cosmicProbMin) + cosmicProbMin;
+                
+                thisKinE = (KinEmax - KinEmin) * G4UniformRand() + KinEmin;
+                thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
+
+              //  cout<< "  thisKinE = "<<thisKinE<<endl;
+    
+              // thisMom = cminp + (cmaxp - cminp) * G4UniformRand(); // momentum in MeV/c
                 thisthe = pi * G4UniformRand()/ 2.0; // [0,pi/2] zenith angle
-                //cout<< thisMom<< " before"<< " "<< cosmicProb <<endl;
-                double cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
-                //cout<< thisMom<< "after "<< " "<< cosmicProb <<endl;
-                //cosmic *= (cosmicProbMax-cosmicProbMin);
-                //cosmic += cosmicProbMin;
+                
+                double cosmic = cosmicNeutBeam(thisthe, thisKinE);
+              //double cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
+
                 int Nextr = 0;
                 while (cosmic < cosmicProb && Nextr < 1000000) {
-                    thisMom = 0;
+                	thisKinE = 0;
                     Nextr = Nextr + 1;
+                    thisKinE = (KinEmax - KinEmin) * G4UniformRand()+ KinEmin;
+                    thisthe = pi * G4UniformRand()/ 2.0;
+                    cosmic = cosmicNeutBeam(thisthe, thisKinE);
+                    
+                    thisMom = 0;
+                    thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
+                   /* Nextr = Nextr + 1;
                     thisMom = cminp + (cmaxp - cminp) * G4UniformRand();
                     thisthe = pi * G4UniformRand()/ 2.0;
                     cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
-                }
+                */}
+                //cout<<" theta = " <<thisthe <<" cosmic = " <<cosmic <<endl;
                 //cout<< thisMom<< " "<< cosmic <<" "<< cosmicProb <<endl;
                 if (Nextr > 999999) cout << " !!!! LOOPING IN N EXTRACTION !!! exceeded " << Nextr << " extractions !!!" << Nextr << endl;
                 thisPhi = -pi + 2 * pi * G4UniformRand();
+                thisMom = thisMom * GeV; 
                 
                 if (cosmicGeo == "sph" || cosmicGeo == "sphere") { //a.c.
                     G4ThreeVector directionCircle(cos(thisPhi) * sin(thisthe), -cos(thisthe), -sin(thisPhi) * sin(thisthe));
@@ -1148,7 +1170,7 @@ void MPrimaryGeneratorAction::setBeam()
 				cmaxp = get_number(csettings[2], 0)*GeV;
 
 				// model is valid only starting at 1 GeV for now
-				if(cminp < 1) cminp = 1;
+				//if(cminp < 1) cminp = 1;
 
 				// select cosmic ray particle from data card
 				if(len>3){
@@ -1167,7 +1189,7 @@ void MPrimaryGeneratorAction::setBeam()
 				cmaxp = get_number(csettings[4], 0)*GeV;
 
 				// model is valid only starting at 1 GeV for now
-				if(cminp < 1) cminp = 1;
+				//if(cminp < 1) cminp = 1;
 
 				// select cosmic ray particle from data card
 				if(len>5){
@@ -1399,18 +1421,21 @@ double MPrimaryGeneratorAction::cosmicMuBeam(double c, double e) {
     return 0.14 * pow((e * (1 + 3.64 / (e * pow(cst, 1.29)))), -2.7) * (1 / (1 + 1.1 * e * c / 115) + 0.054 / (1 + 1.1 * e * c / 850));
 }
 
-double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
+//double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
+double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double Ekin) {
     // cosmic neutrons spectrum as a function of kinetic energy (GeV) and
     // zenith angle
-    double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
-    double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.;
+   // double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
+   // double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.;
+	double En = Ekin*1000;
     double I0 = 0;
+   
     
     // double I0 = pow(En, (double)-2.95);
     //double f = I0*pow(cos(t), (double)3.5);
     //return f;
     //MB From L.Faure Thesis
-    // Total normalization (neutrons/cm2/s:
+    // Total normalization (neutrons/cm2/s):
     // 10-9 - 10-6:     2.0e-3
     // 10-6 - 2 MeV    30.0e-3
     // 2MeV - 1 GeV     4.6e-3
@@ -1419,17 +1444,22 @@ double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
     double A = 1.006 * pow(10, -6);
     double B = 1.011 * pow(10, -3);
     double C = 1.53023e-7;
-    if (En < 1e-6 && En > 1e-9) {
-        I0 = 2e3;
-    } else if (En < 2 && En > 1e-6) {
-        I0 = 2e-3 / En;
-    } else if (En < 1000 && En > 2) {
-        I0 = A * exp(2.1451 * log(En) - 0.35 * pow(log(En), 2)) + B * exp(-0.667 * log(En) - 0.4106 * pow(log(En), 2));
-    } else if (En < 10000 && En >= 1000) {
-        I0 = C * pow(En / 1000., (double) -2.95);
+    if  (NeutFlatDistr == false){ 
+	    if (En < 1e-6 && En > 1e-9) {
+	        I0 = 2e3;
+	    } else if (En < 2 && En > 1e-6) {
+	        I0 = 2e-3 / En;
+	    } else if (En < 1000 && En > 2) {
+	        I0 = A * exp(2.1451 * log(En) - 0.35 * pow(log(En), 2)) + B * exp(-0.667 * log(En) - 0.4106 * pow(log(En), 2));
+	    } else if (En < 10000 && En >= 1000) {
+	        I0 = C * pow(En / 1000., (double) -2.95);
+	    }
     }
-    //cout <<En<<" "<< I0<<endl;
+    else {
+    	I0 = 1;
+    }	
     double f = I0 * pow(cos(t), (double) 3.5);
+    //cout <<" En = "<<En<<" I0 = "<< I0<<" f = "<< f<<endl;
     return f;
     
 }

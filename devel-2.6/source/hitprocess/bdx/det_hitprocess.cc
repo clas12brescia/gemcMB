@@ -4,19 +4,19 @@
 #include "Randomize.hh"
 
 // gemc headers
-#include "veto_hitprocess.h"
+#include "det_hitprocess.h"
 
 // CLHEP units
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
-map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
+map<string, double> det_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 {
 	map<string, double> dgtz;
 	vector<identifier> identity = aHit->GetId();
 
 	int sector  = identity[0].id;
-	int veto_id = identity[1].id;
+	int det_id = identity[1].id;
 	int channel = identity[2].id;
 		
 	// Digitization Parameters
@@ -89,66 +89,59 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
         unsigned int nsteps = Edep.size();
 	
         for(unsigned int s=0; s<nsteps; s++) Etot = Etot + Edep[s];
-        //cout<<"id="<<veto_id<< ",  Etot="<< Etot<<endl;
-        if(Etot>0)
-        {
-            for(unsigned int s=0; s<nsteps; s++) // ciclo sugli nstep di ogni hit che formano l'evento
+            if(Etot>0)
             {
-                etot=etot+Edep[s];
-                                                                
-                // average hit position XYZ
-                X_hit_ave=X_hit_ave+Lpos[s].x();
-                Y_hit_ave=Y_hit_ave+Lpos[s].y();
-                Z_hit_ave=Z_hit_ave+Lpos[s].z();
-                Phi_hit=360-(360-(atan2(Lpos[s].x(),Lpos[s].y())/acos(-1.)*180.+180));
-                Phi_hit_ave=Phi_hit_ave+Phi_hit;
-                
-                // average hit time
-                T_hit_ave=T_hit_ave+times[s];
-                //cout<< " sono nel veto"<<endl;
-            } 
-            
-            X_hit_ave=X_hit_ave/nsteps;	// average hit position X
-            Y_hit_ave=Y_hit_ave/nsteps;	// average hit position Y
-            Z_hit_ave=Z_hit_ave/nsteps;	// average hit position Z
-            Phi_hit_ave=Phi_hit_ave/nsteps;	// average Phi
-            T_hit_ave=T_hit_ave/nsteps;	// average time 
-            dLeft  =sz-Z_hit_ave;		// distance beween interaction point and readout on the left side
-            dRight =sz+Z_hit_ave;		// distance beween interaction point and readout on the right side
-            timeL= dLeft/veff+T_hit_ave;	// time between interaction and readout on the left side
-            timeR= dRight/veff+T_hit_ave; 	// time between interaction and readout on the right side
-            
-            //cout << "AVE X = " << X_hit_ave << " ,Y " << Y_hit_ave << " ,Z " << Z_hit_ave << " ,dRight " << dRight << " ,dLeft " << dLeft << "  ,etot " <<etot  << "  ,Etot " <<etot << endl;
-      
-           
-////////////PHOTO ELECTRON CALCULATION////////////////////    
-//for nVeto: using directly the extracted pe from ps_sipm 
-//////////////////////////////////////////////////////////
+                for(unsigned int s=0; s<nsteps; s++) // ciclo sugli nstep di ogni hit che formano l'evento
+                {
+                       // double birks_constant_lAr = 0.0089; //mm/Mev //V.I. Tretyak / Astroparticle Physics 33 (2010) 4053
+                        double birks_constant_lAr = 0.0033; //mm/Mev //P. Agnes et al. (DarkSide), J. Instrum. 12, P10015 (2017)
+                        double birks_constant_lAr_2ord = 0.0037; //mm/Mev //P. Agnes PHYSICAL REVIEW D 97, 112005 (2018)
+                        double Edep_B_lAr = BirksAttenuation(Edep[s],Dx[s],charge[s],birks_constant_lAr);
+                        double Edep_B_lAr_2ord = BirksAttenuation2(Edep[s],Dx[s],charge[s],birks_constant_lAr_2ord);
 
-            double pe_ave=0.; 
-            double T_ave =0.;
-            att_length = 6000.; // 6m
-            
-            if( veto_id==100)
-            {
-                if (sector==0)	// Up and down - SiPm on the front
-                {
-                    pe_ave=67*exp(-dRight/att_length);
-                    T_ave =timeR;
+                        
+                       // cout<< "dx = "<<Dx[s]<<"   charge[s] = "<< charge[s]<<"   Edep[s] = "<<Edep[s]<<"  B1 = "<<Edep_B_lAr<<"  B2 = "<<Edep_B_lAr_2ord<<endl;
+                        //etot=etot+Edep_B_lAr;
+                        etot=etot+Edep_B_lAr_2ord;
+                                                  
+                        // average hit position XYZ
+                        X_hit_ave=X_hit_ave+Lpos[s].x();
+                        Y_hit_ave=Y_hit_ave+Lpos[s].y();
+                        Z_hit_ave=Z_hit_ave+Lpos[s].z();
+                        Phi_hit=360-(360-(atan2(Lpos[s].x(),Lpos[s].y())/acos(-1.)*180.+180));
+                        Phi_hit_ave=Phi_hit_ave+Phi_hit;
+                        
+                        // average hit time
+                        T_hit_ave=T_hit_ave+times[s];
                 } 
-                else if (sector==1)	// Right and Left- SiPm on the front
-                {
-                    pe_ave=67*exp(-dRight/att_length);
-                    T_ave =timeR;
-                }
-                else if (sector==2)	// Front and Back - SiPm on the front
-                {
-                    pe_ave=67*exp(dRight/att_length);
-                    T_ave =timeR;
-                }
                 
+                X_hit_ave=X_hit_ave/nsteps;	// average hit position X
+                Y_hit_ave=Y_hit_ave/nsteps;	// average hit position Y
+                Z_hit_ave=Z_hit_ave/nsteps;	// average hit position Z
+                Phi_hit_ave=Phi_hit_ave/nsteps;	// average Phi
+                T_hit_ave=T_hit_ave/nsteps;	// average time 
+                dLeft  =sz-Z_hit_ave;		// distance beween interaction point and readout on the left side
+                dRight =sz+Z_hit_ave;		// distance beween interaction point and readout on the right side
+                timeL= dLeft/veff+T_hit_ave;	// time between interaction and readout on the left side
+                timeR= dRight/veff+T_hit_ave; 	// time between interaction and readout on the right side
+                
+                //cout << "AVE X = " << X_hit_ave << " ,Y " << Y_hit_ave << " ,Z " << Z_hit_ave << " ,dRight " << dRight << " ,dLeft " << dLeft << "  ,etot " <<etot  << "  ,Etot " <<etot << endl;
+          
+               
+               
+    ////////////PHOTO ELECTRON CALCULATION////////////////////    
+    //for nVeto: using directly the extracted pe from ps_sipm 
+    //////////////////////////////////////////////////////////
+
+                double pe_ave=0.; 
+                double T_ave =0.;
+                att_length = 6000.; // 6m
+                           
+    	        pe_ave=67*exp(-dRight/att_length);
+                T_ave =timeR;
+              
                 dig_Edep=etot;  
-                ADC2=G4Poisson(pe_ave*etot/4.1) ; // Scaling for more/less energy release
+               // ADC2=G4Poisson(pe_ave*etot/4.1) ; // Scaling for more/less energy release)
                 
                 double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(pe_ave+1.));
                 sigmaTL=0.;
@@ -156,20 +149,18 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
                
                 //cout <<  " ++ HIT BEGIN ++++++" << endl ;
                 //cout <<  " chan: " << channel << endl ;
-                //cout <<  " ADC1: " << ADC1 << endl ;
+                //cout <<  " ADC2 con Briks per lAr: " << ADC2 <<  " ADC6:senza Briks per lAr solo per confronto " << ADC6 <<endl ;
                 //cout <<  " TDC1: " << TDC1 << endl ;
                 //cout <<  " Channel: " << chan << endl ;
                 //cout <<  " ++ HIT END ++++++" << endl ;
 
-            }
-            
-        }// closes (Etot > 0) loop
-        
+            }   // closes (Etot > 0) loop
+       
 	dgtz["hitn"]    = hitn;
 	dgtz["sector"]  = sector;
-	dgtz["veto"]    = veto_id;
+	dgtz["det"]    = det_id;
 	dgtz["channel"] = channel;
-    dgtz["dig_Edep"]= dig_Edep;
+    dgtz["dig_Edep"]  = dig_Edep;
 	dgtz["adc1"]    = ADC1;// deposited energy in MeV
 	dgtz["adc2"]    = ADC2;//output in pe
   	dgtz["adc3"]    = ADC3;// ignore
@@ -189,10 +180,11 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 
 
 	return dgtz;
+ 
 }
 
 
-vector<identifier>  veto_HitProcess :: processID(vector<identifier> id, G4Step *step, detector Detector)
+vector<identifier>  det_HitProcess :: processID(vector<identifier> id, G4Step *step, detector Detector)
 {
 	id[id.size()-1].id_sharing = 1;
 	return id;
@@ -200,7 +192,7 @@ vector<identifier>  veto_HitProcess :: processID(vector<identifier> id, G4Step *
 
 
 
-double veto_HitProcess::BirksAttenuation(double destep, double stepl, int charge, double birks)
+double det_HitProcess::BirksAttenuation(double destep, double stepl, int charge, double birks)
 {
 	//Example of Birk attenuation law in organic scintillators.
 	//adapted from Geant3 PHYS337. See MIN 80 (1970) 239-244
@@ -216,8 +208,23 @@ double veto_HitProcess::BirksAttenuation(double destep, double stepl, int charge
 }
 
 
+double det_HitProcess::BirksAttenuation2(double destep,double stepl,int charge,double birks)
+{
+	//Extension of Birk attenuation law proposed by Chou
+	// see G.V. O'Rielly et al. Nucl. Instr and Meth A368(1996)745
+	// 
+	//
+	double C=-1.02*1E-5*mm*mm/MeV/MeV;	//C=-2*1E-7 g^2cm^-4 MeV^-2 
+	double response = destep;		//kb=5.2*1E-4 g cm^-2 MeV^-1
+	if (birks*destep*stepl*charge != 0.)
+	{
+		response = destep/(1. + birks*destep/stepl + C*pow(destep/stepl,2.));
+	}
+	return response;
+	
+}
 
-map< string, vector <int> >  veto_HitProcess :: multiDgt(MHit* aHit, int hitn)
+map< string, vector <int> >  det_HitProcess :: multiDgt(MHit* aHit, int hitn)
 {
 	map< string, vector <int> > MH;
 	
@@ -225,8 +232,9 @@ map< string, vector <int> >  veto_HitProcess :: multiDgt(MHit* aHit, int hitn)
 }
 
 
+
 // - electronicNoise: returns a vector of hits generated / by electronics.
-vector<MHit*> veto_HitProcess :: electronicNoise()
+vector<MHit*> det_HitProcess :: electronicNoise()
 {
     vector<MHit*> noiseHits;
     
@@ -242,7 +250,7 @@ vector<MHit*> veto_HitProcess :: electronicNoise()
 }
 
 // - charge: returns charge/time digitized information / step
-map< int, vector <double> > veto_HitProcess :: chargeTime(MHit* aHit, int hitn)
+map< int, vector <double> > det_HitProcess :: chargeTime(MHit* aHit, int hitn)
 {
     map< int, vector <double> >  CT;
     
@@ -252,7 +260,7 @@ map< int, vector <double> > veto_HitProcess :: chargeTime(MHit* aHit, int hitn)
 // - voltage: returns a voltage value for a given time. The inputs are:
 // charge value (coming from chargeAtElectronics)
 // time (coming from timeAtElectronics)
-double veto_HitProcess :: voltage(double charge, double time, double forTime)
+double det_HitProcess :: voltage(double charge, double time, double forTime)
 {
     return 0.0;
 }
