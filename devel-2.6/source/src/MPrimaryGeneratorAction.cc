@@ -370,29 +370,48 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             if (cosmicNeutrons) {
                 // if (cminp<0.1 || cmaxp>10000) cout <<"WARNING !!!! COSMIC NEUTRONS E (MeV) is OUT OF THE VALID RANGE !!!"<<endl;
                 // Model by Ashton (1973)
-                
-                double cosmicProbMax = cosmicNeutBeam(0., cminp / GeV);
-                double cosmicProbMin = cosmicNeutBeam(pi / 2., cmaxp / GeV);
+                double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
+                KinEmin= sqrt(cminp / GeV * cminp / GeV + massNeut * massNeut) - massNeut;
+                KinEmax= sqrt(cmaxp / GeV * cmaxp / GeV + massNeut * massNeut) - massNeut;
+
+                double cosmicProbMax = cosmicNeutBeam(0., KinEmin);
+                double cosmicProbMin = cosmicNeutBeam(pi / 2., KinEmax);
                 double cosmicProb = G4UniformRand()* (cosmicProbMax - cosmicProbMin) + cosmicProbMin;
-                thisMom = cminp + (cmaxp - cminp) * G4UniformRand(); // momentum in MeV/c
+              //  double cosmicProbMax = cosmicNeutBeam(0., cminp / GeV);
+              //  double cosmicProbMin = cosmicNeutBeam(pi / 2., cmaxp / GeV);
+              //  double cosmicProb = G4UniformRand()* (cosmicProbMax - cosmicProbMin) + cosmicProbMin;
+                
+                thisKinE = (KinEmax - KinEmin) * G4UniformRand() + KinEmin;
+                thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
+
+              //  cout<< "  thisKinE = "<<thisKinE<<endl;
+    
+              // thisMom = cminp + (cmaxp - cminp) * G4UniformRand(); // momentum in MeV/c
                 thisthe = pi * G4UniformRand()/ 2.0; // [0,pi/2] zenith angle
-                //cout<< thisMom<< " before"<< " "<< cosmicProb <<endl;
-                double cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
-                //cout<< thisMom<< "after "<< " "<< cosmicProb <<endl;
-                //cosmic *= (cosmicProbMax-cosmicProbMin);
-                //cosmic += cosmicProbMin;
+                
+                double cosmic = cosmicNeutBeam(thisthe, thisKinE);
+              //double cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
+
                 int Nextr = 0;
                 while (cosmic < cosmicProb && Nextr < 1000000) {
-                    thisMom = 0;
+                	thisKinE = 0;
                     Nextr = Nextr + 1;
+                    thisKinE = (KinEmax - KinEmin) * G4UniformRand()+ KinEmin;
+                    thisthe = pi * G4UniformRand()/ 2.0;
+                    cosmic = cosmicNeutBeam(thisthe, thisKinE);
+                    
+                    thisMom = 0;
+                    thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
+                   /* Nextr = Nextr + 1;
                     thisMom = cminp + (cmaxp - cminp) * G4UniformRand();
                     thisthe = pi * G4UniformRand()/ 2.0;
                     cosmic = cosmicNeutBeam(thisthe, thisMom / GeV);
-                }
+                */}
                 //cout<<" theta = " <<thisthe <<" cosmic = " <<cosmic <<endl;
                 //cout<< thisMom<< " "<< cosmic <<" "<< cosmicProb <<endl;
                 if (Nextr > 999999) cout << " !!!! LOOPING IN N EXTRACTION !!! exceeded " << Nextr << " extractions !!!" << Nextr << endl;
                 thisPhi = -pi + 2 * pi * G4UniformRand();
+                thisMom = thisMom * GeV; 
                 
                 if (cosmicGeo == "sph" || cosmicGeo == "sphere") { //a.c.
                     G4ThreeVector directionCircle(cos(thisPhi) * sin(thisthe), -cos(thisthe), -sin(thisPhi) * sin(thisthe));
@@ -1402,12 +1421,15 @@ double MPrimaryGeneratorAction::cosmicMuBeam(double c, double e) {
     return 0.14 * pow((e * (1 + 3.64 / (e * pow(cst, 1.29)))), -2.7) * (1 / (1 + 1.1 * e * c / 115) + 0.054 / (1 + 1.1 * e * c / 850));
 }
 
-double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
+//double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
+double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double Ekin) {
     // cosmic neutrons spectrum as a function of kinetic energy (GeV) and
     // zenith angle
-    double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
-    double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.;
+   // double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
+   // double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.;
+	double En = Ekin*1000;
     double I0 = 0;
+   
     
     // double I0 = pow(En, (double)-2.95);
     //double f = I0*pow(cos(t), (double)3.5);
@@ -1433,7 +1455,9 @@ double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double p) {
 	        I0 = C * pow(En / 1000., (double) -2.95);
 	    }
     }
-    else I0 = G4UniformRand();
+    else {
+    	I0 = 1;
+    }	
     double f = I0 * pow(cos(t), (double) 3.5);
     //cout <<" En = "<<En<<" I0 = "<< I0<<" f = "<< f<<endl;
     return f;
