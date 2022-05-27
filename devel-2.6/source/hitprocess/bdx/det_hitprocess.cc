@@ -98,8 +98,9 @@ map<string, double> det_HitProcess :: integrateDgt(MHit* aHit, int hitn)
                         double birks_constant_lAr_2ord = 0.0037; //mm/Mev //P. Agnes PHYSICAL REVIEW D 97, 112005 (2018)
                         double Edep_B_lAr = BirksAttenuation(Edep[s],Dx[s],charge[s],birks_constant_lAr);
                         double Edep_B_lAr_2ord = BirksAttenuation2(Edep[s],Dx[s],charge[s],birks_constant_lAr_2ord);
+
                         
-                        //cout<< "dx = "<<Dx[s]<<"   charge[s] = "<< charge[s]<<"   Edep[s] = "<<Edep[s]<<"  B1 = "<<Edep_B_lAr<<"  B2 = "<<Edep_B_lAr_2ord<<endl;
+                       // cout<< "dx = "<<Dx[s]<<"   charge[s] = "<< charge[s]<<"   Edep[s] = "<<Edep[s]<<"  B1 = "<<Edep_B_lAr<<"  B2 = "<<Edep_B_lAr_2ord<<endl;
                         //etot=etot+Edep_B_lAr;
                         etot=etot+Edep_B_lAr_2ord;
                                                   

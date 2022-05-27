@@ -62,68 +62,68 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	//lAr
 	
 	TH1D *Gen_mom = new TH1D("Gen_mom","Gen_mom",10000,0,11);
-		Gen_mom->GetXaxis()->SetTitle("Momentum [GeV]");
+		Gen_mom->GetXaxis()->SetTitle("Momentum [GeV/c^2]");
 	  	Gen_mom->GetYaxis()->SetTitle("Counts");
 
-    TH1D *Gen_mom_lAr2= new TH1D("Gen_mom_lAr2","Gen_mom_lAr2",10000,0,11);
-		Gen_mom_lAr2->GetXaxis()->SetTitle("Momentum [GeV]");
-	  	Gen_mom_lAr2->GetYaxis()->SetTitle("Counts");
+	TH1D *Gen_Ek= new TH1D("Gen_Ek","Gen_Ek",100000,0,1);
+		Gen_Ek->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek->GetYaxis()->SetTitle("Counts");
 
-	TH1D *lAr_time = new TH1D("lAr_time","lAr_time",10000,-0.5,999.5);
-		lAr_time->GetXaxis()->SetTitle("Time [ns]");
-	  	lAr_time->GetYaxis()->SetTitle("Counts");
+    TH1D *Gen_Ek_lAr2= new TH1D("Gen_Ek_lAr2","Gen_Ek_lAr2",100000,0,0.5);
+		Gen_Ek_lAr2->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_lAr2->GetYaxis()->SetTitle("Counts");
 
-	TH1D *lAr_totEdep_B_1 = new TH1D("lAr_totEdep_B_1","lAr_totEdep_B_1",100,0,0.00001);
-		lAr_totEdep_B_1->GetXaxis()->SetTitle("Energy [GeV]");
-	  	lAr_totEdep_B_1->GetYaxis()->SetTitle("Counts"); 	
+	TH1D *Gen_Ek_w= new TH1D("Gen_Ek_w","Gen_Ek_w",100000,0,0.5);
+		Gen_Ek_w->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_w->GetYaxis()->SetTitle("Counts");
+
+    TH1D *Gen_Ek_lAr2_w= new TH1D("Gen_Ek_lAr2_w","Gen_Ek_lAr2_w",100000,0,0.5);
+		Gen_Ek_lAr2_w->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_lAr2_w->GetYaxis()->SetTitle("Counts");
+
+	TH1D *lAr_totEdep_B_tot= new TH1D("lAr_totEdep_B_tot","lAr_totEdep_B_tot",429,fluxBinLeftEdge);
+		lAr_totEdep_B_tot->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	lAr_totEdep_B_tot->GetYaxis()->SetTitle("Counts");  
+
+	TH1D *lAr_totEdep_B_2_w = new TH1D("lAr_totEdep_B_2_w","lAr_totEdep_B_2_w",10,0.00001,0.0001);
+		lAr_totEdep_B_2_w->GetXaxis()->SetTitle("Energy [GeV]");
+	  	lAr_totEdep_B_2_w->GetYaxis()->SetTitle("Counts"); 	
 	
-	TH1D *lAr_totEdep_B_2 = new TH1D("lAr_totEdep_B_2","lAr_totEdep_B_2",10,0.00001,0.0001);
-		lAr_totEdep_B_2->GetXaxis()->SetTitle("Energy [GeV]");
-	  	lAr_totEdep_B_2->GetYaxis()->SetTitle("Counts"); 	
-	
-	TH1D *lAr_totEdep_B_3 = new TH1D("lAr_totEdep_B_3","lAr_totEdep_B_3",10,0.0001,0.01);
-		lAr_totEdep_B_3->GetXaxis()->SetTitle("Energy [GeV]");
-	  	lAr_totEdep_B_3->GetYaxis()->SetTitle("Counts"); 	
-	
-	TH1D *lAr_totEdep_B_4 = new TH1D("lAr_totEdep_B_4","lAr_totEdep_B_4",10,0.01,0.02);
-		lAr_totEdep_B_4->GetXaxis()->SetTitle("Energy [GeV]");
-	  	lAr_totEdep_B_4->GetYaxis()->SetTitle("Counts"); 	
 
-	TH1D *lAr_totEdep_B_5 = new TH1D("lAr_totEdep_B_5","lAr_totEdep_B_5",100,0.02,0.1);
-		lAr_totEdep_B_5->GetXaxis()->SetTitle("Energy [GeV]");
-	  	lAr_totEdep_B_5->GetYaxis()->SetTitle("Counts"); 	
+	TH1D *NFlux= new TH1D("NFlux","NFlux",429,fluxBinLeftEdge);
+		NFlux->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	NFlux->GetYaxis()->SetTitle("flux");  
 
-	TH1D *lAr_totEdep_B_6 = new TH1D("lAr_totEdep_B_6","lAr_totEdep_B_6",200,0.1,11);
-		lAr_totEdep_B_6->GetXaxis()->SetTitle("Energy [GeV]");
-	  	lAr_totEdep_B_6->GetYaxis()->SetTitle("Counts"); 	
+	// generate totEdep histogram clones to be filled with weights
+	// based on neutron flux 
 
-	 // generate totEdep histogram clones to be filled with weights
-	 // based on neutron flux 
-	 TH1D *lAr_totEdep_B_1_w = (TH1D *)lAr_totEdep_B_1->Clone("lAr_totEdep_B_1_w");
-	 TH1D *lAr_totEdep_B_2_w = (TH1D *)lAr_totEdep_B_2->Clone("lAr_totEdep_B_2_w");
-	 TH1D *lAr_totEdep_B_3_w = (TH1D *)lAr_totEdep_B_3->Clone("lAr_totEdep_B_3_w");
-	 TH1D *lAr_totEdep_B_4_w = (TH1D *)lAr_totEdep_B_4->Clone("lAr_totEdep_B_4_w");
-	 TH1D *lAr_totEdep_B_5_w = (TH1D *)lAr_totEdep_B_5->Clone("lAr_totEdep_B_5_w");
-	 TH1D *lAr_totEdep_B_6_w = (TH1D *)lAr_totEdep_B_6->Clone("lAr_totEdep_B_6_w");
+
+		TH1D *lAr_totEdep_B_tot_w = (TH1D *)lAr_totEdep_B_tot->Clone("lAr_totEdep_B_tot_w");	
+
 
 
 	//////////////////////
 	// START OF THE LOOP
 	//////////////////////
 
-	Long64_t nentries = veto->GetEntries();
+	Long64_t nentries = det->GetEntries();
 	if (Debug){
-		cout << "How many nentries?" <<endl;
-   		cin>>nentries;
-    		cout << "Working in debug mode: " <<nentries<< endl;
-
+		nentries=1000;
+		//cout << "How many nentries?" <<endl;
+   		//cin>>nentries;
+    	cout << "Working in debug mode: " <<nentries<< endl;
   	}
+
   	cout << "WORKING ON nentries =" << nentries << endl;
   	Long64_t nbytes = 0, nb = 0;
   
   	int int_lAr_totEdep_B=0;
+  	double n_mass = 939.565378;
   	
-	
+  	for (int i=0; i<fluxBinNumber-1; i++) {
+		NFlux->Fill(fluxBinLeftEdge[i],fluxBinContent[i]);
+	}
+
   	cout<< "start of loop"<<endl;
 
 	for (int jentry=0; jentry<nentries; jentry++) {
@@ -136,10 +136,14 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 
 
 		int det_nhit = myDet->hitn->size();	
-		int gen_nhit = myGen->px->size();	
-
+		
 		double mom = sqrt(pow(myGen->px->at(0),2) +pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2) );	
-		Gen_mom->Fill(mom/1000);	 
+		//cout<< "mom "<<mom<<endl;
+
+		double Ek=sqrt(pow(mom,2) + pow(n_mass,2)) - n_mass; 
+
+		Gen_mom->Fill(mom/1000);
+		Gen_Ek->Fill(Ek/1000);
 
 		// Get the weigth from the flux histograms
 		// -> Scan the bins from left to right and
@@ -149,44 +153,31 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		
 		Double_t weight = 0;
 		for (int i=0; i<fluxBinNumber; i++) {
-			if ((mom/1000 > fluxBinLeftEdge[i]) && (mom/1000 < fluxBinLeftEdge[i+1])) {
+			if ((Ek/1000 > fluxBinLeftEdge[i]) && (Ek/1000 < fluxBinLeftEdge[i+1])) {
 				//cout << "mom "<<mom<<" -> bin found at "<< fluxBinLeftEdge[i] << " with content "<<fluxBinContent[i]<<endl;
 				weight = fluxBinContent[i] ;
 				break; 
 			}
+			
 		}
 
 
 		double E_dep_tot =0;
 		for (int ihit=0; ihit < det_nhit; ihit++) {
-			//if (myDet->totEdep->at(ihit)>0){	
-				E_dep_tot = E_dep_tot + myDet->dig_Edep->at(ihit);
-				//cout<< " "<< myDet->dig_Edep->at(ihit)<<" "<< E_dep_tot<<" "<< det_nhit<<endl;
-				lAr_time->Fill(myDet->avg_t->at(ihit)/1000);
-								
-		   // }	 
+			E_dep_tot = E_dep_tot + myDet->dig_Edep->at(ihit);
+			//cout<< " "<< myDet->dig_Edep->at(ihit)<<" "<< E_dep_tot<<" "<< det_nhit<<endl;	 
 		}
 
 		if (E_dep_tot*1000 >10 && E_dep_tot*1000<100){
-			int_lAr_totEdep_B = int_lAr_totEdep_B + 1;
-			Gen_mom_lAr2->Fill(mom/1000);
+			Gen_Ek_lAr2->Fill(Ek/1000);
+			Gen_Ek_lAr2_w->Fill(Ek/1000,weight);
 		}
 
-		lAr_totEdep_B_1->Fill(E_dep_tot/1000);
-		lAr_totEdep_B_2->Fill(E_dep_tot/1000);
-		lAr_totEdep_B_3->Fill(E_dep_tot/1000);
-		lAr_totEdep_B_4->Fill(E_dep_tot/1000);
-		lAr_totEdep_B_5->Fill(E_dep_tot/1000);
-		lAr_totEdep_B_6->Fill(E_dep_tot/1000);
-
-		lAr_totEdep_B_1_w->Fill(E_dep_tot, weight);
-		lAr_totEdep_B_2_w->Fill(E_dep_tot, weight);
-		lAr_totEdep_B_3_w->Fill(E_dep_tot, weight);
-		lAr_totEdep_B_4_w->Fill(E_dep_tot, weight);
-		lAr_totEdep_B_5_w->Fill(E_dep_tot, weight);
-		lAr_totEdep_B_6_w->Fill(E_dep_tot, weight);
-
-		
+		Gen_Ek_w->Fill(Ek/1000,weight);
+		lAr_totEdep_B_tot->Fill(E_dep_tot/1000);
+		lAr_totEdep_B_tot_w->Fill(E_dep_tot/1000, weight);
+		lAr_totEdep_B_2_w->Fill(E_dep_tot/1000, weight);
+				
 
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
       	std::cout << "                      \r" << jentry << " / " << nentries
@@ -196,69 +187,44 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		<< " % " ;
       		std::cout.flush();
     	}
-	
+		
+
 	}
 
+	
 
-	Double_t int_1 = lAr_totEdep_B_1->Integral();
-	Double_t int_1_w = lAr_totEdep_B_1_w->Integral();
-	Double_t int_2 = lAr_totEdep_B_2->Integral();
+	Double_t int_tot = lAr_totEdep_B_tot->Integral();
+	Double_t int_tot_w = lAr_totEdep_B_tot_w->Integral();
 	Double_t int_2_w = lAr_totEdep_B_2_w->Integral();
-	Double_t int_3 = lAr_totEdep_B_3->Integral();
-	Double_t int_3_w = lAr_totEdep_B_3_w->Integral();
-	Double_t int_4 = lAr_totEdep_B_4->Integral();
-	Double_t int_4_w = lAr_totEdep_B_4_w->Integral();
-	Double_t int_5 = lAr_totEdep_B_5->Integral();
-	Double_t int_5_w = lAr_totEdep_B_5_w->Integral();
-	Double_t int_6 = lAr_totEdep_B_6->Integral();
-	Double_t int_6_w = lAr_totEdep_B_6_w->Integral();
+	
+	cout<<"int tot = " << int_tot<<endl; 
+	cout<<"int tot w= " << int_tot_w <<endl;
+	cout<< "int_2=" << int_2_w<< endl;
+	
 
-	cout<<"int tot= " << int_1 + int_2 + int_3+ int_4+ int_5+ int_6 <<endl; 
-	cout<< "int1=" << int_1<< endl;
-	cout<< "int2=" << int_2<< endl;
-	cout<< "int3=" << int_3<< endl;
-	cout<< "int4=" << int_4<< endl;
-	cout<< "int5=" << int_5<< endl;
-	cout<< "int6=" << int_6<< endl;
-	cout<< "int_totEdep_B = "<<int_lAr_totEdep_B<<endl;
-       cout<< "end of loop  "<< endl;
+    cout<< "end of loop  "<< endl;
         
         ////////////////////////
         //WRITE ON OUTPUT FILE
         ////////////////////////
         
-        TFile *g;
+    TFile *g;
   	if(Debug) g = new TFile("Output/Debug.root","RECREATE");
  	else g = new TFile(outname.c_str(),"RECREATE");
 
- 		lAr_totEdep_B_1-> Scale(int_1_w/int_1);
- 		lAr_totEdep_B_1->Write(0,TObject::kOverwrite);
+ 	lAr_totEdep_B_tot->Write(0,TObject::kOverwrite);
+ 	lAr_totEdep_B_tot_w->Write(0,TObject::kOverwrite);
+ 	lAr_totEdep_B_2_w->Write(0,TObject::kOverwrite);
 
- 	  	lAr_totEdep_B_2->Scale(int_2_w/int_2);
- 	  	lAr_totEdep_B_2->Write(0,TObject::kOverwrite);
+	Gen_mom->Write(0,TObject::kOverwrite);
+	Gen_Ek->Write(0,TObject::kOverwrite);
+	Gen_Ek_w->Write(0,TObject::kOverwrite);
+    Gen_Ek_lAr2->Write(0,TObject::kOverwrite);
+    Gen_Ek_lAr2_w->Write(0,TObject::kOverwrite);
 
- 		lAr_totEdep_B_3->Scale(int_3_w/int_3);
- 	  	lAr_totEdep_B_3->Write(0,TObject::kOverwrite);
+    NFlux->Write(0,TObject::kOverwrite);
+    
 
- 	  	lAr_totEdep_B_4->Scale(int_4_w/int_4);
- 	  	lAr_totEdep_B_4->Write(0,TObject::kOverwrite);
-
- 	  	lAr_totEdep_B_5->Scale(int_5_w/int_5);
- 	  	lAr_totEdep_B_5->Write(0,TObject::kOverwrite);
-
- 	  	lAr_totEdep_B_6->Scale(int_6_w/int_6);
- 	  	lAr_totEdep_B_6->Write(0,TObject::kOverwrite);
-
- 	  	lAr_totEdep_B_1_w->Write(0,TObject::kOverwrite);
- 	  	lAr_totEdep_B_2_w->Write(0,TObject::kOverwrite);
- 	  	lAr_totEdep_B_3_w->Write(0,TObject::kOverwrite);
- 	  	lAr_totEdep_B_4_w->Write(0,TObject::kOverwrite);
- 	  	lAr_totEdep_B_5_w->Write(0,TObject::kOverwrite);
- 	  	lAr_totEdep_B_6_w->Write(0,TObject::kOverwrite);
-
-    	lAr_time->Write(0,TObject::kOverwrite);	
-    	Gen_mom->Write(0,TObject::kOverwrite);
-    	Gen_mom_lAr2->Write(0,TObject::kOverwrite);
 
  	g->Close();
 }
