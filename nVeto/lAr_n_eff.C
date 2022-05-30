@@ -61,46 +61,52 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	
 	//lAr
 	
-	TH1D *Gen_mom = new TH1D("Gen_mom","Gen_mom",10000,0,11);
+	TH1D *Gen_mom_binT = new TH1D("Gen_mom_binT","Gen_mom_binT",429,fluxBinLeftEdge);
+		Gen_mom_binT->GetXaxis()->SetTitle("Momentum [GeV/c^2]");
+	  	Gen_mom_binT->GetYaxis()->SetTitle("Counts");
+
+	TH1D *Gen_Ek_binT= new TH1D("Gen_Ek_binT","Gen_Ek_binT",429,fluxBinLeftEdge);
+		Gen_Ek_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_binT->GetYaxis()->SetTitle("Counts");
+
+	TH1D *Gen_mom = new TH1D("Gen_mom","Gen_mom",10000,0,1);
 		Gen_mom->GetXaxis()->SetTitle("Momentum [GeV/c^2]");
 	  	Gen_mom->GetYaxis()->SetTitle("Counts");
 
-	TH1D *Gen_Ek= new TH1D("Gen_Ek","Gen_Ek",100000,0,1);
+	TH1D *Gen_Ek= new TH1D("Gen_Ek","Gen_Ek",10000,0,0.5);
 		Gen_Ek->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek->GetYaxis()->SetTitle("Counts");
 
-    TH1D *Gen_Ek_lAr2= new TH1D("Gen_Ek_lAr2","Gen_Ek_lAr2",100000,0,0.5);
+
+    TH1D *Gen_Ek_lAr2= new TH1D("Gen_Ek_lAr2","Gen_Ek_lAr2",10000,0,0.5);
 		Gen_Ek_lAr2->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek_lAr2->GetYaxis()->SetTitle("Counts");
 
-	TH1D *Gen_Ek_w= new TH1D("Gen_Ek_w","Gen_Ek_w",100000,0,0.5);
+	TH1D *Gen_Ek_w= new TH1D("Gen_Ek_w","Gen_Ek_w",10000,0,0.5);
 		Gen_Ek_w->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek_w->GetYaxis()->SetTitle("Counts");
 
-    TH1D *Gen_Ek_lAr2_w= new TH1D("Gen_Ek_lAr2_w","Gen_Ek_lAr2_w",100000,0,0.5);
+    TH1D *Gen_Ek_lAr2_w= new TH1D("Gen_Ek_lAr2_w","Gen_Ek_lAr2_w",10000,0,0.5);
 		Gen_Ek_lAr2_w->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek_lAr2_w->GetYaxis()->SetTitle("Counts");
 
-	TH1D *lAr_totEdep_B_tot= new TH1D("lAr_totEdep_B_tot","lAr_totEdep_B_tot",429,fluxBinLeftEdge);
-		lAr_totEdep_B_tot->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
-	  	lAr_totEdep_B_tot->GetYaxis()->SetTitle("Counts");  
+	TH1D *Gen_Ek_lAr2_binT= new TH1D("Gen_Ek_lAr2_binT","Gen_Ek_lAr2_binT",429,fluxBinLeftEdge);
+		Gen_Ek_lAr2_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_lAr2_binT->GetYaxis()->SetTitle("Counts");
 
-	TH1D *lAr_totEdep_B_2_w = new TH1D("lAr_totEdep_B_2_w","lAr_totEdep_B_2_w",10,0.00001,0.0001);
-		lAr_totEdep_B_2_w->GetXaxis()->SetTitle("Energy [GeV]");
-	  	lAr_totEdep_B_2_w->GetYaxis()->SetTitle("Counts"); 	
-	
+	TH1D *Gen_Ek_w_binT= new TH1D("Gen_Ek_w_binT","Gen_Ek_w_binT",429,fluxBinLeftEdge);
+		Gen_Ek_w_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_w_binT->GetYaxis()->SetTitle("Counts");
+
+    TH1D *Gen_Ek_lAr2_w_binT= new TH1D("Gen_Ek_lAr2_w_binT","Gen_Ek_lAr2_w_binT",429,fluxBinLeftEdge);
+		Gen_Ek_lAr2_w_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_lAr2_w_binT->GetYaxis()->SetTitle("Counts");
 
 	TH1D *NFlux= new TH1D("NFlux","NFlux",429,fluxBinLeftEdge);
 		NFlux->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	NFlux->GetYaxis()->SetTitle("flux");  
 
-	// generate totEdep histogram clones to be filled with weights
-	// based on neutron flux 
-
-
-		TH1D *lAr_totEdep_B_tot_w = (TH1D *)lAr_totEdep_B_tot->Clone("lAr_totEdep_B_tot_w");	
-
-
+		
 
 	//////////////////////
 	// START OF THE LOOP
@@ -142,8 +148,10 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 
 		double Ek=sqrt(pow(mom,2) + pow(n_mass,2)) - n_mass; 
 
-		Gen_mom->Fill(mom/1000);
+		Gen_mom->Fill(mom/1000); // in GeV
 		Gen_Ek->Fill(Ek/1000);
+		Gen_mom_binT->Fill(mom/1000);
+		Gen_Ek_binT->Fill(Ek/1000);
 
 		// Get the weigth from the flux histograms
 		// -> Scan the bins from left to right and
@@ -168,16 +176,16 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 			//cout<< " "<< myDet->dig_Edep->at(ihit)<<" "<< E_dep_tot<<" "<< det_nhit<<endl;	 
 		}
 
-		if (E_dep_tot*1000 >10 && E_dep_tot*1000<100){
+		if (E_dep_tot*1000 >10 && E_dep_tot*1000<100){ // compreso tra 10 e 100 keV
 			Gen_Ek_lAr2->Fill(Ek/1000);
 			Gen_Ek_lAr2_w->Fill(Ek/1000,weight);
+			Gen_Ek_lAr2_binT->Fill(Ek/1000);
+			Gen_Ek_lAr2_w_binT->Fill(Ek/1000,weight);
 		}
 
 		Gen_Ek_w->Fill(Ek/1000,weight);
-		lAr_totEdep_B_tot->Fill(E_dep_tot/1000);
-		lAr_totEdep_B_tot_w->Fill(E_dep_tot/1000, weight);
-		lAr_totEdep_B_2_w->Fill(E_dep_tot/1000, weight);
-				
+		Gen_Ek_w_binT->Fill(Ek/1000,weight);
+						
 
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
       	std::cout << "                      \r" << jentry << " / " << nentries
@@ -191,16 +199,10 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 
 	}
 
-	
-
-	Double_t int_tot = lAr_totEdep_B_tot->Integral();
-	Double_t int_tot_w = lAr_totEdep_B_tot_w->Integral();
-	Double_t int_2_w = lAr_totEdep_B_2_w->Integral();
-	
-	cout<<"int tot = " << int_tot<<endl; 
-	cout<<"int tot w= " << int_tot_w <<endl;
-	cout<< "int_2=" << int_2_w<< endl;
-	
+	cout<< "Gen_Ek "<<Gen_Ek->Integral()<<endl;
+	cout<< "Gen_Ek_lAr2 "<< Gen_Ek_lAr2->Integral()<<endl;
+	cout<< "Gen_Ek_w "<< Gen_Ek_w->Integral()<<endl;	
+	cout<< "Gen_Ek_lAr2_w "<< Gen_Ek_lAr2_w->Integral()<<endl;
 
     cout<< "end of loop  "<< endl;
         
@@ -212,19 +214,19 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
   	if(Debug) g = new TFile("Output/Debug.root","RECREATE");
  	else g = new TFile(outname.c_str(),"RECREATE");
 
- 	lAr_totEdep_B_tot->Write(0,TObject::kOverwrite);
- 	lAr_totEdep_B_tot_w->Write(0,TObject::kOverwrite);
- 	lAr_totEdep_B_2_w->Write(0,TObject::kOverwrite);
-
+ 	
 	Gen_mom->Write(0,TObject::kOverwrite);
 	Gen_Ek->Write(0,TObject::kOverwrite);
+	Gen_mom_binT->Write(0,TObject::kOverwrite);
+	Gen_Ek_binT->Write(0,TObject::kOverwrite);
 	Gen_Ek_w->Write(0,TObject::kOverwrite);
     Gen_Ek_lAr2->Write(0,TObject::kOverwrite);
     Gen_Ek_lAr2_w->Write(0,TObject::kOverwrite);
-
+    Gen_Ek_w_binT->Write(0,TObject::kOverwrite);
+    Gen_Ek_lAr2_binT->Write(0,TObject::kOverwrite);
+    Gen_Ek_lAr2_w_binT->Write(0,TObject::kOverwrite);
     NFlux->Write(0,TObject::kOverwrite);
     
-
 
  	g->Close();
 }
