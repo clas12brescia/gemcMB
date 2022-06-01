@@ -2,12 +2,12 @@
 
 Clone the repository and download a copy of the ccdb sqlite file (for more info on local snapshots of the clas12 ccdb sqlite file, see the dedicated Jlab [wiki page](https://clasweb.jlab.org/wiki/index.php/CLAS12_Constants_Database):
 ```bash
-git clone git@github.com:clas12brescia/gemcMB.git
+git clone https://github.com/clas12brescia/gemcMB.git
 wget https://fisbs.unibs.it/GEMC/clas12.sqlite -O gemcMB/clasdb/clas12.sqlite
 ```
 Pull the docker image
 ```bash
-docker pull maskass/gemcdimarco
+docker pull maskass/gemcdimarco:v2
 ```
 Run the container mounting the repo as shared volume between the host and the container (replace /YOUR/ABSOLUTE/PATH with your absolute path to the repo folder):
 ```bash
@@ -15,7 +15,7 @@ docker run -it --rm \
 -e CCDB_CONNECTION="sqlite:////GEMC/clasdb/clas12.sqlite" \
 -v /YOUR/ABSOLUTE/PATH/gemcMB:/GEMC \
 --workdir /GEMC \
---rm maskass/gemcdimarco bash
+--rm maskass/gemcdimarco:v2 bash
 ```
 Once in the container, compile the source code (~ few minutes):
 ```
