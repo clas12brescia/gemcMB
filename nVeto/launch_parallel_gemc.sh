@@ -26,12 +26,15 @@ done
 for i in $(seq 1 $n); do
 	../devel-2.6/source/gemc bdx_CT_$i.gcard -USE_GUI=0 -N=$Nevents & 
 done
+
 wait 
 
-# ... once finished, convert evio files to root in parallel...
+# ... once finished, convert evio files to root in series
+# (we noticed that evio2root in parallel creates partial root files)
 for i in $(seq 1 $n); do
-	evio2root -B=bdx -INPUTF=out$i.evio &
+	evio2root -B=bdx -INPUTF=out$i.evio
 done
+
 wait 
 
 # Cleanup at the end
