@@ -38,8 +38,7 @@ sub make_main_volume
         my $par2 = 400.+$wallthk;
         my $par3 = 600.+$wallthk;
         $detector{"dimensions"}  = "$par1*cm $par2*cm $par3*cm";
-        $detector{"material"}    = "G4_AIR";
-       # $detector{"material"}    = "Gd";
+        $detector{"material"}    = "G4_Galactic";
         print_det(\%configuration, \%detector);
  
 
