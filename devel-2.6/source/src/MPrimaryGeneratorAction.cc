@@ -24,7 +24,7 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
-bool NeutFlatDistr = true;
+bool NeutFlatDistr = false;
 
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
