@@ -394,14 +394,16 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
                 int Nextr = 0;
                 while (cosmic < cosmicProb && Nextr < 1000000) {
-                	thisKinE = 0;
+                	thisMom = 0;
                     Nextr = Nextr + 1;
+
                     thisKinE = (KinEmax - KinEmin) * G4UniformRand()+ KinEmin;
-                    thisthe = pi * G4UniformRand()/ 2.0;
-                    cosmic = cosmicNeutBeam(thisthe, thisKinE);
-                    
-                    thisMom = 0;
                     thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
+                    
+                    thisthe = pi * G4UniformRand()/ 2.0;
+                    
+                    cosmic = cosmicNeutBeam(thisthe, thisKinE);
+                  
                    /* Nextr = Nextr + 1;
                     thisMom = cminp + (cmaxp - cminp) * G4UniformRand();
                     thisthe = pi * G4UniformRand()/ 2.0;
