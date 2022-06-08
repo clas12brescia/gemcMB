@@ -1,4 +1,4 @@
-void do_plots(string inputFile="../Output/Sort_E0-400MeV_EnflatDistr_10Mevents.root"){
+void do_plots(string inputFile="../Output/4.Efficiency/Sort_E0-400MeV_Edep10-100keV_10ME.root"){
 
 	TFile * f = new TFile(inputFile.c_str());
 

@@ -91,6 +91,10 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	  	NFlux->GetYaxis()->SetTitle("flux");  
 
 		
+    double Edep_min = 10;
+    double Edep_max = 100;
+   	int int_lAr_totEdep_B=0;
+  	double n_mass = 939.565378;
 
 	//////////////////////
 	// START OF THE LOOP
@@ -107,9 +111,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
   	cout << "WORKING ON nentries =" << nentries << endl;
   	Long64_t nbytes = 0, nb = 0;
   
-  	int int_lAr_totEdep_B=0;
-  	double n_mass = 939.565378;
-  	
+
   	for (int i=0; i<fluxBinNumber-1; i++) {
 		NFlux->Fill(fluxBinLeftEdge[i],fluxBinContent[i]);
 	}
@@ -160,7 +162,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 			//cout<< " "<< myDet->dig_Edep->at(ihit)<<" "<< E_dep_tot<<" "<< det_nhit<<endl;	 
 		}
 
-		if (E_dep_tot*1000 >10 && E_dep_tot*1000<100){ // compreso tra 10 e 100 keV
+		if (E_dep_tot*1000 >Edep_min && E_dep_tot*1000<Edep_max){ // compreso tra 10 e 100 keV
 			Gen_Ek_lAr2->Fill(Ek/1000);
 			Gen_Ek_lAr2_binT->Fill(Ek/1000);
 		}
