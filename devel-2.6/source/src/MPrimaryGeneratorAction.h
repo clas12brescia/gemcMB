@@ -132,6 +132,7 @@ private:
 
 	double cosmicMuBeam(double, double);
 	double cosmicNeutBeam(double, double);
+	double dumpNeutBeam(double);
     
     int Nsup;
     int Ntot;
