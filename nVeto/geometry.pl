@@ -384,7 +384,7 @@ sub make_flux_cosmic_sph
     my $cosmicradius=50.;
     
     my $X = $shX + 0. ;
-    my $Y = $shY  -10. ;
+    my $Y = $shY + 0. ;
     my $Z = $shZ +  0.;
     
     my $par1 = $cosmicradius;

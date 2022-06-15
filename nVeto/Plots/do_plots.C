@@ -1,4 +1,4 @@
-void do_plots(string inputFile="../Output/4.Efficiency/Sort_E0-400MeV_Edep10-100keV_10ME.root"){
+void do_plots(string inputFile="../Output/Sort_prova.root"){
 
 	TFile * f = new TFile(inputFile.c_str());
 
@@ -107,7 +107,7 @@ void do_plots(string inputFile="../Output/4.Efficiency/Sort_E0-400MeV_Edep10-100
 		Eff_w->SetTitle("Efficiency weighted for NFlux");
 		Eff_w->SetLineWidth(2);
 		Eff_w->SetLineColor(kBlue);
-		Eff_w->Draw("E1");
+		Eff_w->Draw("HIST,E1");
 
 		cout<<"Integral(0,99) = "<< Eff_w->Integral(0,99)<<endl;
 		cout<<"Integral(100,109) = "<< Eff_w->Integral(100,109)<<endl;

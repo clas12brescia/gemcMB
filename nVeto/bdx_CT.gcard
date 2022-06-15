@@ -32,9 +32,10 @@
 <option name="BEAM_V" value="(0.,1000., 0.)cm"/>
 
 
-<option name="COSMICRAYS"   value="default,0.,0.95,neutron,default"/>	<!--  momento In GeV-> da 50 keV a 1 MeV di energia -->
+<option name="COSMICRAYS"   value="default,0,0.95,neutron,default"/>	<!--  momento In GeV-> da 50 keV a 1 MeV di energia -->
 <!--<option name="COSMICRAYS"   value="default,10,100.,muon,default"/>-->
 
-<option name="COSMICAREA"   value="0*cm, -10.*cm, 0.*cm, .50*m,sph"/>
+<option name="COSMICAREA"   value="0*cm, 0.*cm, 0.*cm, .50*m,sph"/>
+
 
 </gcard> 
