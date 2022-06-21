@@ -402,7 +402,7 @@ sub make_flux_cosmic_sph
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Sphere";
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";
-    $detector{"rotation"}    = "90*deg 0*deg 0*deg";
+    $detector{"rotation"}    = "90*deg 180*deg 0*deg";
     $detector{"dimensions"}  = "$par1*cm $par2*cm $parz3*cm $par4*deg $par5*deg $par6*deg";
     $detector{"material"}    = "G4_AIR";
     $detector{"sensitivity"} = "flux";
@@ -423,7 +423,7 @@ sub make_bdx_CT
 {
     make_main_volume();
     make_nVeto;
-   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
+    make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
 

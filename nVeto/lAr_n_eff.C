@@ -91,7 +91,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	  	NFlux->GetYaxis()->SetTitle("flux");  
 
 		
-    double Edep_min = 10;
+    double Edep_min = 25;
     double Edep_max = 100;
    	int int_lAr_totEdep_B=0;
   	double n_mass = 939.565378;
@@ -129,7 +129,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 
 		int det_nhit = myDet->hitn->size();	
 		
-		double mom = sqrt(pow(myGen->px->at(0),2) +pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2) );	
+		double mom = sqrt(pow(myGen->px->at(0),2) + pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2) );	
 		//cout<< "mom "<<mom<<endl;
 
 		double Ek=sqrt(pow(mom,2) + pow(n_mass,2)) - n_mass; 
@@ -139,16 +139,15 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		Gen_mom_binT->Fill(mom/1000);
 		Gen_Ek_binT->Fill(Ek/1000);
 
-		// Get the weigth from the flux histograms
+	/*	// Get the weigth from the flux histograms
 		// -> Scan the bins from left to right and
 		// exit the loop as soon as the correct bin
 		// is found.
 		// MEMO: energy bins are in GeV, mom is in MeV
 		
-	/*	Double_t weight = 0;
+		Double_t weight = 0;
 		for (int i=0; i<fluxBinNumber; i++) {
 			if ((Ek/1000 > fluxBinLeftEdge[i]) && (Ek/1000 < fluxBinLeftEdge[i+1])) {
-				//cout << "mom "<<mom<<" -> bin found at "<< fluxBinLeftEdge[i] << " with content "<<fluxBinContent[i]<<endl;
 				weight = fluxBinContent[i] ;
 				break; 
 			}
@@ -180,9 +179,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 
 	}
 
-	cout<< "Gen_Ek "<<Gen_Ek->Integral()<<endl;
-	cout<< "Gen_Ek_lAr2 "<< Gen_Ek_lAr2->Integral()<<endl;
-
+	
     cout<< "end of loop  "<< endl;
         
         ////////////////////////
