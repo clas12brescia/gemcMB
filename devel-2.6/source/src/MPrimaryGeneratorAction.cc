@@ -24,7 +24,7 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
-bool dumpNeutron = true;
+bool dumpNeutron = false;
 
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
@@ -1563,11 +1563,8 @@ double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double Ekin) {
 }
 
 double MPrimaryGeneratorAction::dumpNeutBeam(double t) {
-    // cosmic neutrons spectrum as a function of kinetic energy (GeV) and
-    // zenith angle
-   // double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV;
-   // double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.;
-	   
+    // dump neutrons spectrum as a function of zenith angle
+     
     double f = cos(t);
     return f;
 }
