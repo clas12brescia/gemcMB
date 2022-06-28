@@ -24,7 +24,7 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
-bool dumpNeutron = false;
+bool dumpNeutron = true;
 
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
@@ -375,65 +375,17 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		               
 		                double massNeut = particleTable->FindParticle("neutron")->GetPDGMass() / GeV; // in GeV
 		                KinEmin= sqrt(cminp / GeV * cminp / GeV + massNeut * massNeut) - massNeut; // in GeV
-		                KinEmax= sqrt(cmaxp / GeV * cmaxp / GeV + massNeut * massNeut) - massNeut;	 //in GeV
-
-		                double dumpProbMax = dumpNeutBeam(0.);
-		                double dumpProbMin = dumpNeutBeam(pi / 2.);
-		                double dumpProb = G4UniformRand()* (dumpProbMax - dumpProbMin) + dumpProbMin;
-		               	
-		               	//cout<<"dumpProbMax "<<dumpProbMax<<" dumpProbMin "<<dumpProbMin<<endl;
+		                KinEmax= sqrt(cmaxp / GeV * cmaxp / GeV + massNeut * massNeut) - massNeut;	 //in GeV         	
 		                thisKinE = (KinEmax - KinEmin) * G4UniformRand() + KinEmin;
+
 		                thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
-		                thisthe = pi * G4UniformRand()/ 2.0; // [0,pi/2] zenith angle
-		              
-		                double dump = dumpNeutBeam(thisthe);
-
-		                //cout<<"dump "<< dump<<endl;
-
-		                int Nextr = 0;
-		                while (dump < dumpProb && Nextr < 1000000) {
-		                	thisMom = 0;
-		                    Nextr = Nextr + 1;
-
-		                    thisKinE = (KinEmax - KinEmin) * G4UniformRand()+ KinEmin;
-		                    thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
-		                    
-		                    thisthe = pi * G4UniformRand()/ 2.0;
-		                    
-		                    dump = dumpNeutBeam(thisthe);
-		                  
-		                }
-
-		                if (Nextr > 999999) cout << " !!!! LOOPING IN N EXTRACTION !!! exceeded " << Nextr << " extractions !!!" << Nextr << endl;
-		                thisPhi = -pi + 2 * pi * G4UniformRand();
 		                thisMom = thisMom * GeV; // in GeV
-		                // GG - calculate the coordinates of the point starting from phy and theta to obtain a verson
-		                //      calculate coordinate of projection on x-z plane
-		                //      vectorial prdoduct between them 
-		                //      choose randomly theta' and radius inside the cosmicRadius decided in gcard
-		                //      calculate coordinate of thr point (posCircle)
-
-		                if (cosmicGeo == "sph" || cosmicGeo == "sphere") { //a.c.
-		                    G4ThreeVector directionCircle(cos(thisPhi) * sin(thisthe), +cos(thisthe), +sin(thisPhi) * sin(thisthe));
-		                    G4ThreeVector norm1Circle(sin(thisPhi),0,cos(thisPhi));
-		                    G4ThreeVector norm2Circle=directionCircle.cross(norm1Circle);
-		                    
-		                    //now, norm1 and norm2 are orthogonal to the momentum direction. Generate a point on a circle of area cosmicRadius*cosmicRadius*pi
-		                    G4double circleR,circleTheta;
-		                    circleTheta = 2 * pi * G4UniformRand();
-		                    circleR = cosmicRadius * cosmicRadius * G4UniformRand();
-		                    circleR = sqrt(circleR);
-		                    
-		                    G4ThreeVector posCircle= circleR * sin(circleTheta) * norm1Circle + circleR * cos(circleTheta) * norm2Circle;
-		                    
-		                    cosmicVX = posCircle.x();
-		                    cosmicVY = posCircle.y();
-		                    cosmicVZ = posCircle.z();
-		                    //cout << "cosmic R "<< cosmicRadius<< " circleR "<< circleR<<"cicrleTheta "<<circleTheta<< endl;
-		                    //cout <<"thisPhi "<< thisPhi  << "thisthe "<< thisthe << endl;
-		                    //cout <<"directionCircle "<< directionCircle  << "norm1Circle "<< norm1Circle  << " norm2Circle " <<norm2Circle<<  endl;
-		                    //cout <<"posCircle "<< posCircle <<  endl;
-		                }    
+		                
+		                thisthe = -pi/100.0 + 2*pi/100.0 * G4UniformRand(); // [-pi/2,pi/2] zenith angle
+		               // cout<<"thisMom  "<<thisMom<< endl;
+		                //cout<<"thisthe  "<< thisthe<< endl;
+		                thisPhi = -pi + 2 * pi * G4UniformRand();
+		              
             		}
             		else
             		{
@@ -457,6 +409,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		                thisthe = pi * G4UniformRand()/ 2.0; // [0,pi/2] zenith angle
 		              
 		                double cosmic = cosmicNeutBeam(thisthe, thisKinE);
+		                 cout <<" "<< KinEmin<< " "<<KinEmax <<" "<< cosmicProbMin <<" "<< cosmicProbMax <<" "<<cosmicProb<<" "<< cosmic<<endl;
 
 		               //  double cosmicProbMax = cosmicNeutBeam(0., cminp / GeV);
 		               //  double cosmicProbMin = cosmicNeutBeam(pi / 2., cmaxp / GeV);
@@ -511,7 +464,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		                    //cout << "cosmic R "<< cosmicRadius<< " circleR "<< circleR<<"cicrleTheta "<<circleTheta<< endl;
 		                    //cout <<"thisPhi "<< thisPhi  << "thisthe "<< thisthe << endl;
 		                    //cout <<"directionCircle "<< directionCircle  << "norm1Circle "<< norm1Circle  << " norm2Circle " <<norm2Circle<<  endl;
-		                    //cout <<"posCircle "<< posCircle <<  endl;
+		                    
 		                }
 	               } 
             } else {		      //muons
@@ -571,9 +524,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
                 }
                 
             }
-            
-            
-            
+
             // now finding the vertex. Assuming twice the radius as starting point
             // attention:
             // axis transformation, z <> y,  x <> -x
@@ -600,10 +551,10 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             double pvz =0;
 
             if(dumpNeutron){
-	            pvx = cosmicVX + cosmicTarget.x() - 6000 * sin(thisthe) * cos(thisPhi);
-	            pvy = cosmicVY + cosmicTarget.y() - 6000 * cos(thisthe);
-	            pvz = cosmicVZ + cosmicTarget.z() - 6000 * sin(thisthe) * sin(thisPhi);
-            }
+	   			pvx = 0. ;
+	            pvy = -6000. ;
+	            pvz = 0. ;    
+	        }
             else
             {
 	            // GG - extract coordinates of vertex in the sky
@@ -667,6 +618,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 
             if (dumpNeutron){
             	 beam_dir = G4ThreeVector (cos(thisPhi) * sin(thisthe), +cos(thisthe), +sin(thisPhi) * sin(thisthe));
+               // cout<< "beam dir "<< beam_dir<<endl;
             }
             else
             {
@@ -1535,7 +1487,6 @@ double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double Ekin) {
    // double En = (sqrt(p * p + massNeut * massNeut) - massNeut) * 1000.;
 	double En = Ekin*1000;
     double I0 = 0;
-   
     // double I0 = pow(En, (double)-2.95);
     //double f = I0*pow(cos(t), (double)3.5);
     //return f;
@@ -1559,13 +1510,6 @@ double MPrimaryGeneratorAction::cosmicNeutBeam(double t, double Ekin) {
 	        I0 = C * pow(En / 1000., (double) -2.95);
 	    }	
     double f = I0 * pow(cos(t), (double) 3.5);
-    return f;
-}
-
-double MPrimaryGeneratorAction::dumpNeutBeam(double t) {
-    // dump neutrons spectrum as a function of zenith angle
-     
-    double f = cos(t);
     return f;
 }
 
