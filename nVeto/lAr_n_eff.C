@@ -8,6 +8,7 @@
 #include <TCanvas.h>
 #include "iostream"
 #include <map>
+#include <math.h>
 
 bool Debug = false;
 
@@ -65,9 +66,17 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		Gen_Ek->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek->GetYaxis()->SetTitle("Counts");
 
+	TH1D *Gen_Ek_det= new TH1D("Gen_Ek_det","Gen_Ek_det",10000,0,0.5);
+		Gen_Ek_det->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_det->GetYaxis()->SetTitle("Counts");
+
 	TH1D *Gen_Ek_binT= new TH1D("Gen_Ek_binT","Gen_Ek_binT",429,fluxBinLeftEdge);
 		Gen_Ek_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek_binT->GetYaxis()->SetTitle("Counts");
+
+	TH1D *Gen_Ek_det_binT= new TH1D("Gen_Ek_det_binT","Gen_Ek_det_binT",429,fluxBinLeftEdge);
+		Gen_Ek_det_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_det_binT->GetYaxis()->SetTitle("Counts");  	
 
 	TH1D *Gen_mom = new TH1D("Gen_mom","Gen_mom",10000,0,1);
 		Gen_mom->GetXaxis()->SetTitle("Momentum [GeV/c^2]");
@@ -117,7 +126,9 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	}
 
   	cout<< "start of loop"<<endl;
-
+	int n=0;
+	
+	
 	for (int jentry=0; jentry<nentries; jentry++) {
 	    	//if(!Debug)if((jentry%(nentries/50))==0) cout<<round(100*((jentry/Float_t(nentries))))<<"%"<<endl;
 		
@@ -125,12 +136,15 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		generated->GetEntry(jentry);
 		flux->GetEntry(jentry);
 		det->GetEntry(jentry);
-
+		
+		
+		double theta_lim = atan (178/(-myGen->vy->at(0) - 178));
 
 		int det_nhit = myDet->hitn->size();	
 		
-		double mom = sqrt(pow(myGen->px->at(0),2) + pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2) );	
-		//cout<< "mom "<<mom<<endl;
+		double mom = sqrt(pow(myGen->px->at(0),2) + pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2));	
+		double theta =  acos(myGen->py->at(0)/mom);
+	
 
 		double Ek=sqrt(pow(mom,2) + pow(n_mass,2)) - n_mass; 
 
@@ -166,7 +180,13 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 			Gen_Ek_lAr2_binT->Fill(Ek/1000);
 		}
 
-
+		if (theta< theta_lim)
+		{
+			Gen_Ek_det->Fill(Ek/1000);
+			Gen_Ek_det_binT->Fill(Ek/1000);
+		}
+		if (theta> theta_lim && E_dep_tot>0) cout<<"E_dep_tot "<<E_dep_tot<<endl;
+		
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
       	std::cout << "                      \r" << jentry << " / " << nentries
 		<< " ====> " << round((float) jentry / nentries * 100.)
@@ -198,6 +218,8 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
     Gen_Ek_lAr2->Write(0,TObject::kOverwrite);
     Gen_Ek_lAr2_binT->Write(0,TObject::kOverwrite);
     NFlux->Write(0,TObject::kOverwrite);
+    Gen_Ek_det_binT->Write(0,TObject::kOverwrite);
+    Gen_Ek_det->Write(0,TObject::kOverwrite);
     
 
  	g->Close();
