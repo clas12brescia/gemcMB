@@ -1,4 +1,4 @@
-void do_plots(string inputFile="../Output/Sort_DumpNeut_E0-400MeV_Edep_25-100keV_10MLNevents.root"){
+void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep25-100keV_e7ev.root"){
 
 	TFile * f = new TFile(inputFile.c_str());
 
@@ -10,14 +10,20 @@ void do_plots(string inputFile="../Output/Sort_DumpNeut_E0-400MeV_Edep_25-100keV
 	TH1D* Gen_Ek_lAr2;
 	TH1D* Gen_Ek_lAr2_binT;
 
+	TH1D* Gen_Ek_det;
+	TH1D* Gen_Ek_det_binT;
+
 	TH1D* NFlux;
     
 	Gen_Ek = (TH1D *) f->Get(Form("Gen_Ek"));
 	Gen_Ek_binT = (TH1D *) f->Get(Form("Gen_Ek_binT"));
 	
+	Gen_Ek_det = (TH1D *) f->Get(Form("Gen_Ek_det"));
+	Gen_Ek_det_binT = (TH1D *) f->Get(Form("Gen_Ek_det_binT"));	
+	
 	Gen_Ek_lAr2 = (TH1D *) f->Get(Form("Gen_Ek_lAr2"));
 	Gen_Ek_lAr2_binT = (TH1D *) f->Get(Form("Gen_Ek_lAr2_binT"));	
-	
+
 	NFlux = (TH1D *) f->Get(Form("NFlux"));
 
 	TH1D *Eff = (TH1D *)Gen_Ek_lAr2_binT->Clone("Eff");	
@@ -31,47 +37,41 @@ void do_plots(string inputFile="../Output/Sort_DumpNeut_E0-400MeV_Edep_25-100keV
 		gPad->SetLogy();
 
 	TCanvas * c1 = new TCanvas("c1", "c1", 1000, 600);
-		c1->Divide(1,2);
+		c1->Divide(1,3);
 		c1->cd(1);
 			Gen_Ek->SetLineWidth(2);
+			Gen_Ek->SetLabelSize(0.06,"xy");
+			Gen_Ek->SetTitleSize(0.05,"xy");
 			Gen_Ek->SetTitle("Kinetic Energy of generated neutrons");
 			Gen_Ek->SetLineColor(kOrange);
-			Gen_Ek->Draw("HIST,same");
-			gPad->SetLogx();
-			gPad->SetLogy();
-		
+			Gen_Ek->Draw("HIST");
+	    	//gPad->SetLogx();
+			//gPad->SetLogy();
+
 		c1->cd(2);
+			Gen_Ek_det->SetLineWidth(2);
+			Gen_Ek_det->SetLabelSize(0.06,"xy");
+			Gen_Ek_det->SetTitleSize(0.05,"xy");
+			Gen_Ek_det->SetTitle("Kinetic Energy of impinging neutrons");
+			Gen_Ek_det->SetLineColor(kBlack);
+			Gen_Ek_det->Draw("HIST,same");
+
+		c1->cd(3);
 			Gen_Ek_lAr2->SetLineWidth(2);
+			Gen_Ek_lAr2->SetTitleSize(0.05,"xy");
+			Gen_Ek_lAr2->SetLabelSize(0.06,"xy");
 			Gen_Ek_lAr2->SetTitle("Kinetic Energy of neutrons with 10<Edep<100 keV");
 			Gen_Ek_lAr2->SetLineColor(kRed);
 			Gen_Ek_lAr2->Draw("HIST");
 
-	   		gPad->SetLogx();
-			gPad->SetLogy();
-
-	TCanvas * c2 = new TCanvas("c2", "c2", 1000, 600);
-		c2->Divide(1,2);
-		c2->cd(1);
-			Gen_Ek->SetLineWidth(2);
-			Gen_Ek->SetTitle("Kinetic Energy of generated neutrons");
-			Gen_Ek->SetLineColor(kOrange);
-			Gen_Ek->Draw("HIST,same");
-		
-		c2->cd(2);
-			Gen_Ek_lAr2->SetLineWidth(2);
-			Gen_Ek->SetTitle("Kinetic Energy of neutrons with 10<Edep<100 keV");
-			Gen_Ek_lAr2->SetLineColor(kRed);
-			Gen_Ek_lAr2->Draw("HIST");
-
-	   		//gPad->SetLogx();
-			//gPad->SetLogy();
 
 	
-	cout<< Gen_Ek->Integral()<<endl;	
-	cout<< Gen_Ek_lAr2->Integral()<<endl;
+	cout<<"Gen= "<<Gen_Ek->Integral()<<endl;		
+	cout<<"Gen det= "<< Gen_Ek_det->Integral()<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr2->Integral()<<endl;
     
     
-	Eff->Divide(Gen_Ek_binT);
+	Eff->Divide(Gen_Ek_det_binT);
 	Eff_w->Multiply(Eff,NFlux);
 	
 

@@ -100,7 +100,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	  	NFlux->GetYaxis()->SetTitle("flux");  
 
 		
-    double Edep_min =10;
+    double Edep_min =5;
     double Edep_max = 100;
    	int int_lAr_totEdep_B=0;
   	double n_mass = 939.565378;
