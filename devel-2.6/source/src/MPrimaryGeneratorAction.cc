@@ -24,7 +24,7 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
-bool dumpNeutron = true;
+bool dumpNeutron = false;
 
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
@@ -381,9 +381,8 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		                thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
 		                thisMom = thisMom * GeV; // in GeV
 		                
-		                thisthe = -pi/100.0 + 2*pi/100.0 * G4UniformRand(); // [-pi/2,pi/2] zenith angle
+		                thisthe = -pi/100 + 2*pi/100 * G4UniformRand(); // [-pi/2,pi/2] zenith angle
 		               // cout<<"thisMom  "<<thisMom<< endl;
-		                //cout<<"thisthe  "<< thisthe<< endl;
 		                thisPhi = -pi + 2 * pi * G4UniformRand();
 		              
             		}
@@ -409,7 +408,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		                thisthe = pi * G4UniformRand()/ 2.0; // [0,pi/2] zenith angle
 		              
 		                double cosmic = cosmicNeutBeam(thisthe, thisKinE);
-		                 cout <<" "<< KinEmin<< " "<<KinEmax <<" "<< cosmicProbMin <<" "<< cosmicProbMax <<" "<<cosmicProb<<" "<< cosmic<<endl;
+		                // cout <<" "<< KinEmin<< " "<<KinEmax <<" "<< cosmicProbMin <<" "<< cosmicProbMax <<" "<<cosmicProb<<" "<< cosmic<<endl;
 
 		               //  double cosmicProbMax = cosmicNeutBeam(0., cminp / GeV);
 		               //  double cosmicProbMin = cosmicNeutBeam(pi / 2., cmaxp / GeV);
