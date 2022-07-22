@@ -24,7 +24,7 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
-bool dumpNeutron = false;
+bool dumpNeutron = true;
 
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
@@ -381,7 +381,7 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		                thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
 		                thisMom = thisMom * GeV; // in GeV
 		                
-		                thisthe = -pi/100 + 2*pi/100 * G4UniformRand(); // [-pi/2,pi/2] zenith angle
+		                thisthe = -pi/100 + 2*pi/100 * G4UniformRand(); //  zenith angle
 		               // cout<<"thisMom  "<<thisMom<< endl;
 		                thisPhi = -pi + 2 * pi * G4UniformRand();
 		              
