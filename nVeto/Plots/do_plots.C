@@ -1,4 +1,4 @@
-void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep25-100keV_e7ev.root"){
+void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep10-100keV_e7ev.root"){
 
 	TFile * f = new TFile(inputFile.c_str());
 
@@ -66,18 +66,37 @@ void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep25-100keV_e7ev
 
 
 	
-	cout<<"Gen= "<<Gen_Ek->Integral()<<endl;		
-	cout<<"Gen det= "<< Gen_Ek_det->Integral()<<endl;
-	cout<<"Gen lAr2= "<< Gen_Ek_lAr2->Integral()<<endl;
-    
+	cout<<"Gen= "<<Gen_Ek->Integral()<<endl;	
+
+	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(1,100)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(1,100)<<endl;
+	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(101,110)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(101,110)<<endl;
+	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(111,120)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(111,120)<<endl;
+	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(121,130)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(121,130)<<endl;
+	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(131,230)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(131,230)<<endl;
+	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(231,430)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(231,430)<<endl;
+
     
 	Eff->Divide(Gen_Ek_det_binT);
 	Eff_w->Multiply(Eff,NFlux);
 	
 
-	cout<< Eff->Integral()<<endl;
+	cout<< "eff= "<<Eff->Integral(1,100)<<endl;
+	cout<< "eff= "<<Eff->Integral(101,110)<<endl;
+
 	cout<< Eff_w->Integral()<<endl;
-	cout<< NFlux->Integral()<<endl;
+	cout<< "Nflux"<<NFlux->Integral(1,100)<<endl;
+	cout<< "Nflux"<<NFlux->Integral(101,110)<<endl;
+	cout<< "Nflux"<<NFlux->Integral(111,120)<<endl;
+	cout<< "Nflux"<<NFlux->Integral(121,130)<<endl;
+	cout<< "Nflux"<<NFlux->Integral(131,230)<<endl;
+	cout<< "Nflux"<<NFlux->Integral(231,430)<<endl;
+
 
     Eff->SetLineWidth(2);
 	Eff->SetLineColor(kBlack);
@@ -109,12 +128,12 @@ void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep25-100keV_e7ev
 		Eff_w->SetLineColor(kBlue);
 		Eff_w->Draw("HIST,E1");
 
-		cout<<"Integral(0,99) = "<< Eff_w->Integral(0,99)<<endl;
-		cout<<"Integral(100,109) = "<< Eff_w->Integral(100,109)<<endl;
-		cout<<"Integral(110,119) = "<< Eff_w->Integral(110,119)<<endl;
-		cout<<"Integral(120,129) = "<< Eff_w->Integral(120,129)<<endl;
-		cout<<"Integral(130,229) = "<< Eff_w->Integral(130,229)<<endl;
-		cout<<"Integral(230,429) = "<< Eff_w->Integral(230,429)<<endl;
+		cout<<"Integral(0,99) = "<< Eff_w->Integral(1,100)<<endl;
+		cout<<"Integral(100,109) = "<< Eff_w->Integral(101,110)<<endl;
+		cout<<"Integral(110,119) = "<< Eff_w->Integral(111,120)<<endl;
+		cout<<"Integral(120,129) = "<< Eff_w->Integral(121,130)<<endl;
+		cout<<"Integral(130,229) = "<< Eff_w->Integral(131,230)<<endl;
+		cout<<"Integral(230,429) = "<< Eff_w->Integral(231,430)<<endl;
 		
 		gPad->SetLogx();
 		gPad->SetLogy();
