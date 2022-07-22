@@ -169,8 +169,8 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
 	dgtz["sector"]  = sector;
 	dgtz["veto"]    = veto_id;
 	dgtz["channel"] = channel;
-    dgtz["dig_Edep"]= dig_Edep;
-	dgtz["adc1"]    = ADC1;// deposited energy in MeV
+    dgtz["dig_Edep"]= dig_Edep;// deposited energy in MeV
+	dgtz["adc1"]    = ADC1;
 	dgtz["adc2"]    = ADC2;//output in pe
   	dgtz["adc3"]    = ADC3;// ignore
   	dgtz["adc4"]    = ADC4;// ignore

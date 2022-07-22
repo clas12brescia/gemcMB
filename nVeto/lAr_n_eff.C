@@ -70,10 +70,6 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		Gen_Ek_det->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek_det->GetYaxis()->SetTitle("Counts");
 
-	TH1D *Gen_Ek_binT= new TH1D("Gen_Ek_binT","Gen_Ek_binT",429,fluxBinLeftEdge);
-		Gen_Ek_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
-	  	Gen_Ek_binT->GetYaxis()->SetTitle("Counts");
-
 	TH1D *Gen_Ek_det_binT= new TH1D("Gen_Ek_det_binT","Gen_Ek_det_binT",429,fluxBinLeftEdge);
 		Gen_Ek_det_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek_det_binT->GetYaxis()->SetTitle("Counts");  	
@@ -82,28 +78,30 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		Gen_mom->GetXaxis()->SetTitle("Momentum [GeV/c^2]");
 	  	Gen_mom->GetYaxis()->SetTitle("Counts");
 
-	TH1D *Gen_mom_binT = new TH1D("Gen_mom_binT","Gen_mom_binT",429,fluxBinLeftEdge);
-		Gen_mom_binT->GetXaxis()->SetTitle("Momentum [GeV/c^2]");
-	  	Gen_mom_binT->GetYaxis()->SetTitle("Counts");
+    TH1D *Gen_Ek_lAr= new TH1D("Gen_Ek_lAr","Gen_Ek_lAr",10000,0,0.5);
+		Gen_Ek_lAr->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_lAr->GetYaxis()->SetTitle("Counts");
 
-    TH1D *Gen_Ek_lAr2= new TH1D("Gen_Ek_lAr2","Gen_Ek_lAr2",10000,0,0.5);
-		Gen_Ek_lAr2->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
-	  	Gen_Ek_lAr2->GetYaxis()->SetTitle("Counts");
+	TH1D *Gen_Ek_lAr_binT= new TH1D("Gen_Ek_lAr_binT","Gen_Ek_lAr_binT",429,fluxBinLeftEdge);
+		Gen_Ek_lAr_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_lAr_binT->GetYaxis()->SetTitle("Counts");
 
-	TH1D *Gen_Ek_lAr2_binT= new TH1D("Gen_Ek_lAr2_binT","Gen_Ek_lAr2_binT",429,fluxBinLeftEdge);
-		Gen_Ek_lAr2_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
-	  	Gen_Ek_lAr2_binT->GetYaxis()->SetTitle("Counts");
-
-	
-   	TH1D *NFlux= new TH1D("NFlux","NFlux",429,fluxBinLeftEdge);
+	TH1D *NFlux= new TH1D("NFlux","NFlux",429,fluxBinLeftEdge);
 		NFlux->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	NFlux->GetYaxis()->SetTitle("flux");  
 
+    TH2D *Edep_lAr_veto= new TH2D("Edep_lAr_veto","Edep_lAr_veto",10000,0,0.5,10000,0,0.5);
+		Edep_lAr_veto->GetXaxis()->SetTitle("det Energy [GeV]");
+	  	Edep_lAr_veto->GetYaxis()->SetTitle("veto Energy [GeV]");
+
 		
-    double Edep_min =5;
+    double Edep_min =10;
     double Edep_max = 100;
-   	int int_lAr_totEdep_B=0;
-  	double n_mass = 939.565378;
+   	double n_mass = 939.565378;
+  	int det_mult_hit=0;
+  	int veto_hit=0;
+	int no_hit=0;
+	int Edep_no=0;
 
 	//////////////////////
 	// START OF THE LOOP
@@ -126,9 +124,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	}
 
   	cout<< "start of loop"<<endl;
-	int n=0;
-	
-	
+
 	for (int jentry=0; jentry<nentries; jentry++) {
 	    	//if(!Debug)if((jentry%(nentries/50))==0) cout<<round(100*((jentry/Float_t(nentries))))<<"%"<<endl;
 		
@@ -141,17 +137,12 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		double theta_lim = atan (178/(-myGen->vy->at(0) - 178));
 
 		int det_nhit = myDet->hitn->size();	
-		
+		int veto_nhit = myVe->hitn->size();	
+
 		double mom = sqrt(pow(myGen->px->at(0),2) + pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2));	
 		double theta =  acos(myGen->py->at(0)/mom);
-	
-
 		double Ek=sqrt(pow(mom,2) + pow(n_mass,2)) - n_mass; 
 
-		Gen_mom->Fill(mom/1000); // in GeV
-		Gen_Ek->Fill(Ek/1000);
-		Gen_mom_binT->Fill(mom/1000);
-		Gen_Ek_binT->Fill(Ek/1000);
 
 	/*	// Get the weigth from the flux histograms
 		// -> Scan the bins from left to right and
@@ -169,24 +160,40 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		}
 	*/
 
-		double E_dep_tot =0;
-		for (int ihit=0; ihit < det_nhit; ihit++) {
-			E_dep_tot = E_dep_tot + myDet->dig_Edep->at(ihit);
-			//cout<< " "<< myDet->dig_Edep->at(ihit)<<" "<< E_dep_tot<<" "<< det_nhit<<endl;	 
+		Gen_mom->Fill(mom/1000); // in GeV
+		Gen_Ek->Fill(Ek/1000);
+
+		double E_dep_veto = 0;
+		double E_dep_det = 0;
+		for (int ihit=0; ihit < veto_nhit; ihit++) {
+			E_dep_veto = E_dep_veto + myVe->dig_Edep->at(ihit);	
+			for (int jhit=0; jhit < det_nhit; jhit++) {
+				E_dep_det = E_dep_det + myDet->dig_Edep->at(jhit);	
+				
+			}	
 		}
 
-		if (E_dep_tot*1000 >Edep_min && E_dep_tot*1000<Edep_max){ // compreso tra 10 e 100 keV
-			Gen_Ek_lAr2->Fill(Ek/1000);
-			Gen_Ek_lAr2_binT->Fill(Ek/1000);
-		}
+		Edep_lAr_veto->Fill(E_dep_det/1000,E_dep_veto/1000);
 
-		if (theta< theta_lim)
-		{
+		if (theta< theta_lim){
 			Gen_Ek_det->Fill(Ek/1000);
 			Gen_Ek_det_binT->Fill(Ek/1000);
-		}
-		if (theta> theta_lim && E_dep_tot>0) cout<<"E_dep_tot "<<E_dep_tot<<endl;
+			if( E_dep_veto==0){
+				if (det_nhit<2){
+					if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // compreso tra 10 e 100 keV
+						Gen_Ek_lAr->Fill(Ek/1000);
+						Gen_Ek_lAr_binT->Fill(Ek/1000);
+					}
+					else Edep_no=Edep_no+1;
+				}
+				else det_mult_hit=det_mult_hit +1;
+			}
+			else veto_hit=veto_hit +1;
+		} 
 		
+
+		
+				
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
       	std::cout << "                      \r" << jentry << " / " << nentries
 		<< " ====> " << round((float) jentry / nentries * 100.)
@@ -198,8 +205,10 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		
 
 	}
-
-	
+	cout<<endl;
+	cout<<"n with multiple hits in lAr  = "<<det_mult_hit<<endl;
+	cout<<"n with E dep>0 in veto = "<<veto_hit<<endl;
+	cout<<"n with Edep in lAr <10 keV or >100 keV = "<<Edep_no<<endl;
     cout<< "end of loop  "<< endl;
         
         ////////////////////////
@@ -213,13 +222,13 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
  	
 	Gen_mom->Write(0,TObject::kOverwrite);
 	Gen_Ek->Write(0,TObject::kOverwrite);
-	Gen_mom_binT->Write(0,TObject::kOverwrite);
-	Gen_Ek_binT->Write(0,TObject::kOverwrite);
-    Gen_Ek_lAr2->Write(0,TObject::kOverwrite);
-    Gen_Ek_lAr2_binT->Write(0,TObject::kOverwrite);
+    Gen_Ek_lAr->Write(0,TObject::kOverwrite);
+    Gen_Ek_lAr_binT->Write(0,TObject::kOverwrite);
     NFlux->Write(0,TObject::kOverwrite);
     Gen_Ek_det_binT->Write(0,TObject::kOverwrite);
     Gen_Ek_det->Write(0,TObject::kOverwrite);
+
+    Edep_lAr_veto->Write(0,TObject::kOverwrite);
     
 
  	g->Close();

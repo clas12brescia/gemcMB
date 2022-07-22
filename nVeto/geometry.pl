@@ -75,7 +75,7 @@ my $Z = 0.;
 
 
 my $LAr_dim=35.6/2.;
-my $Sci_thickness=1./2;
+my $Sci_thickness=10./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=1./2.;
 
@@ -89,7 +89,7 @@ sub make_nVeto
     {$detector{"mother"}      = "Det_house_inner";}
  
  ################################### Scintillator ##################################### 
-   q{ 
+    
  # down  
     $detector{"name"}        = "down";
     $detector{"description"} = "down side";
@@ -220,7 +220,7 @@ sub make_nVeto
     $detector{"identifiers"} = "sector manual 2 veto manual 100 channel manual 1";
      print_det(\%configuration, \%detector);
  
- };
+ 
  ################################### Liquid argon ##################################### 
   
    
