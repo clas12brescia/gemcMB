@@ -1,14 +1,13 @@
-void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep10-100keV_e7ev.root"){
+void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_veto10cm.root"){
 
 	TFile * f = new TFile(inputFile.c_str());
 
 	// get histos
 	
 	TH1D* Gen_Ek;
-	TH1D* Gen_Ek_binT;
-
-	TH1D* Gen_Ek_lAr2;
-	TH1D* Gen_Ek_lAr2_binT;
+	
+	TH1D* Gen_Ek_lAr;
+	TH1D* Gen_Ek_lAr_binT;
 
 	TH1D* Gen_Ek_det;
 	TH1D* Gen_Ek_det_binT;
@@ -16,17 +15,16 @@ void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep10-100keV_e7ev
 	TH1D* NFlux;
     
 	Gen_Ek = (TH1D *) f->Get(Form("Gen_Ek"));
-	Gen_Ek_binT = (TH1D *) f->Get(Form("Gen_Ek_binT"));
-	
+		
 	Gen_Ek_det = (TH1D *) f->Get(Form("Gen_Ek_det"));
 	Gen_Ek_det_binT = (TH1D *) f->Get(Form("Gen_Ek_det_binT"));	
 	
-	Gen_Ek_lAr2 = (TH1D *) f->Get(Form("Gen_Ek_lAr2"));
-	Gen_Ek_lAr2_binT = (TH1D *) f->Get(Form("Gen_Ek_lAr2_binT"));	
+	Gen_Ek_lAr = (TH1D *) f->Get(Form("Gen_Ek_lAr"));
+	Gen_Ek_lAr_binT = (TH1D *) f->Get(Form("Gen_Ek_lAr_binT"));	
 
 	NFlux = (TH1D *) f->Get(Form("NFlux"));
 
-	TH1D *Eff = (TH1D *)Gen_Ek_lAr2_binT->Clone("Eff");	
+	TH1D *Eff = (TH1D *)Gen_Ek_lAr_binT->Clone("Eff");	
 	TH1D *Eff_w = (TH1D *)Eff->Clone("Eff_w");	
 
 	TCanvas * c = new TCanvas("c", "c", 1000, 600);
@@ -57,29 +55,29 @@ void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep10-100keV_e7ev
 			Gen_Ek_det->Draw("HIST,same");
 
 		c1->cd(3);
-			Gen_Ek_lAr2->SetLineWidth(2);
-			Gen_Ek_lAr2->SetTitleSize(0.05,"xy");
-			Gen_Ek_lAr2->SetLabelSize(0.06,"xy");
-			Gen_Ek_lAr2->SetTitle("Kinetic Energy of neutrons with 10<Edep<100 keV");
-			Gen_Ek_lAr2->SetLineColor(kRed);
-			Gen_Ek_lAr2->Draw("HIST");
+			Gen_Ek_lAr->SetLineWidth(2);
+			Gen_Ek_lAr->SetTitleSize(0.05,"xy");
+			Gen_Ek_lAr->SetLabelSize(0.06,"xy");
+			Gen_Ek_lAr->SetTitle("Kinetic Energy of neutrons with 10<Edep<100 keV");
+			Gen_Ek_lAr->SetLineColor(kRed);
+			Gen_Ek_lAr->Draw("HIST");
 
 
 	
 	cout<<"Gen= "<<Gen_Ek->Integral()<<endl;	
 
 	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(1,100)<<endl;
-	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(1,100)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr_binT->Integral(1,100)<<endl;
 	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(101,110)<<endl;
-	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(101,110)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr_binT->Integral(101,110)<<endl;
 	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(111,120)<<endl;
-	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(111,120)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr_binT->Integral(111,120)<<endl;
 	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(121,130)<<endl;
-	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(121,130)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr_binT->Integral(121,130)<<endl;
 	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(131,230)<<endl;
-	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(131,230)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr_binT->Integral(131,230)<<endl;
 	cout<<"Gen det= "<< Gen_Ek_det_binT->Integral(231,430)<<endl;
-	cout<<"Gen lAr2= "<< Gen_Ek_lAr2_binT->Integral(231,430)<<endl;
+	cout<<"Gen lAr2= "<< Gen_Ek_lAr_binT->Integral(231,430)<<endl;
 
     
 	Eff->Divide(Gen_Ek_det_binT);
@@ -102,8 +100,8 @@ void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_Edep10-100keV_e7ev
 	Eff->SetLineColor(kBlack);
 		
 	 	for (int i=1; i<Eff->GetNbinsX()+1; i++){
-	 		if (Gen_Ek_lAr2_binT->GetBinContent(i)!=0 || (Gen_Ek_binT->GetBinContent(i))!=0){
-	 			double Eff_err = sqrt(1/(Gen_Ek_lAr2_binT->GetBinContent(i))+1/(Gen_Ek_binT->GetBinContent(i)))*(Eff->GetBinContent(i));
+	 		if (Gen_Ek_lAr_binT->GetBinContent(i)!=0 || (Gen_Ek_det_binT->GetBinContent(i))!=0){
+	 			double Eff_err = sqrt(1/(Gen_Ek_lAr_binT->GetBinContent(i))+1/(Gen_Ek_det_binT->GetBinContent(i)))*(Eff->GetBinContent(i));
 	 			Eff->SetBinError(i,Eff_err);
 	 			double Eff_w_err = sqrt((pow(Eff_err,2)*NFlux->GetBinContent(i) + pow(Eff->GetBinContent(i),2))*NFlux->GetBinContent(i));
 	 			//cout<<"Eff_w_err= "<<Eff_w_err<<endl;
