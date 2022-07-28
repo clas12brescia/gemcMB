@@ -75,7 +75,7 @@ my $Z = 0.;
 
 
 my $LAr_dim=35.6/2.;
-my $Sci_thickness=20./2;
+my $Sci_thickness=50./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=1./2.;
 
