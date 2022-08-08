@@ -75,7 +75,7 @@ my $Z = 0.;
 
 
 my $LAr_dim=35.6/2.;
-my $Sci_thickness=50./2;
+my $Sci_thickness=10./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=1./2.;
 
@@ -106,7 +106,7 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";	#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+    $detector{"material"}    = "Borotron";	#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 0 veto manual 100 channel manual 0";
@@ -126,7 +126,7 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";
+    $detector{"material"}    = "Borotron";
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 0 veto manual 100 channel manual 1";
@@ -148,7 +148,7 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+    $detector{"material"}    = "Borotron";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 1 veto manual 100 channel manual 1";
@@ -170,7 +170,7 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+    $detector{"material"}    = "Borotron";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 1 veto manual 100 channel manual 0";
@@ -192,7 +192,7 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+    $detector{"material"}    = "Borotron";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 2 veto manual 100 channel manual 0";
@@ -214,7 +214,7 @@ sub make_nVeto
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+    $detector{"material"}    = "Borotron";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
     $detector{"sensitivity"} = "veto";
     $detector{"hit_type"}    = "veto";
     $detector{"identifiers"} = "sector manual 2 veto manual 100 channel manual 1";
