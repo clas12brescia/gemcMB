@@ -78,7 +78,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
         //double sy=aHit->GetDetector().dimensions[1];
         double sz=aHit->GetDetector().dimensions[2];
                
-        //cout << "Detecort Id = "<< chan<<" Detector size:    Xsize = " << sx << " " << "Ysize = " << sy<< " " << "Zsize = " << sz 	<< " "<< endl;
+       // cout <<"sector= "<<sector<<"   Detector size: Zsize = " << sz << endl;
 
         vector<G4ThreeVector> Lpos = aHit->GetLPos(); // Interaction position relative to the detector center
         vector<G4double>      Edep = aHit->GetEdep(); // Deposited energy
@@ -119,7 +119,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
             timeR= dRight/veff+T_hit_ave; 	// time between interaction and readout on the right side
             
             //cout << "AVE X = " << X_hit_ave << " ,Y " << Y_hit_ave << " ,Z " << Z_hit_ave << " ,dRight " << dRight << " ,dLeft " << dLeft << "  ,etot " <<etot  << "  ,Etot " <<etot << endl;
-      
+            //cout<<"dLeft= "<<dLeft<<"  dRight= "<<dRight<<endl;
            
 ////////////PHOTO ELECTRON CALCULATION////////////////////    
 //for nVeto: using directly the extracted pe from ps_sipm 
@@ -150,6 +150,7 @@ map<string, double> veto_HitProcess :: integrateDgt(MHit* aHit, int hitn)
                 dig_Edep=etot;  
                 ADC2=G4Poisson(pe_ave*etot/4.1) ; // Scaling for more/less energy release
                 
+               // cout<< "pe_ave= "<<pe_ave<< "   etot= "<<etot<< "   ADC2= "<< ADC2<<endl;
                 double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(pe_ave+1.));
                 sigmaTL=0.;
                 TDC1=(T_ave+G4RandGauss::shoot(0.,sigmaTL))*1000.;//time in ps

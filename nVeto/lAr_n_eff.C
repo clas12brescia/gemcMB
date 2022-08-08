@@ -94,10 +94,20 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 		Edep_lAr_veto->GetXaxis()->SetTitle("det Energy [GeV]");
 	  	Edep_lAr_veto->GetYaxis()->SetTitle("veto Energy [GeV]");
 
+	TH1D *Edep_veto= new TH1D("Edep_veto","Edep_veto",10000,0,2);
+		Edep_veto->GetXaxis()->SetTitle("Energy [GeV]");
+	  	Edep_veto->GetYaxis()->SetTitle("counts"); 
+
+	TH1D *adc_veto= new TH1D("adc_veto","adc_veto",10000,0,10);
+		adc_veto->GetXaxis()->SetTitle("Energy [GeV]");
+	  	adc_veto->GetYaxis()->SetTitle("counts"); 
+  	
+
 		
-    double Edep_min =10;
-    double Edep_max = 100;
-   	double n_mass = 939.565378;
+    double Edep_min =10; //in keV
+    double Edep_max = 100; //in keV
+    double veto_threshold=1000; //in keV
+   	double n_mass = 939.565378; // in MeV
   	int det_mult_hit=0;
   	int veto_hit=0;
 	int no_hit=0;
@@ -165,21 +175,25 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 
 		double E_dep_veto = 0;
 		double E_dep_det = 0;
+		double adc2_veto = 0;
 		for (int ihit=0; ihit < veto_nhit; ihit++) {
-			E_dep_veto = E_dep_veto + myVe->dig_Edep->at(ihit);	
 			for (int jhit=0; jhit < det_nhit; jhit++) {
 				E_dep_det = E_dep_det + myDet->dig_Edep->at(jhit);	
-				
-			}	
+			}
+			E_dep_veto = E_dep_veto + myVe->dig_Edep->at(ihit);	
+			adc2_veto = adc2_veto + myVe->adc2->at(ihit);
 		}
 
+		
 		Edep_lAr_veto->Fill(E_dep_det/1000,E_dep_veto/1000);
+		Edep_veto->Fill(E_dep_veto/1000);
+		adc_veto->Fill(adc2_veto/1000);
 
 		if (theta< theta_lim){
 			Gen_Ek_det->Fill(Ek/1000);
 			Gen_Ek_det_binT->Fill(Ek/1000);
-			if( E_dep_veto==0){
-				if (det_nhit<2){
+			if( E_dep_veto*1000<=veto_threshold){
+				if (det_nhit==1){
 					if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // compreso tra 10 e 100 keV
 						Gen_Ek_lAr->Fill(Ek/1000);
 						Gen_Ek_lAr_binT->Fill(Ek/1000);
@@ -207,7 +221,7 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
 	}
 	cout<<endl;
 	cout<<"n with multiple hits in lAr  = "<<det_mult_hit<<endl;
-	cout<<"n with E dep>0 in veto = "<<veto_hit<<endl;
+	cout<<"n with E dep>threshold in veto = "<<veto_hit<<endl;
 	cout<<"n with Edep in lAr <10 keV or >100 keV = "<<Edep_no<<endl;
     cout<< "end of loop  "<< endl;
         
@@ -227,6 +241,8 @@ void lAr_n_eff(string inputname="Sci1cm_p33,6MeV"){
     NFlux->Write(0,TObject::kOverwrite);
     Gen_Ek_det_binT->Write(0,TObject::kOverwrite);
     Gen_Ek_det->Write(0,TObject::kOverwrite);
+    Edep_veto->Write(0,TObject::kOverwrite);
+	adc_veto->Write(0,TObject::kOverwrite);
 
     Edep_lAr_veto->Write(0,TObject::kOverwrite);
     
