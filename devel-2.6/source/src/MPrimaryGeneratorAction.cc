@@ -24,7 +24,7 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
-bool dumpNeutron = false;
+bool dumpNeutron = true;
 
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
