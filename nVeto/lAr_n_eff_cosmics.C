@@ -60,9 +60,9 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 		Gen_mom->GetXaxis()->SetTitle("Momentum [MeV/c^2]");
 	  	Gen_mom->GetYaxis()->SetTitle("Counts");
 
-    TH1D *Gen_Ek_lAr2= new TH1D("Gen_Ek_lAr2","Gen_Ek_lAr2",10000,0,11);
-		Gen_Ek_lAr2->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
-	  	Gen_Ek_lAr2->GetYaxis()->SetTitle("Counts");
+    TH1D *Gen_Ek_lAr= new TH1D("Gen_Ek_lAr","Gen_Ek_lAr",10000,0,11);
+		Gen_Ek_lAr->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_lAr->GetYaxis()->SetTitle("Counts");
 
 	TH1D *Edep= new TH1D("Edep","Edep",10000,0,11);
 		Edep->GetXaxis()->SetTitle("Edep [GeV]");
@@ -71,9 +71,13 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 
     double Edep_min =10;
     double Edep_max = 100;
-   	int int_lAr_totEdep_B=0;
+    double veto_threshold=0; //in keV
   	double n_mass = 939.565378;
-  	int n=0;
+  	int det_mult_hit=0;
+  	int veto_hit=0;
+	int no_hit=0;
+	int Edep_no=0;
+	int good=0;
 
 	//////////////////////
 	// START OF THE LOOP
@@ -103,6 +107,7 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 
 
 		int det_nhit = myDet->hitn->size();	
+		int veto_nhit = myVe->hitn->size();	
 		
 		double mom = sqrt(pow(myGen->px->at(0),2) + pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2) );	
 		//cout<< "mom "<<mom<<endl;
@@ -113,20 +118,28 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 		Gen_Ek->Fill(Ek/1000); // in GeV
 
 
-		double E_dep_tot =0;
-		for (int ihit=0; ihit < det_nhit; ihit++) {
-			E_dep_tot = E_dep_tot + myDet->dig_Edep->at(ihit);	 
+		double E_dep_veto = 0;
+		double E_dep_det = 0;
+		for (int ihit=0; ihit < veto_nhit; ihit++) {
+			for (int jhit=0; jhit < det_nhit; jhit++) {
+				E_dep_det = E_dep_det + myDet->dig_Edep->at(jhit);	
+			}
+			E_dep_veto = E_dep_veto + myVe->dig_Edep->at(ihit);	
 		}
 
-		
-		if (E_dep_tot*1000 >Edep_min && E_dep_tot*1000<Edep_max){ // compreso tra 10 e 100 keV
-			Gen_Ek_lAr2->Fill(Ek/1000);
-			n=n+1;
-			//cout<<"Ek = "<<Ek<<"  edep = "<<E_dep_tot*1000<<endl;
+		if( E_dep_veto*1000<=veto_threshold){
+				if (det_nhit==1){
+					if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // compreso tra 10 e 100 keV
+						Gen_Ek_lAr->Fill(Ek/1000);
+						good=good+1;
+					}
+					else Edep_no=Edep_no+1;
+				}
+				else det_mult_hit=det_mult_hit +1;
 		}
-		Edep->Fill(E_dep_tot/1000);
-
+		else veto_hit=veto_hit +1;
 		
+	
 
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
       	std::cout << "                      \r" << jentry << " / " << nentries
@@ -140,9 +153,11 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 
 	}
 
-	cout<< "n"<< n<<endl;
-	cout<<"Integral lar2= "<< Gen_Ek_lAr2->Integral()<<endl;
-	cout<<"Integral tot= "<< Gen_Ek->Integral()<<endl;
+
+	cout<<"n with multiple hits in lAr  = "<<det_mult_hit<<endl;
+	cout<<"n with E dep>threshold in veto = "<<veto_hit<<endl;
+	cout<<"n with Edep in lAr <10 keV or >100 keV = "<<Edep_no<<endl;
+	cout<<"n with Edep in lAr >10 keV or <100 keV = "<<good<<endl;
     cout<< "end of loop  "<< endl;
         
         ////////////////////////
@@ -156,7 +171,6 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
  	
 	Gen_mom->Write(0,TObject::kOverwrite);
 	Gen_Ek->Write(0,TObject::kOverwrite);
-	Gen_Ek_lAr2->Write(0,TObject::kOverwrite);
     Edep->Write(0,TObject::kOverwrite); 
 
  	g->Close();
