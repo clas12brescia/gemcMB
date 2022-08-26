@@ -49,10 +49,10 @@ sub define_bdx_bank
 	insert_bank_variable(\%configuration, $bankname, "sector",       1, "Di", "sector number");
 	insert_bank_variable(\%configuration, $bankname, "veto",         2, "Di", "veto number");
 	insert_bank_variable(\%configuration, $bankname, "channel",      3, "Di", "channel number");
-	insert_bank_variable(\%configuration, $bankname, "adc1",         4, "Di", "adc1");
-	insert_bank_variable(\%configuration, $bankname, "adc2",         5, "Di", "adc2");
-    insert_bank_variable(\%configuration, $bankname, "adc3",         6, "Di", "adc3");
-    insert_bank_variable(\%configuration, $bankname, "adc4",         7, "Di", "adc4");
+	insert_bank_variable(\%configuration, $bankname, "adc1",         4, "Dd", "adc1");
+	insert_bank_variable(\%configuration, $bankname, "adc2",         5, "Dd", "adc2");
+    insert_bank_variable(\%configuration, $bankname, "adc3",         6, "Dd", "adc3");
+    insert_bank_variable(\%configuration, $bankname, "adc4",         7, "Dd", "adc4");
 	insert_bank_variable(\%configuration, $bankname, "tdc1",         8, "Di", "tdc1");
 	insert_bank_variable(\%configuration, $bankname, "tdc2",         9, "Di", "tdc2");
     insert_bank_variable(\%configuration, $bankname, "tdc3",        10, "Di", "tdc3");
