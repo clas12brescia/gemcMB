@@ -32,7 +32,7 @@ public:
 
     double BirksAttenuation(double,double,int,double);
     double* IVresponse(        int, double, double, double, double sx, double sy, double sz);
-    double* IVresponseProposal(int, double, double, double, double sx, double sy, double sz);
+    double* IVresponseProposal(int, int, double, double, double, double sx, double sy, double sz);
     double* OVresponse(int, double, double, double);
 
 	// - electronicNoise: returns a vector of hits generated / by electronics.
