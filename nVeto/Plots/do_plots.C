@@ -1,4 +1,4 @@
-void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_CHB50cm_thr0keV.root"){
+void do_plots(string inputFile="../Output/Sort_prova_Gd2.root"){
 
 	TFile * f = new TFile(inputFile.c_str());
 
@@ -83,9 +83,6 @@ void do_plots(string inputFile="../Output/Sort_Dump_E0-400MeV_CHB50cm_thr0keV.ro
 	Eff->Divide(Gen_Ek_det_binT);
 	Eff_w->Multiply(Eff,NFlux);
 	
-
-	cout<< "eff= "<<Eff->Integral(1,100)<<endl;
-	cout<< "eff= "<<Eff->Integral(101,110)<<endl;
 
 	cout<< Eff_w->Integral()<<endl;
 	cout<< "Nflux"<<NFlux->Integral(1,100)<<endl;

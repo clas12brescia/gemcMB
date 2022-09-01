@@ -128,6 +128,7 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
     	const double Edep_max = 100; 		//in keV
     	const double veto_threshold = 0; 	//in keV
    		const double n_mass = 939.565378;	//in MeV
+   		int counter=0;
 
 		double E_dep_det = 0;
 		double E_dep_veto[6][4];
@@ -166,18 +167,15 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 
 		
 		for (int ihit=0; ihit < veto_nhit; ihit++) {
-				for (int s=1; s<7; s++){
-					for (int c=1; c<5; c++){
-						if(myVe->sector->at(ihit)==s & myVe->channel->at(ihit)==c){
-							E_dep_veto[s][c] = E_dep_veto[s][c] + myVe->dig_Edep->at(ihit);	
-							if(c==1) adc_veto[s][c] = adc_veto[s][c] + myVe->adc1->at(ihit);
-							if(c==2) adc_veto[s][c] = adc_veto[s][c] + myVe->adc2->at(ihit);
-							if(c==3) adc_veto[s][c] = adc_veto[s][c] + myVe->adc3->at(ihit);
-							if(c==4) adc_veto[s][c] = adc_veto[s][c] + myVe->adc4->at(ihit);	
-							//cout<<s<<" "<<c<<" "<<E_dep_veto[s][c]*1000<<" "<<adc_veto[s][c]*1000<<endl;					
-						}
-					}
-				}	
+			int chan = myVe->channel->at(ihit);
+			int sec = myVe->sector->at(ihit);		
+			E_dep_veto[sec][chan] = E_dep_veto[sec][chan] + myVe->dig_Edep->at(ihit);	
+					/*	if(c==1) adc_veto[s][c] = adc_veto[s][c] + myVe->adc1->at(ihit);
+						if(c==2) adc_veto[s][c] = adc_veto[s][c] + myVe->adc2->at(ihit);
+						if(c==3) adc_veto[s][c] = adc_veto[s][c] + myVe->adc3->at(ihit);
+						if(c==4) adc_veto[s][c] = adc_veto[s][c] + myVe->adc4->at(ihit);	
+					*/	if(E_dep_veto[sec][chan]*1000>veto_threshold) counter=counter+1;		
+					//	cout<<veto_nhit<<" "<<ihit<<" "<<counter<<endl; 			
 		}
 
 		if (theta< theta_lim){
@@ -185,15 +183,10 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 			Gen_Ek_det_binT->Fill(Ek/1000);
 			if (det_nhit==1){
 				if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // compreso tra 10 e 100 keV
-					for (int s=1; s<7; s++){
-						for (int c=1; c<5; c++){
-							if(E_dep_veto[s][c]*1000<=veto_threshold){
-								//cout<<s<<" "<<c<<" "<<E_dep_veto[s][c]*1000<<" "<<veto_threshold<<endl;
+					if(counter==0){
+								//cout<<E_dep_veto[s][c]*1000<<endl;
 								Gen_Ek_lAr->Fill(Ek/1000);
 								Gen_Ek_lAr_binT->Fill(Ek/1000);	
-							break;
-							}
-						}
 					}	
 				}
 			}	

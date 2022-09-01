@@ -2,8 +2,8 @@
 while read -r line;
 do
    # root -l -b -q "nVeto_con_loop.C($line)";
-    #root -l -b -q "lAr_n_eff_Gd.C($line)";
-    root -l -b -q "lAr_n_eff_cosmics.C($line)";
+    root -l -b -q "lAr_n_eff_Gd.C($line)";
+    #root -l -b -q "lAr_n_eff_cosmics.C($line)";
 done < inputlist.txt
 
 # for name in {"Sci1cm_p43MeV",
