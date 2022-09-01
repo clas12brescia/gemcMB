@@ -966,7 +966,7 @@ sub make_bdx_CT
     make_main_volume();
     make_nVeto;
     make_lAr;
-  #  make_passive;
+    make_passive;
   #  make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
