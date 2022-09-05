@@ -78,7 +78,8 @@ my $LAr_dim=35.6/2.;
 my $Sci_thickness=10./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=0.00025/2.;
-
+my $Pb_thickness=1./2;
+my $Pb_dim=150./2;
 
 sub make_nVeto
 {
@@ -598,7 +599,7 @@ sub make_lAr
 
  ################################### Gadolinium #####################################    
 
-sub make_passive
+sub make_passive_Gd
 { 
     my %detector = init_det();
     if ($configuration{"variation"} eq "CT")
@@ -917,7 +918,125 @@ sub make_passive
      print_det(\%configuration, \%detector); 
 }
 
+sub make_passive_Pb
+{
+    my %detector = init_det();
+    if ($configuration{"variation"} eq "CT")
+    {$detector{"mother"}      = "bdx_main_volume";}
+    else
+    {$detector{"mother"}      = "Det_house_inner";}
+ 
+ ################################### Lead ##################################### 
+   
+    # Pb_down  
+    $detector{"name"}        = "Pb_down ";
+    $detector{"description"} = "Pb_down side ";
+    $detector{"color"}       = "0000004"; #blue + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    my $Pb_lx =$Pb_dim; 
+    my $Pb_ly =$Pb_thickness; 
+    my $Pb_lz =$Pb_dim; 
+    my $X = 0.;
+    my $Y = -$Pb_dim;
+    my $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
+    $detector{"material"}    = "G4_Pb"; 
+     print_det(\%configuration, \%detector);
 
+
+    # Pb_up 
+    $detector{"name"}        = "Pb_up ";
+    $detector{"description"} = "Pb_up side";
+    $detector{"color"}       = "0000004"; #blue + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = 0.;
+    $Y = +$Pb_dim;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
+    $detector{"material"}    = "G4_Pb";
+    print_det(\%configuration, \%detector);
+  
+    # Pb_right  
+    $detector{"name"}        = "Pb_right ";
+    $detector{"description"} = "Pb_right side  ";
+    $detector{"color"}       = "0000004"; #red + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $Pb_lx =$Pb_thickness; 
+    $Pb_ly =$Pb_dim-$Pb_thickness;
+    $Pb_lz =$Pb_dim;
+    $X = $Pb_dim-$Pb_thickness; 
+    $Y = 0.;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
+    $detector{"material"}    = "G4_Pb"; 
+     print_det(\%configuration, \%detector);
+
+       # Pb_left 
+    $detector{"name"}        = "Pb_left ";
+    $detector{"description"} = "Pb_left side  ";
+    $detector{"color"}       = "0000004"; #red + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = - $Pb_dim +$Pb_thickness;
+    $Y = 0.;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
+    $detector{"material"}    = "G4_Pb"; 
+     print_det(\%configuration, \%detector);
+
+   
+     # Pb_front  
+    $detector{"name"}        = "Pb_front ";
+    $detector{"description"} = "Pb_front side ";
+    $detector{"color"}       = "0000004"; #giallo + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $Pb_lx =$Pb_dim ; 
+    $Pb_ly =$Pb_dim + $Pb_thickness; 
+    $Pb_lz =$Pb_thickness; 
+    $X = 0.;
+    $Y = 0.;
+    $Z = $Pb_dim + $Pb_thickness;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
+    $detector{"material"}    = "G4_Pb"; 
+     print_det(\%configuration, \%detector);
+
+
+       # Pb_back 
+    $detector{"name"}        = "Pb_back ";
+    $detector{"description"} = "Pb_back side ";
+    $detector{"color"}       = "0000003"; #giallo + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = 0.;
+    $Y = 0.;
+    $Z = -$Pb_dim - $Pb_thickness;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
+    $detector{"material"}    = "G4_Pb"; 
+     print_det(\%configuration, \%detector);
+
+} 
 
 
 sub make_flux_cosmic_sph
@@ -966,7 +1085,8 @@ sub make_bdx_CT
     make_main_volume();
     make_nVeto;
     make_lAr;
-    make_passive;
+    make_passive_Gd;
+    make_passive_Pb;
   #  make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
