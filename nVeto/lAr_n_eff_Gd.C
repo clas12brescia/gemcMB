@@ -126,7 +126,7 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 		double theta_lim = atan (178/(-myGen->vy->at(0) - 178));
     	const double Edep_min =10; 			//in keV
     	const double Edep_max = 100; 		//in keV
-    	const double veto_threshold = 0; 	//in keV
+    	const double veto_threshold = 1000; 	//in keV
    		const double n_mass = 939.565378;	//in MeV
    		int counter=0;
 
