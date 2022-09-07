@@ -78,7 +78,7 @@ my $LAr_dim=35.6/2.;
 my $Sci_thickness=10./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=0.00025/2.;
-my $Pb_thickness=1./2;
+my $Pb_thickness=5./2;
 my $Pb_dim=150./2;
 
 sub make_nVeto
