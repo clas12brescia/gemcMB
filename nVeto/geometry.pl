@@ -78,8 +78,10 @@ my $LAr_dim=35.6/2.;
 my $Sci_thickness=10./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=0.00025/2.;
+my $water_thickness=10./2;
+my $water_dim=150./2;
 my $Pb_thickness=5./2;
-my $Pb_dim=150./2;
+my $Pb_dim=$water_dim + 2*$water_thickness;
 
 sub make_nVeto
 {
@@ -918,6 +920,126 @@ sub make_passive_Gd
      print_det(\%configuration, \%detector); 
 }
 
+sub make_passive_water
+{
+    my %detector = init_det();
+    if ($configuration{"variation"} eq "CT")
+    {$detector{"mother"}      = "bdx_main_volume";}
+    else
+    {$detector{"mother"}      = "Det_house_inner";}
+ 
+ ################################### Lead ##################################### 
+   
+    # water_down  
+    $detector{"name"}        = "water_down ";
+    $detector{"description"} = "water_down side ";
+    $detector{"color"}       = "08e8de4"; #blue + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    my $water_lx =$water_dim; 
+    my $water_ly =$water_thickness; 
+    my $water_lz =$water_dim; 
+    my $X = 0.;
+    my $Y = -$water_dim;
+    my $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
+    $detector{"material"}    = "G4_WATER"; 
+     print_det(\%configuration, \%detector);
+
+
+    # water_up 
+    $detector{"name"}        = "water_up ";
+    $detector{"description"} = "water_up side";
+    $detector{"color"}       = "08e8de4"; #blue + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = 0.;
+    $Y = +$water_dim;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
+    $detector{"material"}    = "G4_WATER";
+    print_det(\%configuration, \%detector);
+  
+    # water_right  
+    $detector{"name"}        = "water_right ";
+    $detector{"description"} = "water_right side  ";
+    $detector{"color"}       = "08e8de4"; #red + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $water_lx =$water_thickness; 
+    $water_ly =$water_dim-$water_thickness;
+    $water_lz =$water_dim;
+    $X = $water_dim-$water_thickness; 
+    $Y = 0.;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
+    $detector{"material"}    = "G4_WATER"; 
+     print_det(\%configuration, \%detector);
+
+       # water_left 
+    $detector{"name"}        = "water_left ";
+    $detector{"description"} = "water_left side  ";
+    $detector{"color"}       = "08e8de4"; #red + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = - $water_dim +$water_thickness;
+    $Y = 0.;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
+    $detector{"material"}    = "G4_WATER"; 
+     print_det(\%configuration, \%detector);
+
+   
+     # water_front  
+    $detector{"name"}        = "water_front ";
+    $detector{"description"} = "water_front side ";
+    $detector{"color"}       = "08e8de4"; #giallo + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $water_lx =$water_dim ; 
+    $water_ly =$water_dim + $water_thickness; 
+    $water_lz =$water_thickness; 
+    $X = 0.;
+    $Y = 0.;
+    $Z = $water_dim + $water_thickness;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
+    $detector{"material"}    = "G4_WATER"; 
+     print_det(\%configuration, \%detector);
+
+
+       # water_back 
+    $detector{"name"}        = "water_back ";
+    $detector{"description"} = "water_back side ";
+    $detector{"color"}       = "08e8de4"; #giallo + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = 0.;
+    $Y = 0.;
+    $Z = -$water_dim - $water_thickness;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
+    $detector{"material"}    = "G4_WATER"; 
+     print_det(\%configuration, \%detector);
+
+} 
+
 sub make_passive_Pb
 {
     my %detector = init_det();
@@ -1087,6 +1209,7 @@ sub make_bdx_CT
     make_lAr;
     make_passive_Gd;
     make_passive_Pb;
+    make_passive_water;
   #  make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
