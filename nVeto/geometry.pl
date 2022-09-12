@@ -946,7 +946,8 @@ sub make_passive_water
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "G4_WATER"; 
+    $detector{"material"}    = "Borate_Concrete"; 
+    #$detector{"material"}    = "G4_WATER"; 
      print_det(\%configuration, \%detector);
 
 
@@ -963,7 +964,8 @@ sub make_passive_water
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "G4_WATER";
+    $detector{"material"}    = "Borate_Concrete"; 
+    #$detector{"material"}    = "G4_WATER"; 
     print_det(\%configuration, \%detector);
   
     # water_right  
@@ -982,7 +984,8 @@ sub make_passive_water
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "G4_WATER"; 
+    $detector{"material"}    = "Borate_Concrete"; 
+    #$detector{"material"}    = "G4_WATER"; 
      print_det(\%configuration, \%detector);
 
        # water_left 
@@ -998,7 +1001,8 @@ sub make_passive_water
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "G4_WATER"; 
+    $detector{"material"}    = "Borate_Concrete"; 
+    #$detector{"material"}    = "G4_WATER"; 
      print_det(\%configuration, \%detector);
 
    
@@ -1018,7 +1022,8 @@ sub make_passive_water
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "G4_WATER"; 
+    $detector{"material"}    = "Borate_Concrete"; 
+    #$detector{"material"}    = "G4_WATER"; 
      print_det(\%configuration, \%detector);
 
 
@@ -1035,7 +1040,8 @@ sub make_passive_water
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "G4_WATER"; 
+    $detector{"material"}    = "Borate_Concrete"; 
+    #$detector{"material"}    = "G4_WATER"; 
      print_det(\%configuration, \%detector);
 
 } 

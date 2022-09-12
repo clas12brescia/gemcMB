@@ -36,6 +36,15 @@ sub define_bdx_materials
     $mat{"components"}    = "G4_Gd 1."; #1. è la percentuale del componente (100%)
     print_mat(\%configuration, \%mat);
 
+    # Borate_Concrete 
+    %mat = init_mat();
+    $mat{"name"}          = "Borate_Concrete";
+    $mat{"description"}   = "Borate Concrete";
+    $mat{"density"}       = "2.7";
+    $mat{"ncomponents"}   = "11";
+    $mat{"components"}    = "G4_H 0.0095 G4_C 0.00095 G4_O 0.502652 G4_Na 0.0152 G4_Mg 0.00019 G4_Al 0.032178 G4_Si 0.32017 G4_K 0.01235 G4_Ca 0.0418 G4_Fe 0.0133 G4_B 0.05";
+    print_mat(\%configuration, \%mat);
+
     # Iron
     %mat = init_mat();
     $mat{"name"}          = "BDX_Iron";
