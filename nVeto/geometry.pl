@@ -80,7 +80,7 @@ my $Sci_dim=$LAr_dim;
 my $Gd_thickness=0.00025/2.;
 my $water_thickness=10./2;
 my $water_dim=150./2;
-my $Pb_thickness=5./2;
+my $Pb_thickness=10./2;
 my $Pb_dim=$water_dim + 2*$water_thickness;
 
 sub make_nVeto
@@ -1072,7 +1072,7 @@ sub make_passive_Pb
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"material"}    = "G4_Fe"; 
      print_det(\%configuration, \%detector);
 
 
@@ -1089,7 +1089,7 @@ sub make_passive_Pb
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb";
+    $detector{"material"}    = "G4_Fe";
     print_det(\%configuration, \%detector);
   
     # Pb_right  
@@ -1108,7 +1108,7 @@ sub make_passive_Pb
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"material"}    = "G4_Fe"; 
      print_det(\%configuration, \%detector);
 
        # Pb_left 
@@ -1124,7 +1124,7 @@ sub make_passive_Pb
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"material"}    = "G4_Fe"; 
      print_det(\%configuration, \%detector);
 
    
@@ -1144,7 +1144,7 @@ sub make_passive_Pb
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"material"}    = "G4_Fe"; 
      print_det(\%configuration, \%detector);
 
 
@@ -1161,7 +1161,7 @@ sub make_passive_Pb
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"material"}    = "G4_Fe"; 
      print_det(\%configuration, \%detector);
 
 } 
@@ -1215,7 +1215,7 @@ sub make_bdx_CT
     make_lAr;
     make_passive_Gd;
     make_passive_Pb;
-    make_passive_water;
+  #  make_passive_water;
   #  make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
