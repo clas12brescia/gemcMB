@@ -78,7 +78,7 @@ my $LAr_dim=35.6/2.;
 my $Sci_thickness=10./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=0.00025/2.;
-my $water_thickness=10./2;
+my $water_thickness=50./2;
 my $water_dim=150./2;
 my $Pb_thickness=10./2;
 my $Pb_dim=$water_dim + 2*$water_thickness;
@@ -1214,8 +1214,8 @@ sub make_bdx_CT
     make_nVeto;
     make_lAr;
     make_passive_Gd;
-    make_passive_Pb;
-  #  make_passive_water;
+  #  make_passive_Pb;
+    make_passive_water;
   #  make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
