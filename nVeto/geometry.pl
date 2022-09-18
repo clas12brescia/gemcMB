@@ -78,10 +78,12 @@ my $LAr_dim=35.6/2.;
 my $Sci_thickness=10./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=0.00025/2.;
-my $water_thickness=50./2;
-my $water_dim=150./2;
-my $Pb_thickness=50./2;
-my $Pb_dim=$water_dim + 2*$water_thickness;
+my $pass1_thickness=50./2;
+my $pass1_dim=150./2;
+my $pass2_thickness=50./2;
+my $pass2_dim=$pass1_dim + 2*$pass1_thickness;
+my $passive_mat1= "G4_WATER";
+my $passive_mat2= "G4_Pb";
 
 sub make_nVeto
 {
@@ -920,7 +922,7 @@ sub make_passive_Gd
      print_det(\%configuration, \%detector); 
 }
 
-sub make_passive_water
+sub make_passive_1
 {
     my %detector = init_det();
     if ($configuration{"variation"} eq "CT")
@@ -930,123 +932,117 @@ sub make_passive_water
  
  ################################### Lead ##################################### 
    
-    # water_down  
-    $detector{"name"}        = "water_down ";
-    $detector{"description"} = "water_down side ";
+    # pass1_down  
+    $detector{"name"}        = "pass1_down ";
+    $detector{"description"} = "pass1_down side ";
     $detector{"color"}       = "08e8de4"; #blue + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    my $water_lx =$water_dim; 
-    my $water_ly =$water_thickness; 
-    my $water_lz =$water_dim; 
+    my $pass1_lx =$pass1_dim; 
+    my $pass1_ly =$pass1_thickness; 
+    my $pass1_lz =$pass1_dim; 
     my $X = 0.;
-    my $Y = -$water_dim;
+    my $Y = -$pass1_dim;
     my $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "Borate_Concrete"; 
-    #$detector{"material"}    = "G4_WATER"; 
+    $detector{"dimensions"}  = "$pass1_lx*cm $pass1_ly*cm $pass1_lz*cm";
+    $detector{"material"}    = "$passive_mat1"; 
      print_det(\%configuration, \%detector);
 
 
-    # water_up 
-    $detector{"name"}        = "water_up ";
-    $detector{"description"} = "water_up side";
+    # pass1_up 
+    $detector{"name"}        = "pass1_up ";
+    $detector{"description"} = "pass1_up side";
     $detector{"color"}       = "08e8de4"; #blue + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
     $X = 0.;
-    $Y = +$water_dim;
+    $Y = +$pass1_dim;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "Borate_Concrete"; 
-    #$detector{"material"}    = "G4_WATER"; 
+    $detector{"dimensions"}  = "$pass1_lx*cm $pass1_ly*cm $pass1_lz*cm";
+    $detector{"material"}    = "$passive_mat1"; 
     print_det(\%configuration, \%detector);
   
-    # water_right  
-    $detector{"name"}        = "water_right ";
-    $detector{"description"} = "water_right side  ";
+    # pass1_right  
+    $detector{"name"}        = "pass1_right ";
+    $detector{"description"} = "pass1_right side  ";
     $detector{"color"}       = "08e8de4"; #red + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $water_lx =$water_thickness; 
-    $water_ly =$water_dim-$water_thickness;
-    $water_lz =$water_dim;
-    $X = $water_dim-$water_thickness; 
+    $pass1_lx =$pass1_thickness; 
+    $pass1_ly =$pass1_dim-$pass1_thickness;
+    $pass1_lz =$pass1_dim;
+    $X = $pass1_dim-$pass1_thickness; 
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "Borate_Concrete"; 
-    #$detector{"material"}    = "G4_WATER"; 
+    $detector{"dimensions"}  = "$pass1_lx*cm $pass1_ly*cm $pass1_lz*cm";
+    $detector{"material"}    = "$passive_mat1"; 
      print_det(\%configuration, \%detector);
 
-       # water_left 
-    $detector{"name"}        = "water_left ";
-    $detector{"description"} = "water_left side  ";
+       # pass1_left 
+    $detector{"name"}        = "pass1_left ";
+    $detector{"description"} = "pass1_left side  ";
     $detector{"color"}       = "08e8de4"; #red + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $X = - $water_dim +$water_thickness;
+    $X = - $pass1_dim +$pass1_thickness;
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "Borate_Concrete"; 
-    #$detector{"material"}    = "G4_WATER"; 
+    $detector{"dimensions"}  = "$pass1_lx*cm $pass1_ly*cm $pass1_lz*cm";
+    $detector{"material"}    = "$passive_mat1"; 
      print_det(\%configuration, \%detector);
 
    
-     # water_front  
-    $detector{"name"}        = "water_front ";
-    $detector{"description"} = "water_front side ";
+     # pass1_front  
+    $detector{"name"}        = "pass1_front ";
+    $detector{"description"} = "pass1_front side ";
     $detector{"color"}       = "08e8de4"; #giallo + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $water_lx =$water_dim ; 
-    $water_ly =$water_dim + $water_thickness; 
-    $water_lz =$water_thickness; 
+    $pass1_lx =$pass1_dim ; 
+    $pass1_ly =$pass1_dim + $pass1_thickness; 
+    $pass1_lz =$pass1_thickness; 
     $X = 0.;
     $Y = 0.;
-    $Z = $water_dim + $water_thickness;
+    $Z = $pass1_dim + $pass1_thickness;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "Borate_Concrete"; 
-    #$detector{"material"}    = "G4_WATER"; 
+    $detector{"dimensions"}  = "$pass1_lx*cm $pass1_ly*cm $pass1_lz*cm";
+    $detector{"material"}    = "$passive_mat1"; 
      print_det(\%configuration, \%detector);
 
 
-       # water_back 
-    $detector{"name"}        = "water_back ";
-    $detector{"description"} = "water_back side ";
+       # pass1_back 
+    $detector{"name"}        = "pass1_back ";
+    $detector{"description"} = "pass1_back side ";
     $detector{"color"}       = "08e8de4"; #giallo + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
     $X = 0.;
     $Y = 0.;
-    $Z = -$water_dim - $water_thickness;
+    $Z = -$pass1_dim - $pass1_thickness;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$water_lx*cm $water_ly*cm $water_lz*cm";
-    $detector{"material"}    = "Borate_Concrete"; 
-    #$detector{"material"}    = "G4_WATER"; 
+    $detector{"dimensions"}  = "$pass1_lx*cm $pass1_ly*cm $pass1_lz*cm";
+    $detector{"material"}    = "$passive_mat1"; 
      print_det(\%configuration, \%detector);
 
 } 
 
-sub make_passive_Pb
+sub make_passive_2
 {
     my %detector = init_det();
     if ($configuration{"variation"} eq "CT")
@@ -1056,112 +1052,112 @@ sub make_passive_Pb
  
  ################################### Lead ##################################### 
    
-    # Pb_down  
-    $detector{"name"}        = "Pb_down ";
-    $detector{"description"} = "Pb_down side ";
+    # pass2_down  
+    $detector{"name"}        = "pass2_down ";
+    $detector{"description"} = "pass2_down side ";
     $detector{"color"}       = "0000004"; #blue + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    my $Pb_lx =$Pb_dim; 
-    my $Pb_ly =$Pb_thickness; 
-    my $Pb_lz =$Pb_dim; 
+    my $pass2_lx =$pass2_dim; 
+    my $pass2_ly =$pass2_thickness; 
+    my $pass2_lz =$pass2_dim; 
     my $X = 0.;
-    my $Y = -$Pb_dim;
+    my $Y = -$pass2_dim;
     my $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"dimensions"}  = "$pass2_lx*cm $pass2_ly*cm $pass2_lz*cm";
+    $detector{"material"}    = "$passive_mat2"; 
      print_det(\%configuration, \%detector);
 
 
-    # Pb_up 
-    $detector{"name"}        = "Pb_up ";
-    $detector{"description"} = "Pb_up side";
+    # pass2_up 
+    $detector{"name"}        = "pass2_up ";
+    $detector{"description"} = "pass2_up side";
     $detector{"color"}       = "0000004"; #blue + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
     $X = 0.;
-    $Y = +$Pb_dim;
+    $Y = +$pass2_dim;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb";
+    $detector{"dimensions"}  = "$pass2_lx*cm $pass2_ly*cm $pass2_lz*cm";
+    $detector{"material"}    = "$passive_mat2";
     print_det(\%configuration, \%detector);
   
-    # Pb_right  
-    $detector{"name"}        = "Pb_right ";
-    $detector{"description"} = "Pb_right side  ";
+    # pass2_right  
+    $detector{"name"}        = "pass2_right ";
+    $detector{"description"} = "pass2_right side  ";
     $detector{"color"}       = "0000004"; #red + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $Pb_lx =$Pb_thickness; 
-    $Pb_ly =$Pb_dim-$Pb_thickness;
-    $Pb_lz =$Pb_dim;
-    $X = $Pb_dim-$Pb_thickness; 
+    $pass2_lx =$pass2_thickness; 
+    $pass2_ly =$pass2_dim-$pass2_thickness;
+    $pass2_lz =$pass2_dim;
+    $X = $pass2_dim-$pass2_thickness; 
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"dimensions"}  = "$pass2_lx*cm $pass2_ly*cm $pass2_lz*cm";
+    $detector{"material"}    = "$passive_mat2"; 
      print_det(\%configuration, \%detector);
 
-       # Pb_left 
-    $detector{"name"}        = "Pb_left ";
-    $detector{"description"} = "Pb_left side  ";
+       # pass2_left 
+    $detector{"name"}        = "pass2_left ";
+    $detector{"description"} = "pass2_left side  ";
     $detector{"color"}       = "0000004"; #red + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $X = - $Pb_dim +$Pb_thickness;
+    $X = - $pass2_dim +$pass2_thickness;
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"dimensions"}  = "$pass2_lx*cm $pass2_ly*cm $pass2_lz*cm";
+    $detector{"material"}    = "$passive_mat2"; 
      print_det(\%configuration, \%detector);
 
    
-     # Pb_front  
-    $detector{"name"}        = "Pb_front ";
-    $detector{"description"} = "Pb_front side ";
+     # pass2_front  
+    $detector{"name"}        = "pass2_front ";
+    $detector{"description"} = "pass2_front side ";
     $detector{"color"}       = "0000004"; #giallo + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
-    $Pb_lx =$Pb_dim ; 
-    $Pb_ly =$Pb_dim + $Pb_thickness; 
-    $Pb_lz =$Pb_thickness; 
+    $pass2_lx =$pass2_dim ; 
+    $pass2_ly =$pass2_dim + $pass2_thickness; 
+    $pass2_lz =$pass2_thickness; 
     $X = 0.;
     $Y = 0.;
-    $Z = $Pb_dim + $Pb_thickness;
+    $Z = $pass2_dim + $pass2_thickness;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"dimensions"}  = "$pass2_lx*cm $pass2_ly*cm $pass2_lz*cm";
+    $detector{"material"}    = "$passive_mat2"; 
      print_det(\%configuration, \%detector);
 
 
-       # Pb_back 
-    $detector{"name"}        = "Pb_back ";
-    $detector{"description"} = "Pb_back side ";
+       # pass2_back 
+    $detector{"name"}        = "pass2_back ";
+    $detector{"description"} = "pass2_back side ";
     $detector{"color"}       = "0000003"; #giallo + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
     $X = 0.;
     $Y = 0.;
-    $Z = -$Pb_dim - $Pb_thickness;
+    $Z = -$pass2_dim - $pass2_thickness;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
     $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$Pb_lx*cm $Pb_ly*cm $Pb_lz*cm";
-    $detector{"material"}    = "G4_Pb"; 
+    $detector{"dimensions"}  = "$pass2_lx*cm $pass2_ly*cm $pass2_lz*cm";
+    $detector{"material"}    = "$passive_mat2"; 
      print_det(\%configuration, \%detector);
 
 } 
@@ -1214,8 +1210,8 @@ sub make_bdx_CT
     make_nVeto;
     make_lAr;
     make_passive_Gd;
-    make_passive_Pb;
-  # make_passive_water;
+    make_passive_1;
+    make_passive_2;
   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
