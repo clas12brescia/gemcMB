@@ -82,8 +82,8 @@ my $pass1_thickness=50./2;
 my $pass1_dim=150./2;
 my $pass2_thickness=50./2;
 my $pass2_dim=$pass1_dim + 2*$pass1_thickness;
-my $passive_mat1= "Borate_Concrete";
-my $passive_mat2= "G4_Pb";
+my $passive_mat2= "Borate_Concrete";
+my $passive_mat1= "G4_WATER";
 
 sub make_nVeto
 {
@@ -1211,7 +1211,7 @@ sub make_bdx_CT
     make_lAr;
     make_passive_Gd;
     make_passive_1;
-  #  make_passive_2;
+    make_passive_2;
   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
