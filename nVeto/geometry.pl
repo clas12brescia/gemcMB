@@ -82,8 +82,8 @@ my $pass1_thickness=50./2;
 my $pass1_dim=150./2;
 my $pass2_thickness=50./2;
 my $pass2_dim=$pass1_dim + 2*$pass1_thickness;
-my $passive_mat2= "Borate_Concrete";
-my $passive_mat1= "G4_WATER";
+my $passive_mat1= "Borate_Concrete";
+my $passive_mat2= "G4_WATER";
 
 sub make_nVeto
 {
