@@ -19,11 +19,13 @@ bool Debug = false;
 
 */
 
-void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
-	
+void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){	
 	string filename("Output_gemc/out_" + inputname + ".root");
-	string outname("Output/Sort_" + inputname + ".root");
 
+//	string outname("Output/Sort_" + inputname +"_thr0keV.root");
+//	string outname("Output/Sort_" + inputname +"_thr100keV.root");
+	string outname("Output/Sort_" + inputname +"_thr1MeV.root");
+    
 
 	// Use a TGraph just to import bin (values and contents)
 	// from a text file. The resulting arrays will be used
@@ -49,9 +51,9 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 	generatedClass * myGen= new generatedClass(generated);
 	fluxClass * myFl = new fluxClass(flux);
 
-//	myVe->Init(veto);
-//	myGen->Init(generated);
-//	myFl->Init(flux);
+	//	myVe->Init(veto);
+	//	myGen->Init(generated);
+	//	myFl->Init(flux);
 	
 	////////////////////
 	// HISTOS DEFINITION
@@ -86,19 +88,26 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 		Gen_Ek_lAr_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	Gen_Ek_lAr_binT->GetYaxis()->SetTitle("Counts");
 
+	TH1D *Gen_Ek_lAr_outR_binT= new TH1D("Gen_Ek_lAr_outR_binT","Gen_Ek_lAr_outR_binT",429,fluxBinLeftEdge);
+		Gen_Ek_lAr_outR_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_lAr_outR_binT->GetYaxis()->SetTitle("Counts");  	
+
+	TH1D *Gen_Ek_outVeto_binT= new TH1D("Gen_Ek_outVeto_binT","Gen_Ek_outVeto_binT",429,fluxBinLeftEdge);
+		Gen_Ek_outVeto_binT->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+	  	Gen_Ek_outVeto_binT->GetYaxis()->SetTitle("Counts");   	
+
 	TH1D *NFlux= new TH1D("NFlux","NFlux",429,fluxBinLeftEdge);
 		NFlux->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
 	  	NFlux->GetYaxis()->SetTitle("flux");  
 
-  
-
+  	 
 	//////////////////////
 	// START OF THE LOOP
 	//////////////////////
 
 	Long64_t nentries = det->GetEntries();
 	if (Debug){
-		nentries=1000;
+		nentries=15;
 		//cout << "How many nentries?" <<endl;
    		//cin>>nentries;
     	cout << "Working in debug mode: " <<nentries<< endl;
@@ -112,7 +121,7 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 	}
 
   	cout<< "start of loop"<<endl;
-
+  	
 	for (int jentry=0; jentry<nentries; jentry++) {
 	    	//if(!Debug)if((jentry%(nentries/50))==0) cout<<round(100*((jentry/Float_t(nentries))))<<"%"<<endl;
 		
@@ -121,17 +130,19 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 		flux->GetEntry(jentry);
 		det->GetEntry(jentry);
 		
-	///////////////// VARIABLE DEINFITION /////////////////	
+		///////////////// VARIABLE DEINFITION /////////////////	
 
 		double theta_lim = atan (178/(-myGen->vy->at(0) - 178));
-    	const double Edep_min =10; 			//in keV
+		const double Edep_min =10; 			//in keV
     	const double Edep_max = 100; 		//in keV
-    	const double veto_threshold = 1000; 	//in keV
+    	const double veto_threshold = 1000; 	//in keV 	
    		const double n_mass = 939.565378;	//in MeV
+
+
    		int counter=0;
 
 		double E_dep_det = 0;
-		double E_dep_veto[6][4];
+	/*	double E_dep_veto[6][4];
 		double adc_veto[6][4];
 		for (int s=1; s<7; s++){
 			for (int c=1; c<5; c++){
@@ -139,7 +150,7 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 				adc_veto[s][c]=0;				
 			}
 		}
-
+*/
 		int det_nhit = myDet->hitn->size();	
 		int veto_nhit = myVe->hitn->size();	
 
@@ -165,35 +176,40 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 		Gen_mom->Fill(mom/1000); // in GeV
 		Gen_Ek->Fill(Ek/1000);
 
-		
+		//cout<<"jentry  "<<jentry<<" veto nhit"<< veto_nhit<<endl;
 		for (int ihit=0; ihit < veto_nhit; ihit++) {
-			int chan = myVe->channel->at(ihit);
-			int sec = myVe->sector->at(ihit);		
-			E_dep_veto[sec][chan] = E_dep_veto[sec][chan] + myVe->dig_Edep->at(ihit);	
-					/*	if(c==1) adc_veto[s][c] = adc_veto[s][c] + myVe->adc1->at(ihit);
-						if(c==2) adc_veto[s][c] = adc_veto[s][c] + myVe->adc2->at(ihit);
-						if(c==3) adc_veto[s][c] = adc_veto[s][c] + myVe->adc3->at(ihit);
-						if(c==4) adc_veto[s][c] = adc_veto[s][c] + myVe->adc4->at(ihit);	
-					*/	if(E_dep_veto[sec][chan]*1000>veto_threshold) counter=counter+1;		
-					//	cout<<veto_nhit<<" "<<ihit<<" "<<counter<<endl; 			
+		//	int chan = myVe->channel->at(ihit);
+		//	int sec = myVe->sector->at(ihit);		
+		//	E_dep_veto[sec][chan] = E_dep_veto[sec][chan] + myVe->dig_Edep->at(ihit);
+		//	cout<< "ihit "<< ihit<<"chan "<<chan <<" sec  "<<sec<<" Edep veto  "<<E_dep_veto[sec][chan]*1000<<endl;	
+		//	cout<<" counter pre  "<<counter<<endl;	
+			if(myVe->dig_Edep->at(ihit)*1000>veto_threshold) {
+		//		cout<<" counter post  "<<counter<<endl;
+				counter=counter+1;
+			} 
+			if (counter>0) break;			 			
 		}
 
 		if (theta< theta_lim){
 			Gen_Ek_det->Fill(Ek/1000);
 			Gen_Ek_det_binT->Fill(Ek/1000);
 			if (det_nhit==1){
+				//cout<<"Edep "<<myDet->dig_Edep->at(0)*1000<<endl;
 				if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // compreso tra 10 e 100 keV
 					if(counter==0){
 								//cout<<E_dep_veto[s][c]*1000<<endl;
 								Gen_Ek_lAr->Fill(Ek/1000);
 								Gen_Ek_lAr_binT->Fill(Ek/1000);	
-					}	
+					}
+					else Gen_Ek_outVeto_binT->Fill(Ek/1000);	
 				}
+				else if (counter==0) Gen_Ek_lAr_outR_binT->Fill(Ek/1000);
+
 			}	
 		} 
 		
 
-		
+		//cout<<"thr1"<<veto_threshold<<endl;
 				
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
       	std::cout << "                      \r" << jentry << " / " << nentries
@@ -206,15 +222,40 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 		
 
 	}
-
+		
 	cout<<endl;
-	cout<<Gen_Ek_lAr->Integral()<<endl;
+	cout<<"n con Edep 10-100 keV"<<Gen_Ek_lAr_binT->Integral()<<endl;
+	cout<<"Integral(0,99)    n con Edep 10-100 keV = "<< Gen_Ek_lAr_binT->Integral(1,100)<<endl;
+	cout<<"Integral(100,109) n con Edep 10-100 keV = "<< Gen_Ek_lAr_binT->Integral(101,110)<<endl;
+	cout<<"Integral(110,119) n con Edep 10-100 keV = "<< Gen_Ek_lAr_binT->Integral(111,120)<<endl;
+	cout<<"Integral(120,129) n con Edep 10-100 keV = "<< Gen_Ek_lAr_binT->Integral(121,130)<<endl;
+	cout<<"Integral(130,229) n con Edep 10-100 keV = "<< Gen_Ek_lAr_binT->Integral(131,230)<<endl;
+	cout<<"Integral(230,429) n con Edep 10-100 keV = "<< Gen_Ek_lAr_binT->Integral(231,430)<<endl;
+	cout<<"n con Edep out of Range"<<Gen_Ek_lAr_outR_binT->Integral()<<endl;
+	cout<<"Integral(0,99) 	 n con Edep out of Range = "<< Gen_Ek_lAr_outR_binT->Integral(1,100)<<endl;
+	cout<<"Integral(100,109) n con Edep out of Range = "<< Gen_Ek_lAr_outR_binT->Integral(101,110)<<endl;
+	cout<<"Integral(110,119) n con Edep out of Range = "<< Gen_Ek_lAr_outR_binT->Integral(111,120)<<endl;
+	cout<<"Integral(120,129) n con Edep out of Range = "<< Gen_Ek_lAr_outR_binT->Integral(121,130)<<endl;
+	cout<<"Integral(130,229) n con Edep out of Range = "<< Gen_Ek_lAr_outR_binT->Integral(131,230)<<endl;
+	cout<<"Integral(230,429) n con Edep out of Range = "<< Gen_Ek_lAr_outR_binT->Integral(231,430)<<endl;
+	cout<<"n con Edep out of Range"<<Gen_Ek_lAr_outR_binT->Integral()<<endl;
+	cout<<"Integral(0,99) 	 n con Edep out Veto = "<< Gen_Ek_outVeto_binT->Integral(1,100)<<endl;
+	cout<<"Integral(100,109) n con Edep out Veto = "<< Gen_Ek_outVeto_binT->Integral(101,110)<<endl;
+	cout<<"Integral(110,119) n con Edep out Veto = "<< Gen_Ek_outVeto_binT->Integral(111,120)<<endl;
+	cout<<"Integral(120,129) n con Edep out Veto = "<< Gen_Ek_outVeto_binT->Integral(121,130)<<endl;
+	cout<<"Integral(130,229) n con Edep out Veto = "<< Gen_Ek_outVeto_binT->Integral(131,230)<<endl;
+	cout<<"Integral(230,429) n con Edep out Veto = "<< Gen_Ek_outVeto_binT->Integral(231,430)<<endl;
+		
+
     cout<< "end of loop  "<< endl;
         
         ////////////////////////
         //WRITE ON OUTPUT FILE
         ////////////////////////
-        
+
+   
+    
+    
     TFile *g;
   	if(Debug) g = new TFile("Output/Debug.root","RECREATE");
  	else g = new TFile(outname.c_str(),"RECREATE");
@@ -224,10 +265,11 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 	Gen_Ek->Write(0,TObject::kOverwrite);
     Gen_Ek_lAr->Write(0,TObject::kOverwrite);
     Gen_Ek_lAr_binT->Write(0,TObject::kOverwrite);
+    Gen_Ek_lAr_outR_binT->Write(0,TObject::kOverwrite);
     NFlux->Write(0,TObject::kOverwrite);
     Gen_Ek_det_binT->Write(0,TObject::kOverwrite);
     Gen_Ek_det->Write(0,TObject::kOverwrite);
-
+    Gen_Ek_outVeto_binT->Write(0,TObject::kOverwrite);
     
 
  	g->Close();

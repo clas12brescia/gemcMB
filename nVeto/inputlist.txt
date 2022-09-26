@@ -1,4 +1,3 @@
-"Dump_E0-400MeV_veto40cm_Gd250m_Pb5cm"
-"Dump_E0-400MeV_veto40cm_Gd250m_Pb10cm"
-"Dump_E0-400MeV_veto40cm_Gd250m_Pb5cm_h2o10cm"
-"Dump_E0-400MeV_veto40cm_Gd250m_Pb10cm_h2o10cm"
+"Dump_E0-400MeV_veto40cm_Gd250m_Bconcrete50cm_h2o50cm"
+"Dump_E0-400MeV_veto40cm_Gd250m_h2o50cm_Bconcrete50cm"
+"Dump_E0-400MeV_veto40cm_Gd250m_Pb50cm"
