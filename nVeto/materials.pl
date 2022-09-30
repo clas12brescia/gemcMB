@@ -55,6 +55,15 @@ sub define_bdx_materials
     print_mat(\%configuration, \%mat);
 	
     
+    # Borate_Polyethylene
+    %mat = init_mat();
+    $mat{"name"}          = "Borate_Polyethylene";   
+    $mat{"description"}   = "Borate_Polyethylene material C2H4 0.94 g/cm3";
+    $mat{"density"}       = "1.03";
+    $mat{"ncomponents"}   = "2";
+    $mat{"components"}    = "G4_POLYETHYLENE 0.95 B 0.05";
+    print_mat(\%configuration, \%mat);
+
     # CsI(Tl)
     %mat = init_mat();
     $mat{"name"}          = "CsI_Tl";
