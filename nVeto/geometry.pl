@@ -78,12 +78,21 @@ my $LAr_dim=35.6/2.;
 my $Sci_thickness=10./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=0.00025/2.;
-my $pass1_thickness=60./2;
-my $pass1_dim=150./2;
-my $pass2_thickness=50./2;
-my $pass2_dim=$pass1_dim + 2*$pass1_thickness;
-my $passive_mat1= "Borotron";
-my $passive_mat2= "G4_Pb";
+
+my $passive_mat1= "G4_B";
+my $pass1_thickness=25./2;
+my $pass1_dim=150./2 + 2*$pass1_thickness;
+
+my $passive_mat2= "Borotron";
+my $pass2_thickness=60./2;
+my $pass2_dim=$pass1_dim + 2*$pass1_thickness + 2*$pass2_thickness ;
+
+my $passive_mat3= "G4_Pb";
+my $pass3_thickness=50./2;
+my $pass3_dim=$pass2_dim + 2*$pass2_thickness + 2*$pass3_thickness;
+
+
+
 
 sub make_nVeto
 {
@@ -1162,6 +1171,125 @@ sub make_passive_2
 
 } 
 
+sub make_passive_3
+{
+    my %detector = init_det();
+    if ($configuration{"variation"} eq "CT")
+    {$detector{"mother"}      = "bdx_main_volume";}
+    else
+    {$detector{"mother"}      = "Det_house_inner";}
+ 
+ ################################### passive materiale 3 ##################### 
+   
+    # pass3_down  
+    $detector{"name"}        = "pass3_down ";
+    $detector{"description"} = "pass3_down side ";
+    $detector{"color"}       = "0000004"; #blue + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    my $pass3_lx =$pass3_dim; 
+    my $pass3_ly =$pass3_thickness; 
+    my $pass3_lz =$pass3_dim; 
+    my $X = 0.;
+    my $Y = -$pass3_dim;
+    my $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$pass3_lx*cm $pass3_ly*cm $pass3_lz*cm";
+    $detector{"material"}    = "$passive_mat3"; 
+     print_det(\%configuration, \%detector);
+
+
+    # pass3_up 
+    $detector{"name"}        = "pass3_up ";
+    $detector{"description"} = "pass3_up side";
+    $detector{"color"}       = "0000004"; #blue + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = 0.;
+    $Y = +$pass3_dim;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$pass3_lx*cm $pass3_ly*cm $pass3_lz*cm";
+    $detector{"material"}    = "$passive_mat3";
+    print_det(\%configuration, \%detector);
+  
+    # pass3_right  
+    $detector{"name"}        = "pass3_right ";
+    $detector{"description"} = "pass3_right side  ";
+    $detector{"color"}       = "0000004"; #red + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $pass3_lx =$pass3_thickness; 
+    $pass3_ly =$pass3_dim-$pass3_thickness;
+    $pass3_lz =$pass3_dim;
+    $X = $pass3_dim-$pass3_thickness; 
+    $Y = 0.;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$pass3_lx*cm $pass3_ly*cm $pass3_lz*cm";
+    $detector{"material"}    = "$passive_mat3"; 
+     print_det(\%configuration, \%detector);
+
+       # pass3_left 
+    $detector{"name"}        = "pass3_left ";
+    $detector{"description"} = "pass3_left side  ";
+    $detector{"color"}       = "0000004"; #red + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = - $pass3_dim +$pass3_thickness;
+    $Y = 0.;
+    $Z = 0.;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$pass3_lx*cm $pass3_ly*cm $pass3_lz*cm";
+    $detector{"material"}    = "$passive_mat3"; 
+     print_det(\%configuration, \%detector);
+
+   
+     # pass3_front  
+    $detector{"name"}        = "pass3_front ";
+    $detector{"description"} = "pass3_front side ";
+    $detector{"color"}       = "0000004"; #giallo + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $pass3_lx =$pass3_dim ; 
+    $pass3_ly =$pass3_dim + $pass3_thickness; 
+    $pass3_lz =$pass3_thickness; 
+    $X = 0.;
+    $Y = 0.;
+    $Z = $pass3_dim + $pass3_thickness;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$pass3_lx*cm $pass3_ly*cm $pass3_lz*cm";
+    $detector{"material"}    = "$passive_mat3"; 
+     print_det(\%configuration, \%detector);
+
+
+       # pass3_back 
+    $detector{"name"}        = "pass3_back ";
+    $detector{"description"} = "pass3_back side ";
+    $detector{"color"}       = "0000003"; #giallo + trasparency
+    $detector{"style"}       = 1;
+    $detector{"visible"}     = 1;
+    $detector{"type"}        = "Box";
+    $X = 0.;
+    $Y = 0.;
+    $Z = -$pass3_dim - $pass3_thickness;
+    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+    $detector{"dimensions"}  = "$pass3_lx*cm $pass3_ly*cm $pass3_lz*cm";
+    $detector{"material"}    = "$passive_mat3"; 
+     print_det(\%configuration, \%detector);
+
+} 
 
 sub make_flux_cosmic_sph
 {
@@ -1211,7 +1339,8 @@ sub make_bdx_CT
     make_lAr;
     make_passive_Gd;
     make_passive_1;
-    make_passive_2;
+  # make_passive_2;
+  #  make_passive_3;
   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
