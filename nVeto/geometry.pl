@@ -85,7 +85,7 @@ my $pass1_dim=150./2 + 2*$pass1_thickness;
 
 my $passive_mat2= "Borotron";
 my $pass2_thickness=60./2;
-my $pass2_dim=$pass1_dim + 2*$pass1_thickness + 2*$pass2_thickness ;
+my $pass2_dim=$pass1_dim + 2*$pass1_thickness + 2*$pass2_thickness;
 
 my $passive_mat3= "G4_Pb";
 my $pass3_thickness=50./2;
@@ -1339,7 +1339,7 @@ sub make_bdx_CT
     make_lAr;
     make_passive_Gd;
   #  make_passive_1;
-  # make_passive_2;
+    make_passive_2;
     make_passive_3;
   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
