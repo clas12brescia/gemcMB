@@ -32,17 +32,17 @@ sub make_main_volume
         my $Z = 0.;
         $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-            my $wallthk=0.01; # now it's 15cm or 470cm
+        my $wallthk=10; # now it's 15cm or 470cm
             
         my $par1 = 600.+$wallthk;
         my $par2 = 400.+$wallthk;
         my $par3 = 600.+$wallthk;
         $detector{"dimensions"}  = "$par1*cm $par2*cm $par3*cm";
-        $detector{"material"}    = "G4_Galactic";
+        $detector{"material"}    = "G4_CONCRETE";
         print_det(\%configuration, \%detector);
  
 
-        my $p1= $par1-$wallthk  ;
+        my $p1= $par1-$wallthk ;
         my $p2 =$par2-$wallthk ;
         my $p3 =$par3-$wallthk ;
         $detector{"name"}        = "bdx_main_volume";
@@ -75,7 +75,7 @@ my $Z = 0.;
 
 
 my $LAr_dim=35.6/2.;
-my $Sci_thickness=10./2;
+my $Sci_thickness=15./2;
 my $Sci_dim=$LAr_dim;
 my $Gd_thickness=0.00025/2.;
 
@@ -1338,8 +1338,8 @@ sub make_bdx_CT
     make_nVeto;
     make_lAr;
     make_passive_Gd;
-  #  make_passive_1;
-    make_passive_2;
+  # make_passive_1;
+  #  make_passive_2;
     make_passive_3;
   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
