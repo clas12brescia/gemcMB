@@ -197,7 +197,6 @@ void lAr_n_eff_Gd(string inputname="Sci1cm_p33,6MeV"){
 				//cout<<"Edep "<<myDet->dig_Edep->at(0)*1000<<endl;
 				if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // compreso tra 10 e 100 keV
 					if(counter==0){
-								//cout<<E_dep_veto[s][c]*1000<<endl;
 								Gen_Ek_lAr->Fill(Ek/1000);
 								Gen_Ek_lAr_binT->Fill(Ek/1000);	
 					}

@@ -1,3 +1,2 @@
-"Dump_E0-400MeV_veto40cm_Gd250m_Bconcrete50cm_h2o50cm"
-"Dump_E0-400MeV_veto40cm_Gd250m_h2o50cm_Bconcrete50cm"
-"Dump_E0-400MeV_veto40cm_Gd250m_Pb50cm"
+"Cosmics_E1-10GeV_veto60cm_Pb50cm"  
+"Cosmics_E100-1000MeV_veto60cm_Pb50cm"

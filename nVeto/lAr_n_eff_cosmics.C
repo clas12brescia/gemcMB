@@ -21,7 +21,10 @@ bool Debug = false;
 void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 	
 	string filename("Output_gemc/out_" + inputname + ".root");
-	string outname("Output/Sort_" + inputname + ".root");
+
+	//string outname("Output/Sort_" + inputname +"_thr0keV.root");
+	//string outname("Output/Sort_" + inputname +"_thr100keV.root");
+	string outname("Output/Sort_" + inputname +"_thr1MeV.root");
 
 
 	// Open the file
@@ -67,17 +70,33 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 	TH1D *Edep= new TH1D("Edep","Edep",10000,0,11);
 		Edep->GetXaxis()->SetTitle("Edep [GeV]");
 	  	Edep->GetYaxis()->SetTitle("Counts");
-  	
 
-    double Edep_min =10;
-    double Edep_max = 100;
-    double veto_threshold=0; //in keV
-  	double n_mass = 939.565378;
-  	int det_mult_hit=0;
-  	int veto_hit=0;
-	int no_hit=0;
-	int Edep_no=0;
-	int good=0;
+	TH1D *Veto_pid= new TH1D("Veto_pid","Veto_pid",4000,-1000,3000);
+		Veto_pid->GetXaxis()->SetTitle("Particle ID");
+	  	Veto_pid->GetYaxis()->SetTitle("Counts");  	
+
+	TH1D *lAr_pid= new TH1D("lAr_pid","lAr_pid",4000,-1000,3000);
+		lAr_pid->GetXaxis()->SetTitle("Particle ID");
+	  	lAr_pid->GetYaxis()->SetTitle("Counts");  	
+  	
+  	TH1D *lAr_pid_Edep= new TH1D("lAr_pid_Edep","lAr_pid_Edep",4000,-1000,3000);
+		lAr_pid_Edep->GetXaxis()->SetTitle("Particle ID");
+	  	lAr_pid_Edep->GetYaxis()->SetTitle("Counts"); 
+
+	TH2F *Veto_pid_trackE= new TH2F("Veto_pid_trackE","Veto_pid_trackE",4000,-1000,3000,10000,0,10000);
+		Veto_pid_trackE->GetXaxis()->SetTitle("Particle ID");
+	  	Veto_pid_trackE->GetYaxis()->SetTitle("Energy[MeV]");  
+
+	TH2F *lar_pid_trackE= new TH2F("lar_pid_trackE","lar_pid_trackE",4000,-1000,3000,4000,0,10000);
+		lar_pid_trackE->GetXaxis()->SetTitle("Particle ID");
+	  	lar_pid_trackE->GetYaxis()->SetTitle("Energy[MeV]");  	
+	
+
+	TH2F *lar_pid_trackE_Edep= new TH2F("lar_pid_trackE_Edep","lar_pid_trackE_Edep",4000,-1000,3000,40000,0,4000);
+		lar_pid_trackE_Edep->GetXaxis()->SetTitle("Particle ID");
+	  	lar_pid_trackE_Edep->GetYaxis()->SetTitle("Energy[MeV]");  	
+	
+
 
 	//////////////////////
 	// START OF THE LOOP
@@ -105,39 +124,52 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 		flux->GetEntry(jentry);
 		det->GetEntry(jentry);
 
+	    const double Edep_min =10;
+	    const double Edep_max = 100;
+	    const double veto_threshold=1000; //in keV
+	  	const double n_mass = 939.565378;
+		int counter=0;
 
 		int det_nhit = myDet->hitn->size();	
 		int veto_nhit = myVe->hitn->size();	
 		
 		double mom = sqrt(pow(myGen->px->at(0),2) + pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2) );	
-		//cout<< "mom "<<mom<<endl;
-
 		double Ek=sqrt(pow(mom,2) + pow(n_mass,2)) - n_mass; 
 
 		Gen_mom->Fill(mom/1000); // in GeV
 		Gen_Ek->Fill(Ek/1000); // in GeV
 
+		for (int ihit=0; ihit < det_nhit; ihit++) {
+			lAr_pid->Fill(myDet->pid->at(ihit));	
+			lar_pid_trackE->Fill(myDet->pid->at(0),myDet->trackE->at(0));	
+		}
 
-		double E_dep_veto = 0;
-		double E_dep_det = 0;
 		for (int ihit=0; ihit < veto_nhit; ihit++) {
-			for (int jhit=0; jhit < det_nhit; jhit++) {
-				E_dep_det = E_dep_det + myDet->dig_Edep->at(jhit);	
-			}
-			E_dep_veto = E_dep_veto + myVe->dig_Edep->at(ihit);	
+			Veto_pid->Fill(myVe->pid->at(ihit));
+			Veto_pid_trackE->Fill(myVe->pid->at(ihit),myVe->trackE->at(ihit));	 			
 		}
 
-		if( E_dep_veto*1000<=veto_threshold){
-				if (det_nhit==1){
-					if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // compreso tra 10 e 100 keV
-						Gen_Ek_lAr->Fill(Ek/1000);
-						good=good+1;
-					}
-					else Edep_no=Edep_no+1;
-				}
-				else det_mult_hit=det_mult_hit +1;
+
+		for (int ihit=0; ihit < veto_nhit; ihit++) { 
+			if(myVe->dig_Edep->at(ihit)*1000>veto_threshold) {
+				counter=counter+1;
+			} 
+			if (counter>0) break;			 			
 		}
-		else veto_hit=veto_hit +1;
+
+		
+		if (det_nhit==1){
+			if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // compreso tra 10 e 100 keV
+				if(counter==0){ 
+						Gen_Ek_lAr->Fill(Ek/1000);
+						lAr_pid_Edep->Fill(myDet->pid->at(0));
+						cout<< "pid = "<<myDet->pid->at(0) << "En = "<<myDet->trackE->at(0)<<endl;
+						lar_pid_trackE_Edep->Fill(myDet->pid->at(0),myDet->trackE->at(0));
+				}
+			}
+				
+		}
+		
 		
 	
 
@@ -154,11 +186,41 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 	}
 
 
-	cout<<"n with multiple hits in lAr  = "<<det_mult_hit<<endl;
-	cout<<"n with E dep>threshold in veto = "<<veto_hit<<endl;
-	cout<<"n with Edep in lAr <10 keV or >100 keV = "<<Edep_no<<endl;
-	cout<<"n with Edep in lAr >10 keV or <100 keV = "<<good<<endl;
+	cout<<"n con Edep 10-100 keV = "<<Gen_Ek_lAr->Integral()<<endl;
+    
+/* */
+    cout<<"Veto neutron  = "<<Veto_pid->Integral(3113,3113)<<endl; //pid+1001
+    cout<<"Veto proton   = "<<Veto_pid->Integral(3213,3213)<<endl;
+    cout<<"Veto gamma    = "<<Veto_pid->Integral(1023,1023)<<endl;
+    cout<<"Veto muon     = "<<Veto_pid->Integral(1014,1014)<<endl;
+    cout<<"Veto antimuon = "<<Veto_pid->Integral(988,988)<<endl; // 1001-pid
+    cout<<"Veto electron = "<<Veto_pid->Integral(1012,1012)<<endl;
+    cout<<"Veto positron = "<<Veto_pid->Integral(990,990)<<endl;
+    cout<<"Veto pi+ 	 = "<<Veto_pid->Integral(1212,1212)<<endl;
+    cout<<"Veto pi-      = "<<Veto_pid->Integral(790,790)<<endl;
+
+    cout<<"lar neutron  = "<<lAr_pid->Integral(3113,3113)<<endl; //pid+1001
+    cout<<"lar proton   = "<<lAr_pid->Integral(3213,3213)<<endl;
+    cout<<"lar gamma    = "<<lAr_pid->Integral(1023,1023)<<endl;
+    cout<<"lar muon     = "<<lAr_pid->Integral(1014,1014)<<endl;
+    cout<<"lar antimuon = "<<lAr_pid->Integral(988,988)<<endl; // 1001-pid
+    cout<<"lar electron = "<<lAr_pid->Integral(1012,1012)<<endl;
+    cout<<"lar positron = "<<lAr_pid->Integral(990,990)<<endl;
+    cout<<"lar pi+ 	    = "<<lAr_pid->Integral(1212,1212)<<endl;
+    cout<<"lar pi-      = "<<lAr_pid->Integral(790,790)<<endl;
+
+    cout<<"lar Edep neutron  = "<<lAr_pid_Edep->Integral(3113,3113)<<endl; //pid+1001
+    cout<<"lar Edep proton   = "<<lAr_pid_Edep->Integral(3213,3213)<<endl;
+    cout<<"lar Edep gamma    = "<<lAr_pid_Edep->Integral(1023,1023)<<endl;
+    cout<<"lar Edep muon     = "<<lAr_pid_Edep->Integral(1014,1014)<<endl;
+    cout<<"lar Edep antimuon = "<<lAr_pid_Edep->Integral(988,988)<<endl; // 1001-pid
+    cout<<"lar Edep electron = "<<lAr_pid_Edep->Integral(1012,1012)<<endl;
+    cout<<"lar Edep positron = "<<lAr_pid_Edep->Integral(990,990)<<endl;
+    cout<<"lar Edep pi+ 	 = "<<lAr_pid_Edep->Integral(1212,1212)<<endl;
+    cout<<"lar Edep pi-      = "<<lAr_pid_Edep->Integral(790,790)<<endl;
+
     cout<< "end of loop  "<< endl;
+
         
         ////////////////////////
         //WRITE ON OUTPUT FILE
@@ -171,7 +233,13 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
  	
 	Gen_mom->Write(0,TObject::kOverwrite);
 	Gen_Ek->Write(0,TObject::kOverwrite);
-    Edep->Write(0,TObject::kOverwrite); 
+    Edep->Write(0,TObject::kOverwrite);
+    lAr_pid->Write(0,TObject::kOverwrite);
+	Veto_pid->Write(0,TObject::kOverwrite);
+	Veto_pid_trackE->Write(0,TObject::kOverwrite);
+	lar_pid_trackE->Write(0,TObject::kOverwrite);
+	lar_pid_trackE_Edep->Write(0,TObject::kOverwrite);
+
 
  	g->Close();
 }
