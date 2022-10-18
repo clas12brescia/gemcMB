@@ -339,7 +339,7 @@ void PhysicsList::cookPhysics()
 
 		g4HadronicPhysics.push_back(opticalPhysics);
 	}
-
+	g4HadronicPhysics.push_back(new G4StoppingPhysics(verbosity));
 }
 
 
