@@ -1,2 +1,2 @@
-"Cosmics_E1-10GeV_veto60cm_Pb50cm"  
-"Cosmics_E100-1000MeV_veto60cm_Pb50cm"
+"Cosmics_E100-1000MeV_veto4x15cm_Pb3x10+20cm_split"  
+"Cosmics_E1-10GeV_veto4x15cm_Pb3x10+20cm_split"

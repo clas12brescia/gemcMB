@@ -23,13 +23,12 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 	string filename("Output_gemc/out_" + inputname + ".root");
 
 	//string outname("Output/Sort_" + inputname +"_thr0keV.root");
-	//string outname("Output/Sort_" + inputname +"_thr100keV.root");
-	string outname("Output/Sort_" + inputname +"_thr1MeV.root");
+	string outname("Output/Sort_" + inputname +"_thr100keV.root");
+	//string outname("Output/Sort_" + inputname +"_thr1MeV.root");
 
 
 	// Open the file
 	TFile * f = new TFile(filename.c_str());
-
 	// Get the tree(s)
 	TTree * veto = (TTree * ) f->Get("veto");
 	TTree * det = (TTree * ) f->Get("det");
@@ -126,7 +125,7 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 
 	    const double Edep_min =10;
 	    const double Edep_max = 100;
-	    const double veto_threshold=1000; //in keV
+	    const double veto_threshold=100; //in keV
 	  	const double n_mass = 939.565378;
 		int counter=0;
 
