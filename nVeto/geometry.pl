@@ -75,7 +75,7 @@ my $Z = 0.;
 
 
 my $LAr_dim=35.6/2.;
-my $Sci_thickness=15./2;
+my $Sci_thickness=1./2;
 my $Sci_dim=$LAr_dim;
 my $pass_in_thickness=10./2.;
 my $passive_in_mat="G4_Pb";
@@ -1338,9 +1338,9 @@ sub make_bdx_CT
     make_main_volume();
     make_nVeto;
     make_lAr;
-    make_passive_in;
-    make_passive_1;
-    make_passive_2;
+  #  make_passive_in;
+  #  make_passive_1;
+  #  make_passive_2;
   #  make_passive_3;
   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
