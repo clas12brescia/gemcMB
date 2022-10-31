@@ -26,6 +26,8 @@
 <option name="PHYSICS"   value="QGSP_BERT_HP + STD + HP" />
 <!--<option name="PHYSICS"   value="STD + HP" />-->
 
+<!-- option name="CHECK_OVERLAPS"   value="1" />-->
+
 <option name="BEAM_P"   value="mu+,1696*MeV, 90*deg, -90*deg"/>
 <option name="SPREAD_P" value="0*MeV, 10*deg, 10*deg"/>
 <!--<option name="SPREAD_V" value="(10.,0.)cm"/>-->
