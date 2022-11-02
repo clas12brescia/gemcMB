@@ -19,10 +19,10 @@ my $cic    = 2.54;
 sub make_main_volume
     {
      my %detector = init_det();
-        $detector{"name"}        = "bdx_real_main_volume";			# The position and rotation of a volume are relative to its mother volume. 
+        $detector{"name"}        = "bdx_real_main_volume";	# The position and rotation of a volume are relative to its mother volume. 
         $detector{"mother"}      = "root";					# The rotation will happen before the position. “root” is the root volume.
         $detector{"description"} = "World";
-        $detector{"color"}       = "666666";					# The color entry is a 6 digit hexadecimal number that represents Red,Green and Blue weights from 0 to 255 (RRGGBB)
+        $detector{"color"}       = "666666";				# The color entry is a 6 digit hexadecimal number that represents Red,Green and Blue weights from 0 to 255 (RRGGBB)
         $detector{"color"}       = "000000";
         $detector{"style"}       = 0;						# 1 is “solid”, 0 is “wireframe”
         $detector{"visible"}     = 1;						# 1 is “visible”, 0 is “invisible” 
@@ -75,26 +75,29 @@ my $Y = 0.;
 my $Z = 0.;
 
 
-my $LAr_dim=35.6/2.;
-my $Veto_thickness=4./2;
-my $Veto_dim=$LAr_dim;
-my $veto_layers= 4;
-my $pass_in_layers=3;
+my $Det_dim=35.6/2.;
+my $Det_mat= "LAr";
 
-my $pass_in_thickness=1./2.;
+my $Veto_layers= 4;
+my $Veto_thickness=4./2;
+my $Veto_dim=$Det_dim;
+my $Veto_mat= "ScintillatorB";
+
+my $pass_in_layers=3;
+my $pass_in_thickness=2./2.;
 my $passive_in_mat="G4_Pb";
 
-my $passive_mat1= "G4_Pb";
 my $pass1_thickness=20./2;
 my $pass1_dim=300./2 + 2*$pass1_thickness;
+my $passive_mat1= "G4_Pb";
 
-my $passive_mat2= "G4_Pb";
 my $pass2_thickness=10./2;
 my $pass2_dim=$pass1_dim + 2*$pass1_thickness + 2*$pass2_thickness;
+my $passive_mat2= "G4_Pb";
 
-my $passive_mat3= "G4_Pb";
 my $pass3_thickness=50./2;
 my $pass3_dim=$pass2_dim + 2*$pass2_thickness + 2*$pass3_thickness;
+my $passive_mat3= "G4_Pb";
 
 
 sub make_nVeto
@@ -108,154 +111,171 @@ sub make_nVeto
  ################################### Scintillator ##################################### 
 # RIGHT
 
-    my $csi_pad_lx =$Veto_thickness; 
-    my $csi_pad_ly =$Veto_dim;
-    my $csi_pad_lz =$Veto_dim; 
 
-    for(my $i=0; $i<$veto_layers; $i++){
-     
-    $detector{"name"}        = "right $i";
-    $detector{"description"} = "right side $i ";
-    $detector{"color"}       = "ff00003"; #red + trasparency
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $X = $Veto_dim +(2*$i+1)*$Veto_thickness +(2*$i)*$pass_in_thickness;
-    $Y = 0.;
-    $Z = 0.;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";         #defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
-    $detector{"sensitivity"} = "veto";
-    $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 1 veto manual 100 channel manual $i";
-     print_det(\%configuration, \%detector);
+
+    for(my $i=0; $i<$Veto_layers; $i++){
+
+        my $Veto_lx =$Veto_thickness; 
+        my $Veto_ly =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
+        my $Veto_lz =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;  
+        $detector{"name"}        = "right $i";
+        $detector{"description"} = "right side $i ";
+        $detector{"color"}       = "ff0000"; #red + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $X = $Veto_dim +(2*$i+1)*$Veto_thickness +(2*$i)*$pass_in_thickness;
+        $Y = 0.;
+        $Z = 0.;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$Veto_lx*cm $Veto_ly*cm $Veto_lz*cm";
+        $detector{"material"} = "$Veto_mat";
+        $detector{"sensitivity"} = "veto";
+        $detector{"hit_type"}    = "veto";
+        $detector{"identifiers"} = "sector manual 1 veto manual 100 channel manual $i";
+         print_det(\%configuration, \%detector);
+
     }
 
     #LEFT    
-    for(my $i=0; $i<$veto_layers; $i++){ 
-    $detector{"name"}        = "left $i";
-    $detector{"description"} = "left side $i ";
-    $detector{"color"}       = "ff00003"; #red + trasparency
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $X = - $Veto_dim-(2*$i+1)*$Veto_thickness -(2*$i)*$pass_in_thickness;
-    $Y = 0.;
-    $Z = 0.;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";         #defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
-    $detector{"sensitivity"} = "veto";
-    $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 2 veto manual 100 channel manual $i";
-     print_det(\%configuration, \%detector);
+    for(my $i=0; $i<$Veto_layers; $i++){ 
+        my $Veto_lx =$Veto_thickness; 
+        my $Veto_ly =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;;
+        my $Veto_lz =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;;     
+        $detector{"name"}        = "left $i";
+        $detector{"description"} = "left side $i ";
+        $detector{"color"}       = "ff0000"; #red + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $X = - $Veto_dim-(2*$i+1)*$Veto_thickness -(2*$i)*$pass_in_thickness;
+        $Y = 0.;
+        $Z = 0.;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$Veto_lx*cm $Veto_ly*cm $Veto_lz*cm";
+        $detector{"material"}    = "$Veto_mat";         #defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+        $detector{"sensitivity"} = "veto";
+        $detector{"hit_type"}    = "veto";
+        $detector{"identifiers"} = "sector manual 2 veto manual 100 channel manual $i";
+         print_det(\%configuration, \%detector);
     }
 
 
 
-   $csi_pad_lx =$Veto_dim+2*$veto_layers*$Veto_thickness + 2*$pass_in_layers*$pass_in_thickness; 
-   $csi_pad_ly =$Veto_thickness; 
-   $csi_pad_lz =$Veto_dim; 
+   
 
   # DOWN
-    for(my $i=0; $i<$veto_layers; $i++){
+    for(my $i=0; $i<$Veto_layers; $i++){
 
-    $detector{"name"}        = "down $i";
-    $detector{"description"} = "down side $i";
-    $detector{"color"}       = "0000ff3"; #blue + trasparency
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    my $X = 0.;
-    my $Y = -$Veto_dim - (2*$i+1)*$Veto_thickness - 2*$i*$pass_in_thickness;
-    my $Z = 0.;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";	#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
-    $detector{"sensitivity"} = "veto";
-    $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 3 veto manual 100 channel manual $i";
-     print_det(\%configuration, \%detector);
+        my $Veto_lx =$Veto_dim  + 2*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        my $Veto_ly =$Veto_thickness; 
+        my $Veto_lz =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        $detector{"name"}        = "down $i";
+        $detector{"description"} = "down side $i";
+        $detector{"color"}       = "0000ff"; #blue + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        my $X = 0.;
+        my $Y = -$Veto_dim - (2*$i+1)*$Veto_thickness - 2*$i*$pass_in_thickness;
+        my $Z = 0.;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$Veto_lx*cm $Veto_ly*cm $Veto_lz*cm";
+        $detector{"material"}    = "$Veto_mat";	#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+        $detector{"sensitivity"} = "veto";
+        $detector{"hit_type"}    = "veto";
+        $detector{"identifiers"} = "sector manual 3 veto manual 100 channel manual $i";
+         print_det(\%configuration, \%detector);
 
     }     
   
     # UP
-    for(my $i=0; $i<$veto_layers; $i++){
-    $detector{"name"}        = "up $i";
-    $detector{"description"} = "up side  $i";
-    $detector{"color"}       = "0000ff3"; #blue + trasparency
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $X = 0.;
-    $Y = +$Veto_dim+ (2*$i+1)*$Veto_thickness + 2*$i*$pass_in_thickness;
-    $Z = 0.;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";
-    $detector{"sensitivity"} = "veto";
-    $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 4 veto manual 100 channel manual $i";
-    print_det(\%configuration, \%detector);
+    for(my $i=0; $i<$Veto_layers; $i++){
+
+        my $Veto_lx =$Veto_dim + 2*$Veto_thickness +  $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        my $Veto_ly =$Veto_thickness; 
+        my $Veto_lz =$Veto_dim +  $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        $detector{"name"}        = "up $i";
+        $detector{"description"} = "up side  $i";
+        $detector{"color"}       = "0000ff"; #blue + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $X = 0.;
+        $Y = +$Veto_dim+ (2*$i+1)*$Veto_thickness + 2*$i*$pass_in_thickness;
+        $Z = 0.;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$Veto_lx*cm $Veto_ly*cm $Veto_lz*cm";
+        $detector{"material"}    = "$Veto_mat";
+        $detector{"sensitivity"} = "veto";
+        $detector{"hit_type"}    = "veto";
+        $detector{"identifiers"} = "sector manual 4 veto manual 100 channel manual $i";
+        print_det(\%configuration, \%detector);
 
     }
-
-    $csi_pad_lx =$Veto_dim +2.*$veto_layers*$Veto_thickness + 2*$pass_in_layers*$pass_in_thickness; 
-    $csi_pad_ly =$Veto_dim +2.*$veto_layers*$Veto_thickness + 2*$pass_in_layers*$pass_in_thickness; 
-    $csi_pad_lz =$Veto_thickness; 
+ 
 
      # FRONT
-    for(my $i=0; $i<$veto_layers; $i++){
-    $detector{"name"}        = "front $i";
-    $detector{"description"} = "front side$i";
-    $detector{"color"}       = "ffd7003"; #giallo + trasparency
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $X = 0.;
-    $Y = 0.;
-    $Z = $Veto_dim+(2*$i+1)*$Veto_thickness + 2*$i*$pass_in_thickness;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
-    $detector{"sensitivity"} = "veto";
-    $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 5 veto manual 100 channel manual $i";
-     print_det(\%configuration, \%detector);
+    for(my $i=0; $i<$Veto_layers; $i++){
+
+        my $Veto_lx =$Veto_dim +2.*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
+        my $Veto_ly =$Veto_dim +2.*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        my $Veto_lz =$Veto_thickness; 
+        $detector{"name"}        = "front $i";
+        $detector{"description"} = "front side$i";
+        $detector{"color"}       = "ffd700"; #giallo + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $X = 0.;
+        $Y = 0.;
+        $Z = $Veto_dim+(2*$i+1)*$Veto_thickness + 2*$i*$pass_in_thickness;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$Veto_lx*cm $Veto_ly*cm $Veto_lz*cm";
+        $detector{"material"}    = "$Veto_mat";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+        $detector{"sensitivity"} = "veto";
+        $detector{"hit_type"}    = "veto";
+        $detector{"identifiers"} = "sector manual 5 veto manual 100 channel manual $i";
+         print_det(\%configuration, \%detector);
+
     } 
 
 
     # BACK
-    for(my $i=0; $i<$veto_layers; $i++){
-    $detector{"name"}        = "back $i";
-    $detector{"description"} = "back side $i";
-    $detector{"color"}       = "ffd7003"; #giallo + trasparency
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $X = 0.;
-    $Y = 0.;
-    $Z = - $Veto_dim - (2*$i+1)*$Veto_thickness - 2*$i*$pass_in_thickness;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$csi_pad_lx*cm $csi_pad_ly*cm $csi_pad_lz*cm";
-    $detector{"material"}    = "ScintillatorB";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
-    $detector{"sensitivity"} = "veto";
-    $detector{"hit_type"}    = "veto";
-    $detector{"identifiers"} = "sector manual 6 veto manual 100 channel manual $i";
-     print_det(\%configuration, \%detector);
+    for(my $i=0; $i<$Veto_layers; $i++){
+
+        my $Veto_lx =$Veto_dim +2.*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
+        my $Veto_ly =$Veto_dim +2.*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        my $Veto_lz =$Veto_thickness; 
+        $detector{"name"}        = "back $i";
+        $detector{"description"} = "back side $i";
+        $detector{"color"}       = "ffd700"; #giallo + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $X = 0.;
+        $Y = 0.;
+        $Z = - $Veto_dim - (2*$i+1)*$Veto_thickness - 2*$i*$pass_in_thickness;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$Veto_lx*cm $Veto_ly*cm $Veto_lz*cm";
+        $detector{"material"}    = "$Veto_mat";			#defined in /GEMC/devel-2.6/sources/materials/cpp_materials.cc
+        $detector{"sensitivity"} = "veto";
+        $detector{"hit_type"}    = "veto";
+        $detector{"identifiers"} = "sector manual 6 veto manual 100 channel manual $i";
+        print_det(\%configuration, \%detector);
+
     }
 
 } 
  ################################### Liquid argon ##################################### 
   
-sub make_lAr
+sub make_Det
 {   
     my %detector = init_det();
     if ($configuration{"variation"} eq "CT")
@@ -270,18 +290,18 @@ sub make_lAr
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Tube";
-    my $LAr_Rmin =0.; 
-    my $LAr_Rmax =$LAr_dim; 
-    my $LAr_d =$LAr_dim;
-    my $LAr_phi_min =0.;
-    my $LAr_phi_max =2*pi; 
+    my $Det_Rmin =0.; 
+    my $Det_Rmax =$Det_dim; 
+    my $Det_d =$Det_dim;
+    my $Det_phi_min =0.;
+    my $Det_phi_max =2*pi; 
     $X = 0.;
     $Y = 0.;
     $Z = 0.;
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
     $detector{"rotation"}    = "90*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$LAr_Rmin*cm $LAr_Rmax*cm $LAr_d*cm $LAr_phi_min*rad $LAr_phi_max*rad";
-    $detector{"material"}    = "LAr";			
+    $detector{"dimensions"}  = "$Det_Rmin*cm $Det_Rmax*cm $Det_d*cm $Det_phi_min*rad $Det_phi_max*rad";
+    $detector{"material"}    = "$Det_mat";			
     $detector{"sensitivity"} = "det";
     $detector{"hit_type"}    = "det";
     $detector{"identifiers"} = "sector manual 3 det manual 200 channel manual 0";
@@ -300,15 +320,15 @@ sub make_passive_in
 
 
 #/////////// RIGHT /////////#
-my $pass_in_lx =$pass_in_thickness; 
-    my $pass_in_ly =$Veto_dim ;
-    my $pass_in_lz =$Veto_dim; 
+
 
 for(my $i=0; $i<$pass_in_layers; $i++){
-   #  pass_in_right 1 
+    my $pass_in_lx =$pass_in_thickness; 
+    my $pass_in_ly =$Veto_dim + 2*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
+    my $pass_in_lz =$Veto_dim + 2*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
     $detector{"name"}        = " pass_in_right $i";
     $detector{"description"} = "right side $i ";
-    $detector{"color"}       = "0000003"; #black + trasparency
+    $detector{"color"}       = "0000004"; #black + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
@@ -326,11 +346,14 @@ for(my $i=0; $i<$pass_in_layers; $i++){
 
 #/////////// LEFT /////////#
 
-       #  pass_in_left 1
-for(my $i=0; $i<$pass_in_layers; $i++){       
+for(my $i=0; $i<$pass_in_layers; $i++){    
+
+    my $pass_in_lx =$pass_in_thickness; 
+    my $pass_in_ly =$Veto_dim + 2*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
+    my $pass_in_lz =$Veto_dim + 2*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
     $detector{"name"}        = " pass_in_left $i";
     $detector{"description"} = "left side $i";
-    $detector{"color"}       = "0000003"; #black + trasparency
+    $detector{"color"}       = "0000004"; #black + trasparency
     $detector{"style"}       = 1;
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Box";
@@ -342,94 +365,108 @@ for(my $i=0; $i<$pass_in_layers; $i++){
     $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
     $detector{"material"}    = "$passive_in_mat";			
      print_det(\%configuration, \%detector);
+
 }
 
-    $pass_in_lx =$Veto_dim+2*$veto_layers*$Veto_thickness + 2*$pass_in_layers*$pass_in_thickness; 
-    $pass_in_ly =$pass_in_thickness; 
-    $pass_in_lz =$Veto_dim; 
+
+    
 
 #/////////// UP /////////#
+
     for(my $i=0; $i<$pass_in_layers; $i++){ 
-    $detector{"name"}        = "pass_in_up $i";
-    $detector{"description"} = "up side $i ";
-    $detector{"color"}       = "0000003"; #nero
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $X = 0.;
-    $Y = +$Veto_dim+ (2*$i+2)*$Veto_thickness + (2*$i +1)*$pass_in_thickness ;
-    $Z = 0.;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
-    $detector{"material"}    = "$passive_in_mat";
-    print_det(\%configuration, \%detector);
+
+        my $pass_in_lx =$Veto_dim + 2*$Veto_thickness + $i*2*$Veto_thickness + +2*$pass_in_thickness + $i*2*$pass_in_thickness;  
+        my $pass_in_ly =$pass_in_thickness; 
+        my $pass_in_lz =$Veto_dim + 2*$Veto_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        $detector{"name"}        = "pass_in_up $i";
+        $detector{"description"} = "up side $i ";
+        $detector{"color"}       = "0000004"; #nero
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $X = 0.;
+        $Y = +$Veto_dim+ (2*$i+2)*$Veto_thickness + (2*$i +1)*$pass_in_thickness ;
+        $Z = 0.;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
+        $detector{"material"}    = "$passive_in_mat";
+        print_det(\%configuration, \%detector);
+
     }
      
 
 #/////////// DOWN /////////#
  
-    for(my $i=0; $i<$pass_in_layers; $i++){     
-    $detector{"name"}        = "pass_in_down $i";
-    $detector{"description"} = "down side $i";
-    $detector{"color"}       = "0000003"; #nero
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $X = 0.;
-    $Y = -$Veto_dim - (2*$i+2)*$Veto_thickness - (2*$i +1)*$pass_in_thickness ;
-    $Z = 0.;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
-    $detector{"material"}    = "$passive_in_mat";
-    print_det(\%configuration, \%detector);
+    for(my $i=0; $i<$pass_in_layers; $i++){    
+        my $pass_in_lx =$Veto_dim + 2*$Veto_thickness +  $i*2*$Veto_thickness + +2*$pass_in_thickness + $i*2*$pass_in_thickness;  
+        my $pass_in_ly =$pass_in_thickness; 
+        my $pass_in_lz =$Veto_dim + 2*$Veto_thickness +  $i*2*$Veto_thickness + $i*2*$pass_in_thickness;  
+        $detector{"name"}        = "pass_in_down $i";
+        $detector{"description"} = "down side $i";
+        $detector{"color"}       = "0000004"; #nero
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $X = 0.;
+        $Y = -$Veto_dim - (2*$i+2)*$Veto_thickness - (2*$i +1)*$pass_in_thickness ;
+        $Z = 0.;
+       $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; 
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
+        $detector{"material"}    = "$passive_in_mat";
+        print_det(\%configuration, \%detector);
     }
 
        
 
 #/////////// FRONT /////////#
- 
-     $pass_in_lx =$Veto_dim +2.*$veto_layers*$Veto_thickness + 2*$pass_in_layers*$pass_in_thickness; 
-     $pass_in_ly =$Veto_dim +2.*$veto_layers*$Veto_thickness + 2*$pass_in_layers*$pass_in_thickness; 
-     $pass_in_lz =$pass_in_thickness;
 
-     # pass_in_front 1 
+  
     for(my $i=0; $i<$pass_in_layers; $i++){  
-    $detector{"name"}        = "pass_in_front $i";
-    $detector{"description"} = "front side $i ";
-    $detector{"color"}       = "0000003"; 
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box"; 
-    $X = 0.;
-    $Y = 0.;
-    $Z = $Veto_dim+(2*$i+2)*$Veto_thickness + (2*$i+1)*$pass_in_thickness;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
-    $detector{"material"}    = "$passive_in_mat";	
-    print_det(\%configuration, \%detector);
+
+        my $pass_in_lx =$Veto_dim +2.*$Veto_thickness + 2*$pass_in_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
+        my $pass_in_ly =$Veto_dim +2.*$Veto_thickness + 2*$pass_in_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        my $pass_in_lz =$pass_in_thickness;    
+        $detector{"name"}        = "pass_in_front $i";
+        $detector{"description"} = "front side $i ";
+        $detector{"color"}       = "0000003"; 
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box"; 
+        $X = 0.;
+        $Y = 0.;
+        $Z = $Veto_dim+(2*$i+2)*$Veto_thickness + (2*$i+1)*$pass_in_thickness;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
+        $detector{"material"}    = "$passive_in_mat";	
+        print_det(\%configuration, \%detector);
     }
 
-    # pass_in_back 1
-    for(my $i=0; $i<$pass_in_layers; $i++){  
-    $detector{"name"}        = "pass_in_back $i";
-    $detector{"description"} = "back side $i";
-    $detector{"color"}       = "0000003"; 
-    $detector{"style"}       = 1;
-    $detector{"visible"}     = 1;
-    $detector{"type"}        = "Box";
-    $X = 0.;
-    $Y = 0.;
-    $Z = - $Veto_dim - (2*$i+2)*$Veto_thickness - (2*$i +1)*$pass_in_thickness;
-    $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
-    $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-    $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
-    $detector{"material"}    = "$passive_in_mat";
-     print_det(\%configuration, \%detector); 
+
+    for(my $i=0; $i<$pass_in_layers; $i++){ 
+
+        my $pass_in_lx =$Veto_dim +2.*$Veto_thickness + 2*$pass_in_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
+        my $pass_in_ly =$Veto_dim +2.*$Veto_thickness + 2*$pass_in_thickness + $i*2*$Veto_thickness + $i*2*$pass_in_thickness; 
+        my $pass_in_lz =$pass_in_thickness;   
+        $detector{"name"}        = "pass_in_back $i";
+        $detector{"description"} = "back side $i";
+        $detector{"color"}       = "0000003"; 
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $X = 0.;
+        $Y = 0.;
+        $Z = - $Veto_dim - (2*$i+2)*$Veto_thickness - (2*$i +1)*$pass_in_thickness;
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";	#
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$pass_in_lx*cm $pass_in_ly*cm $pass_in_lz*cm";
+        $detector{"material"}    = "$passive_in_mat";
+         print_det(\%configuration, \%detector); 
+
     }
-      
+    
    
 }
 
@@ -838,9 +875,9 @@ sub make_bdx_CT
 {
     make_main_volume();
     make_nVeto;
-    make_lAr;
+    make_Det;
     make_passive_in;
-  #  make_passive_1;
+    make_passive_1;
   #  make_passive_2;
   #  make_passive_3;
   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
