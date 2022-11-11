@@ -240,10 +240,10 @@ double* veto_HitProcess::IVresponseProposal(int sector, int channel, double xx, 
         };
         
         int s=0;
-        if (channel == 1) s=0;
-        if (channel == 2) s=1;
-        if (channel == 3) s=2;
-        if (channel == 4) s=3;
+        if (channel == 0) s=0;
+        if (channel == 1) s=1;
+        if (channel == 2) s=2;
+        if (channel == 3) s=3;
 
         response[s] = parm[s][7]*x*x*y + parm[s][6]*x*y*y + parm[s][5]*x*x + parm[s][4]*y*y + parm[s][3]*x*y + parm[s][2]*x + parm[s][1]*y + parm[s][0];
         response[s] = response[s] * normfactor[s];
@@ -267,10 +267,10 @@ double* veto_HitProcess::IVresponseProposal(int sector, int channel, double xx, 
         };
         
         int s=0;
-        if (channel == 1) s=0;
-        if (channel == 2) s=1;
-        if (channel == 3) s=2;
-        if (channel == 4) s=3;
+        if (channel == 0) s=0;
+        if (channel == 1) s=1;
+        if (channel == 2) s=2;
+        if (channel == 3) s=3;
 
         response[s] = parm[s][7]*x*x*y + parm[s][6]*x*y*y + parm[s][5]*x*x + parm[s][4]*y*y + parm[s][3]*x*y + parm[s][2]*x + parm[s][1]*y + parm[s][0];
             response[s] = response[s] * normfactor[s];
@@ -290,10 +290,10 @@ double* veto_HitProcess::IVresponseProposal(int sector, int channel, double xx, 
         for(unsigned int s=0; s<4; s++) response[s] =0.;
 
         int s=0;
-        if (channel == 1) s=0;
-        if (channel == 2) s=1;
-        if (channel == 3) s=2;
-        if (channel == 4) s=3;
+        if (channel == 0) s=0;
+        if (channel == 1) s=1;
+        if (channel == 2) s=2;
+        if (channel == 3) s=3;
 
         response[s] = parm[0]*x*x + parm[1]*y*y + parm[2]*y + parm[3];
         response[s] = response[s] * normfactor[0];
@@ -311,10 +311,10 @@ double* veto_HitProcess::IVresponseProposal(int sector, int channel, double xx, 
         double normfactor[1]={1.03};
         
         int s=0;
-        if (channel == 1) s=0;
-        if (channel == 2) s=1;
-        if (channel == 3) s=2;
-        if (channel == 4) s=3;
+        if (channel == 0) s=0;
+        if (channel == 1) s=1;
+        if (channel == 2) s=2;
+        if (channel == 3) s=3;
 
         for(unsigned int s=0; s<4; s++) response[s] =0.;
 
@@ -341,10 +341,10 @@ double* veto_HitProcess::IVresponseProposal(int sector, int channel, double xx, 
         double normfactor[4]={1.08, 1.02, 0.96, 0.97};
 
         int s=0;
-        if (channel == 1) s=0;
-        if (channel == 2) s=1;
-        if (channel == 3) s=2;
-        if (channel == 4) s=3;
+        if (channel == 0) s=0;
+        if (channel == 1) s=1;
+        if (channel == 2) s=2;
+        if (channel == 3) s=3;
 
         response[s] = parm[s][7]*x*x*y + parm[s][6]*x*y*y + parm[s][5]*x*x + parm[s][4]*y*y + parm[s][3]*x*y + parm[s][2]*x + parm[s][1]*y + parm[s][0];
                     response[s] = response[s] * normfactor[s];
@@ -367,10 +367,10 @@ double* veto_HitProcess::IVresponseProposal(int sector, int channel, double xx, 
         double normfactor[4]={1.09, 1.14, 0.68, 0.63};
 
         int s=0;
-        if (channel == 1) s=0;
-        if (channel == 2) s=1;
-        if (channel == 3) s=2;
-        if (channel == 4) s=3;
+        if (channel == 0) s=0;
+        if (channel == 1) s=1;
+        if (channel == 2) s=2;
+        if (channel == 3) s=3;
 
         response[s] = parm[s][7]*x*x*y + parm[s][6]*x*y*y + parm[s][5]*x*x + parm[s][4]*y*y + parm[s][3]*x*y + parm[s][2]*x + parm[s][1]*y + parm[s][0];
         response[s] = response[s] * normfactor[s];
