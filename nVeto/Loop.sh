@@ -1,8 +1,15 @@
+#!/bin/bash
+
+if [ $# -lt 1 ]; then
+   thr=100
+else  
+   thr=$1
+fi
 
 while read -r line;
 do
    # root -l -b -q "nVeto_con_loop.C($line)";
-    root -l -b -q "lAr_n_eff_cosmics.C($line)";
+    root -l -b -q "lAr_n_eff_cosmics.C($line, $thr)";
     #rot -l -b -q "Plots/do_plots.C($line)";
 done < inputlist.txt
 
