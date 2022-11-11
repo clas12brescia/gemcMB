@@ -8,6 +8,7 @@
 #include <TCanvas.h>
 #include "iostream"
 #include <map>
+using namespace std;
 
 bool Debug = false;
 
@@ -18,14 +19,11 @@ bool Debug = false;
 
 */
 
-void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
+void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =100){
 	
 	string filename("/mnt/project_mnt/jlab12/fiber7_fs/gosta/Output_gemc/out_" + inputname + ".root");
-
-	//string outname("Output/Sort_" + inputname +"_thr0keV.root");
-	//string outname("/mnt/project_mnt/jlab12/fiber7_fs/gosta/Output/Sort_" + inputname +"_thr100keV.root");
-	string outname("Output/Sort_" + inputname +"_thr1MeV.root");
-
+  string outname("/mnt/project_mnt/jlab12/fiber7_fs/gosta/Output/Sort_" + inputname +"_thr" + Form ("%d",veto_threshold)+ "keV.root");
+	//string outname("Output/Sort_" + inputname +"_thr" + Form ("%d",veto_threshold)+ "_keV.root");
 
 	// Open the file
 	TFile * f = new TFile(filename.c_str());
@@ -108,10 +106,13 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
    		//cin>>nentries;
     	cout << "Working in debug mode: " <<nentries<< endl;
   	}
+	
 
   	cout << "WORKING ON nentries =" << nentries << endl;
+  	cout << "Veto Threshold =" << veto_threshold << endl;
   	Long64_t nbytes = 0, nb = 0;
   
+
 
   	cout<< "start of loop"<<endl;
 
@@ -123,10 +124,9 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV"){
 		flux->GetEntry(jentry);
 		det->GetEntry(jentry);
 
-	    const double Edep_min =10;
-	    const double Edep_max = 100;
-	    const double veto_threshold=1000; //in keV
-	  	const double n_mass = 939.565378;
+	    const double Edep_min =10; // in keV
+	    const double Edep_max = 100; // in keV
+	  	const double n_mass = 939.565378; // in MeV
 		int counter=0;
 
 		int det_nhit = myDet->hitn->size();	

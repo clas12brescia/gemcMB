@@ -32,7 +32,7 @@ sub make_main_volume
         my $Z = 0.;
         $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-        my $wallthk=10; # now it's 15cm or 470cm
+        my $wallthk=30./2; # now it's 15cm or 470cm
             
         my $par1 = 600.+$wallthk;
         my $par2 = 400.+$wallthk;
@@ -55,8 +55,8 @@ sub make_main_volume
         $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
         $detector{"dimensions"}  = "$p1*cm $p2*cm $p3*cm";
-        #$detector{"material"}    = "G4_AIR";
-        $detector{"material"}    = "G4_Galactic";
+        $detector{"material"}    = "G4_AIR";
+        #$detector{"material"}    = "G4_Galactic";
         print_det(\%configuration, \%detector);
 }
 
@@ -79,12 +79,12 @@ my $Det_dim=35.6/2.;
 my $Det_mat= "LAr";
 
 my $Veto_layers= 4;
-my $Veto_thickness=4./2;
+my $Veto_thickness=15./2;
 my $Veto_dim=$Det_dim;
 my $Veto_mat= "ScintillatorB";
 
-my $pass_in_layers=3;
-my $pass_in_thickness=2./2.;
+my $pass_in_layers=4;
+my $pass_in_thickness=15./2.;
 my $passive_in_mat="G4_Pb";
 
 my $pass1_thickness=20./2;
@@ -162,9 +162,6 @@ sub make_nVeto
          print_det(\%configuration, \%detector);
     }
 
-
-
-   
 
   # DOWN
     for(my $i=0; $i<$Veto_layers; $i++){
@@ -368,8 +365,6 @@ for(my $i=0; $i<$pass_in_layers; $i++){
 
 }
 
-
-    
 
 #/////////// UP /////////#
 
@@ -877,7 +872,7 @@ sub make_bdx_CT
     make_nVeto;
     make_Det;
     make_passive_in;
-    make_passive_1;
+  #  make_passive_1;
   #  make_passive_2;
   #  make_passive_3;
   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
