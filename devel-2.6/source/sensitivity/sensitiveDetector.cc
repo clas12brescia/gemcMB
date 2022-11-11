@@ -387,6 +387,9 @@ int sensitiveDetector::processID(string procName)
 	if(procName == "xi0Inelastic")          return 140;
 	if(procName == "omega-Inelastic")       return 150;
 	if(procName == "hBertiniCaptureAtRest") return 160;
+	if(procName == "muMinusCaptureAtRest")  return 170;
+	if(procName == "He3Inelastic")  		return 180;
+	
 
 	if(procName == "na")                    return 999;
 
