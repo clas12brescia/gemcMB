@@ -42,7 +42,7 @@ our %configuration = load_configuration($ARGV[0]);
 # Loading FT specific subroutines
 require "./hit.pl";
 require "./bank.pl";
-require "./geometry.pl";
+require "./geometry-crs.pl";
 require "./materials.pl";
 
 define_banks();
