@@ -141,8 +141,8 @@ sub make_nVeto
     #LEFT    
     for(my $i=0; $i<$Veto_layers; $i++){ 
         my $Veto_lx =$Veto_thickness; 
-        my $Veto_ly =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;;
-        my $Veto_lz =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;;     
+        my $Veto_ly =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;
+        my $Veto_lz =$Veto_dim + $i*2*$Veto_thickness + $i*2*$pass_in_thickness;  
         $detector{"name"}        = "left $i";
         $detector{"description"} = "left side $i ";
         $detector{"color"}       = "ff0000"; #red + trasparency
