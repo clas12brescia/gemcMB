@@ -503,7 +503,7 @@ for(my $i=1; $i<=$pass_in_layers; $i++){
 sub make_flux_cosmic_sph
 {
     my %detector = init_det();
-    my $cosmicradius=50.;
+    my $cosmicradius=55.;
     
     my $X = $shX + 0. ;
     my $Y = $shY + 0. ;
