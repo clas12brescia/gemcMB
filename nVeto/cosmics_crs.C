@@ -1,7 +1,6 @@
 #include "vetoClass.h"
-#include "detClass.h"
 #include "generatedClass.h"
-#include "fluxClass.h"
+#include "crsClass.h"
 #include <TH2.h>
 #include <TH3.h>
 #include <TStyle.h>
@@ -10,7 +9,7 @@
 #include <map>
 using namespace std;
 
-bool Debug = false;
+bool Debug = true;
 
 /*
 	Import the bin list and content from
@@ -19,7 +18,7 @@ bool Debug = false;
 
 */
 
-void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =100){
+void cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =100){
 	
 	string filename("/mnt/project_mnt/jlab12/fiber7_fs/gosta/Output_gemc/out_" + inputname + ".root");
   string outname("/mnt/project_mnt/jlab12/fiber7_fs/gosta/Output/Sort_" + inputname +"_thr" + Form ("%d",veto_threshold)+ "keV.root");
@@ -29,15 +28,13 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =1
 	TFile * f = new TFile(filename.c_str());
 	// Get the tree(s)
 	TTree * veto = (TTree * ) f->Get("veto");
-	TTree * det = (TTree * ) f->Get("det");
+	TTree * crs = (TTree * ) f->Get("crs");
 	TTree * generated = (TTree * ) f->Get("generated");
-	TTree * flux = (TTree * ) f->Get("flux");
 
 	// new objects 
-	detClass * myDet = new detClass(det);
+	crsClass * myCrs = new crsClass(crs);
 	vetoClass * myVe = new vetoClass(veto);
 	generatedClass * myGen= new generatedClass(generated);
-	fluxClass * myFl = new fluxClass(flux);
 
 	
 	////////////////////
@@ -49,46 +46,46 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =1
 	
 	//lAr
 	
-	TH1D *Gen_Ek= new TH1D("Gen_Ek","Gen_Ek",10000,0,11);
+	  TH1D *Gen_Ek= new TH1D("Gen_Ek","Gen_Ek",10000,0,11);
 		Gen_Ek->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
-	  	Gen_Ek->GetYaxis()->SetTitle("Counts");
+ 	  Gen_Ek->GetYaxis()->SetTitle("Counts");
 
-	TH1D *Gen_mom = new TH1D("Gen_mom","Gen_mom",10000,0,11);
+	  TH1D *Gen_mom = new TH1D("Gen_mom","Gen_mom",10000,0,11);
 		Gen_mom->GetXaxis()->SetTitle("Momentum [MeV/c^2]");
-	  	Gen_mom->GetYaxis()->SetTitle("Counts");
+ 	  Gen_mom->GetYaxis()->SetTitle("Counts");
 
-    TH1D *Gen_Ek_lAr= new TH1D("Gen_Ek_lAr","Gen_Ek_lAr",10000,0,11);
-		Gen_Ek_lAr->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
-	  	Gen_Ek_lAr->GetYaxis()->SetTitle("Counts");
+    TH1D *Gen_Ek_crs= new TH1D("Gen_Ek_crs","Gen_Ek_crs",10000,0,11);
+		Gen_Ek_crs->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
+ 	  Gen_Ek_crs->GetYaxis()->SetTitle("Counts");
 
-	TH1D *Edep= new TH1D("Edep","Edep",10000,0,11);
+	  TH1D *Edep= new TH1D("Edep","Edep",10000,0,11);
 		Edep->GetXaxis()->SetTitle("Edep [GeV]");
-	  	Edep->GetYaxis()->SetTitle("Counts");
+    Edep->GetYaxis()->SetTitle("Counts");
 
-	TH1D *Veto_pid= new TH1D("Veto_pid","Veto_pid",4000,-1000,3000);
+	  TH1D *Veto_pid= new TH1D("Veto_pid","Veto_pid",4000,-1000,3000);
 		Veto_pid->GetXaxis()->SetTitle("Particle ID");
-	  	Veto_pid->GetYaxis()->SetTitle("Counts");  	
+ 	  Veto_pid->GetYaxis()->SetTitle("Counts");  	
 
-	TH1D *lAr_pid= new TH1D("lAr_pid","lAr_pid",4000,-1000,3000);
-		lAr_pid->GetXaxis()->SetTitle("Particle ID");
-	  	lAr_pid->GetYaxis()->SetTitle("Counts");  	
+	  TH1D *crs_pid= new TH1D("crs_pid","crs_pid",4000,-1000,3000);
+		crs_pid->GetXaxis()->SetTitle("Particle ID");
+ 	  crs_pid->GetYaxis()->SetTitle("Counts");  	
   	
-  	TH1D *lAr_pid_Edep= new TH1D("lAr_pid_Edep","lAr_pid_Edep",4000,-1000,3000);
-		lAr_pid_Edep->GetXaxis()->SetTitle("Particle ID");
-	  	lAr_pid_Edep->GetYaxis()->SetTitle("Counts"); 
+  	TH1D *crs_pid_Edep= new TH1D("crs_pid_Edep","crs_pid_Edep",4000,-1000,3000);
+		crs_pid_Edep->GetXaxis()->SetTitle("Particle ID");
+ 	  crs_pid_Edep->GetYaxis()->SetTitle("Counts"); 
 
 /*	TH2F *Veto_pid_trackE= new TH2F("Veto_pid_trackE","Veto_pid_trackE",4000,-1000,3000,10000,0,10000);
 		Veto_pid_trackE->GetXaxis()->SetTitle("Particle ID");
 	  	Veto_pid_trackE->GetYaxis()->SetTitle("Energy[MeV]");  
 
-	TH2F *lar_pid_trackE= new TH2F("lar_pid_trackE","lar_pid_trackE",4000,-1000,3000,4000,0,10000);
-		lar_pid_trackE->GetXaxis()->SetTitle("Particle ID");
-	  	lar_pid_trackE->GetYaxis()->SetTitle("Energy[MeV]");  	
+	TH2F *crs_pid_trackE= new TH2F("crs_pid_trackE","crs_pid_trackE",4000,-1000,3000,4000,0,10000);
+		crs_pid_trackE->GetXaxis()->SetTitle("Particle ID");
+	  	crs_pid_trackE->GetYaxis()->SetTitle("Energy[MeV]");  	
 	
 
-	TH2F *lar_pid_trackE_Edep= new TH2F("lar_pid_trackE_Edep","lar_pid_trackE_Edep",4000,-1000,3000,40000,0,4000);
-		lar_pid_trackE_Edep->GetXaxis()->SetTitle("Particle ID");
-	  	lar_pid_trackE_Edep->GetYaxis()->SetTitle("Energy[MeV]");  	
+	TH2F *crs_pid_trackE_Edep= new TH2F("crs_pid_trackE_Edep","crs_pid_trackE_Edep",4000,-1000,3000,40000,0,4000);
+		crs_pid_trackE_Edep->GetXaxis()->SetTitle("Particle ID");
+	  	crs_pid_trackE_Edep->GetYaxis()->SetTitle("Energy[MeV]");  	
 	
 */
 
@@ -96,53 +93,48 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =1
 	// START OF THE LOOP
 	//////////////////////
 
-	Long64_t nentries = det->GetEntries();
+	Long64_t nentries = generated->GetEntries();
 	if (Debug){
-		nentries=1000;
-
+		nentries=1000000;
     	cout << "Working in debug mode: " <<nentries<< endl;
-  	}
+ 	}
 	
 
-  	cout << "WORKING ON nentries =" << nentries << endl;
-  	cout << "Veto Threshold =" << veto_threshold << endl;
-  	Long64_t nbytes = 0, nb = 0;
-  
-
-
-  	cout<< "start of loop"<<endl;
+  cout << "WORKING ON nentries =" << nentries << endl;
+  cout << "Veto Threshold =" << veto_threshold << endl;
+  Long64_t nbytes = 0, nb = 0;
+  cout<< "start of loop"<<endl;
 
 	for (int jentry=0; jentry<nentries; jentry++) {
-	    	//if(!Debug)if((jentry%(nentries/50))==0) cout<<round(100*((jentry/Float_t(nentries))))<<"%"<<endl;
-		
+
 		veto->GetEntry(jentry);
 		generated->GetEntry(jentry);
-		det->GetEntry(jentry);
+		crs->GetEntry(jentry);
 
-	  const double Edep_min =10; // in keV
-    const double Edep_max = 100; // in keV
+	  const double Edep_min =500; // in keV
+    const double Edep_max = 1000; // in keV
     const double n_mass = 939.565378; // in MeV
 		int counter=0;
-    double totEdep_R[4]={0};
-    double totEdep_L[4]={0};
-    double totEdep_D[4]={0};
-    double totEdep_U[4]={0};
-    double totEdep_F[4]={0};
-    double totEdep_B[4]={0};
+    double totEdep_R[3]={0};
+    double totEdep_L[3]={0};
+    double totEdep_D[3]={0};
+    double totEdep_U[3]={0};
+    double totEdep_F[3]={0};
+    double totEdep_B[3]={0};
+    double totEdep_crs=0;
 
-		int det_nhit = myDet->hitn->size();	
-		int veto_nhit = myVe->hitn->size();	
-		
+		int crs_nhit = myCrs->hitn->size();	
+		int veto_nhit = myVe->hitn->size();
+   
 		double mom = sqrt(pow(myGen->px->at(0),2) + pow(myGen->py->at(0),2) + pow(myGen->pz->at(0),2) );	
 		double Ek=sqrt(pow(mom,2) + pow(n_mass,2)) - n_mass; 
 
 		Gen_mom->Fill(mom/1000); // in GeV
 		Gen_Ek->Fill(Ek/1000); // in GeV
 
-		
-
+		//cout<< "JENTRY: "<<jentry<<endl;
 		for (int ihit=0; ihit < veto_nhit; ihit++) {
-      for (int ch=0; ch<4; ch++){
+        for (int ch=0; ch<3; ch++){
           if ( myVe->sector->at(ihit)==1 & myVe->channel->at(ihit) == ch) totEdep_R[ch]= totEdep_R[ch] + myVe->dig_Edep->at(ihit);
           if ( myVe->sector->at(ihit)==2 & myVe->channel->at(ihit) == ch) totEdep_L[ch]= totEdep_L[ch] + myVe->dig_Edep->at(ihit);
           if ( myVe->sector->at(ihit)==3 & myVe->channel->at(ihit) == ch) totEdep_D[ch]= totEdep_D[ch] + myVe->dig_Edep->at(ihit);
@@ -150,38 +142,34 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =1
           if ( myVe->sector->at(ihit)==5 & myVe->channel->at(ihit) == ch) totEdep_F[ch]= totEdep_F[ch] + myVe->dig_Edep->at(ihit);
           if ( myVe->sector->at(ihit)==6 & myVe->channel->at(ihit) == ch) totEdep_B[ch]= totEdep_B[ch] + myVe->dig_Edep->at(ihit);
         }
-			Veto_pid->Fill(myVe->pid->at(ihit));
+			  Veto_pid->Fill(myVe->pid->at(ihit));
 		//	Veto_pid_trackE->Fill(myVe->pid->at(ihit),myVe->trackE->at(ihit));	 			
 		}
-
-    for (int ch=0; ch<4; ch++){
+   
+    for (int ch=0; ch<3; ch++){
         if(totEdep_R[ch]*1000>veto_threshold || totEdep_L[ch]*1000>veto_threshold ||
-          totEdep_D[ch]*1000>veto_threshold || totEdep_U[ch]*1000>veto_threshold ||
-          totEdep_F[ch]*1000>veto_threshold || totEdep_B[ch]*1000>veto_threshold ) {
-				  counter=counter+1;
+           totEdep_D[ch]*1000>veto_threshold || totEdep_U[ch]*1000>veto_threshold ||
+           totEdep_F[ch]*1000>veto_threshold || totEdep_B[ch]*1000>veto_threshold ) {
+				   counter=counter+1;
 		    } 
 			  if (counter>0) break;			 			
     }
 
-    for (int ihit=0; ihit < det_nhit; ihit++) {
-			lAr_pid->Fill(myDet->pid->at(ihit));	
-		//	lar_pid_trackE->Fill(myDet->pid->at(0),myDet->trackE->at(0));	
+    for (int ihit=0; ihit < crs_nhit; ihit++) {
+      totEdep_crs =  totEdep_crs + myCrs->totEdep->at(ihit);
+			crs_pid->Fill(myCrs->pid->at(ihit));	
+		  //	crs_pid_trackE->Fill(myCrs->pid->at(0),myDet->trackE->at(0));	
 		}
-		
-		if (det_nhit==1){
-			if (myDet->dig_Edep->at(0)*1000 >Edep_min && myDet->dig_Edep->at(0)*1000<Edep_max){ // between 10 and 100 keV
-				if(counter==0){ 
-						Gen_Ek_lAr->Fill(Ek/1000);
-						lAr_pid_Edep->Fill(myDet->pid->at(0));
-					//	lar_pid_trackE_Edep->Fill(myDet->pid->at(0),myDet->trackE->at(0));
-				}
-			}
-				
-		}
-		
-		
-	
 
+    if (totEdep_crs*1000 >Edep_min && totEdep_crs*1000<Edep_max){ // compreso tra 10 e 100 keV
+      if(counter==0){ 
+				Gen_Ek_crs->Fill(Ek/1000);
+				crs_pid_Edep->Fill(myCrs->pid->at(0));
+				cout<<" Edep [keV] =  "<< totEdep_crs*1000<<",    En = "<<myCrs->trackE->at(0)<<endl;
+				//	crs_pid_trackE_Edep->Fill(myCrs->pid->at(0),myDet->trackE->at(0));
+      }				
+		}
+		
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
       	std::cout << "                      \r" << jentry << " / " << nentries
 		<< " ====> " << round((float) jentry / nentries * 100.)
@@ -195,9 +183,9 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =1
 	}
 
 
-	cout<<"n with Edep 10-100 keV = "<<Gen_Ek_lAr->Integral()<<endl;
+	  cout<<"n con Edep 10-100 keV = "<<Gen_Ek_crs->Integral()<<endl;
     
-/* 
+/* */
     cout<<"Veto neutron  = "<<Veto_pid->Integral(3113,3113)<<endl; //pid+1001
     cout<<"Veto proton   = "<<Veto_pid->Integral(3213,3213)<<endl;
     cout<<"Veto gamma    = "<<Veto_pid->Integral(1023,1023)<<endl;
@@ -208,26 +196,26 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =1
     cout<<"Veto pi+ 	 = "<<Veto_pid->Integral(1212,1212)<<endl;
     cout<<"Veto pi-      = "<<Veto_pid->Integral(790,790)<<endl;
 
-    cout<<"lar neutron  = "<<lAr_pid->Integral(3113,3113)<<endl; //pid+1001
-    cout<<"lar proton   = "<<lAr_pid->Integral(3213,3213)<<endl;
-    cout<<"lar gamma    = "<<lAr_pid->Integral(1023,1023)<<endl;
-    cout<<"lar muon     = "<<lAr_pid->Integral(1014,1014)<<endl;
-    cout<<"lar antimuon = "<<lAr_pid->Integral(988,988)<<endl; // 1001-pid
-    cout<<"lar electron = "<<lAr_pid->Integral(1012,1012)<<endl;
-    cout<<"lar positron = "<<lAr_pid->Integral(990,990)<<endl;
-    cout<<"lar pi+ 	    = "<<lAr_pid->Integral(1212,1212)<<endl;
-    cout<<"lar pi-      = "<<lAr_pid->Integral(790,790)<<endl;
+    cout<<"crs neutron  = "<<crs_pid->Integral(3113,3113)<<endl; //pid+1001
+    cout<<"crs proton   = "<<crs_pid->Integral(3213,3213)<<endl;
+    cout<<"crs gamma    = "<<crs_pid->Integral(1023,1023)<<endl;
+    cout<<"crs muon     = "<<crs_pid->Integral(1014,1014)<<endl;
+    cout<<"crs antimuon = "<<crs_pid->Integral(988,988)<<endl; // 1001-pid
+    cout<<"crs electron = "<<crs_pid->Integral(1012,1012)<<endl;
+    cout<<"crs positron = "<<crs_pid->Integral(990,990)<<endl;
+    cout<<"crs pi+ 	    = "<<crs_pid->Integral(1212,1212)<<endl;
+    cout<<"crs pi-      = "<<crs_pid->Integral(790,790)<<endl;
 
-    cout<<"lar Edep neutron  = "<<lAr_pid_Edep->Integral(3113,3113)<<endl; //pid+1001
-    cout<<"lar Edep proton   = "<<lAr_pid_Edep->Integral(3213,3213)<<endl;
-    cout<<"lar Edep gamma    = "<<lAr_pid_Edep->Integral(1023,1023)<<endl;
-    cout<<"lar Edep muon     = "<<lAr_pid_Edep->Integral(1014,1014)<<endl;
-    cout<<"lar Edep antimuon = "<<lAr_pid_Edep->Integral(988,988)<<endl; // 1001-pid
-    cout<<"lar Edep electron = "<<lAr_pid_Edep->Integral(1012,1012)<<endl;
-    cout<<"lar Edep positron = "<<lAr_pid_Edep->Integral(990,990)<<endl;
-    cout<<"lar Edep pi+ 	 = "<<lAr_pid_Edep->Integral(1212,1212)<<endl;
-    cout<<"lar Edep pi-      = "<<lAr_pid_Edep->Integral(790,790)<<endl;
-*/
+    cout<<"crs Edep neutron  = "<<crs_pid_Edep->Integral(3113,3113)<<endl; //pid+1001
+    cout<<"crs Edep proton   = "<<crs_pid_Edep->Integral(3213,3213)<<endl;
+    cout<<"crs Edep gamma    = "<<crs_pid_Edep->Integral(1023,1023)<<endl;
+    cout<<"crs Edep muon     = "<<crs_pid_Edep->Integral(1014,1014)<<endl;
+    cout<<"crs Edep antimuon = "<<crs_pid_Edep->Integral(988,988)<<endl; // 1001-pid
+    cout<<"crs Edep electron = "<<crs_pid_Edep->Integral(1012,1012)<<endl;
+    cout<<"crs Edep positron = "<<crs_pid_Edep->Integral(990,990)<<endl;
+    cout<<"crs Edep pi+ 	   = "<<crs_pid_Edep->Integral(1212,1212)<<endl;
+    cout<<"crs Edep pi-      = "<<crs_pid_Edep->Integral(790,790)<<endl;
+
     cout<< "end of loop  "<< endl;
 
         
@@ -237,17 +225,19 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =1
         
     TFile *g;
   	if(Debug) g = new TFile("Output/Debug.root","RECREATE");
- 	else g = new TFile(outname.c_str(),"RECREATE");
+ 	  else g = new TFile(outname.c_str(),"RECREATE");
 
  	
-	Gen_mom->Write(0,TObject::kOverwrite);
-	Gen_Ek->Write(0,TObject::kOverwrite);
+	  Gen_mom->Write(0,TObject::kOverwrite);
+	  Gen_Ek->Write(0,TObject::kOverwrite);
+    Gen_Ek_crs->Write(0,TObject::kOverwrite);
     Edep->Write(0,TObject::kOverwrite);
-    lAr_pid->Write(0,TObject::kOverwrite);
-	Veto_pid->Write(0,TObject::kOverwrite);
+    crs_pid->Write(0,TObject::kOverwrite);
+    crs_pid_Edep->Write(0,TObject::kOverwrite);
+	  Veto_pid->Write(0,TObject::kOverwrite);
 //	Veto_pid_trackE->Write(0,TObject::kOverwrite);
-//	lar_pid_trackE->Write(0,TObject::kOverwrite);
-//	lar_pid_trackE_Edep->Write(0,TObject::kOverwrite);
+//	crs_pid_trackE->Write(0,TObject::kOverwrite);
+//	crs_pid_trackE_Edep->Write(0,TObject::kOverwrite);
 
 
  	g->Close();
