@@ -60,13 +60,12 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 
 	//Old crystal
 	if (sector == 100 && xch == 0 && ych == 0) {
-        //double att_length_crs = 600 * cm; // compatible with NO ATT Lenght as measured for cosmic muons
 		sensor_surface_crs = pow(0.3 * cm, 2);
 		redout_surface_crs = pow(4.7 * cm, 2);
 		sensor_qe_crs = 0.22; // consider only 25um sipm
 		optical_coupling = 0.6866;
 	}
- 
+
     
     // PbWO4 parameters
     if (sector == 400 || sector == 402 ||sector == 500 ||sector == 502) // 400/402 = Panda Crystals Top/Bottom, 500/502 = FT crystals Top/Bottom
@@ -75,43 +74,16 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
         sensor_surface_crs = pow(0.6 * cm, 2);
         sensor_qe_crs = 0.22; // consider only 25um sipm
         optical_coupling = 0.9;
-        att_length_crs = 60000 * cm; // compatible with NO ATT Lenght as measured for cosmic muons
-        if (sector == 400 || sector == 402) light_yield_crs = 310 * integration_frac / MeV;//Panda Crystals LY
-        if (sector == 500 || sector == 502) light_yield_crs = 310 * integration_frac / MeV;//FT Crystals LY
-
+        if (sector == 400 || sector == 402) light_yield_crs = 350 * integration_frac / MeV;//Panda Crystals LY
+        if (sector == 500 || sector == 502) light_yield_crs = 350 * integration_frac / MeV;//FT Crystals LY
     }
-    
-    
     double length_crs; //(in mm)
     double sside_crs;
     double lside_crs;
-    double radius_crs;
     length_crs = 2*aHit->GetDetector().dimensions[4];
     sside_crs = 2*aHit->GetDetector().dimensions[0];
     lside_crs = 2*aHit->GetDetector().dimensions[2];
     redout_surface_crs =sside_crs*lside_crs* mm * mm;
-    
-    if (sector == 600 ) // NaI Lab FIFA crystal 2"x2" 905-3 NaI Scintillation Detector, 2- x 2-in. crystal, 2-in. tube
-    {
-        
-        sensor_surface_crs = 3.1415 * pow(2.*2.54/2 * cm, 2);// 2" PMT
-        sensor_qe_crs = 0.2; // Typical Hamamtsu qe PMT
-        optical_coupling = 0.9;
-        att_length_crs = 6000 * cm; // compatible with NO ATT Lenght as measured for cosmic muons
-        light_yield_crs = 38000 * integration_frac / MeV;//Saint Gobain typical NaI crystal
-        length_crs = 2*aHit->GetDetector().dimensions[2];
-        radius_crs =aHit->GetDetector().dimensions[1];
-        redout_surface_crs = 3.1415 * pow(radius_crs * mm, 2);
-        sensor_surface_crs = redout_surface_crs;
-        //cout<<"Sector="<<sector << endl;
-        //cout<<"length_crs="<<length_crs << endl;
-        //cout<<"radius_crs="<<radius_crs << endl;
-        //cout<<"redout_surface_crs="<<redout_surface_crs<< endl;
-    }
-
-    
-    
-    
     //cout<<"Sector="<<sector << endl;
     //cout<<"length_crs="<<length_crs << endl;
     //cout<<"sside_crs="<<sside_crs << endl;
@@ -170,15 +142,11 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 	{
 		for (unsigned int s = 0; s < nsteps; s++) {
 //        Etot = Etot + Edep[s];
-            //cout<<"Edep ="<<Edep[s] << endl;
 			Etot_crs = Etot_crs + Edep[s];
 		}
 	}
-    //cout<<"ETotdep ="<<Etot_crs << endl;
-    //cout<<" " << endl;
 
 	double Etot_B_crs = 0;
-    double Etot_noB_crs=0.;
 	if (Etot_crs > 0) {
 		for (unsigned int s = 0; s < nsteps; s++) {   //Reference vie for cal matrix:
 													  //cristals with short size pointing downstream
@@ -210,9 +178,7 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 //			double Edep_B = BirksAttenuation(Edep[s],Dx[s],charge[s],birks_constant);
 
 			double Edep_B_crs = BirksAttenuation(Edep[s], Dx[s], charge[s], birks_constant);
-
 			//	Edep_B_crs = Edep[s];
-            Etot_noB_crs=Etot_noB_crs+Edep[s];
 			Etot_B_crs = Etot_B_crs + Edep_B_crs;
 
 			//	cout << "\t Birks Effect: " << " Edep=" << Edep[s] << " StepL=" << Dx[s] << " charge =" << charge[s] << " Edep_B=" << Edep_B_crs << endl;
@@ -269,7 +235,7 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 
 		// cout << "Etot " << Etot_crs  << " EtotB " << Etot_B_crs  << " steps " << nsteps<< endl;
 //		double peL=G4Poisson(etotL*light_yield*sensor_qe);
-//		double peR=G4Poisson(etotR*light_yield*sensor_qe);do 
+//		double peR=G4Poisson(etotR*light_yield*sensor_qe);
 //        double sigmaTL=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(peL+1.));
 //        double sigmaTR=sqrt(pow(0.2*nanosecond,2.)+pow(1.*nanosecond,2.)/(peR+1.));
 
@@ -315,20 +281,11 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 
 		//      SIPM 1
 
-        peR_crs = etotR_crs * light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs;
-        // cout<<" peR="<<peR_crs<<" EtotR="<< etotR_crs<< " "<< peR_crs/etotR_crs<<endl;
-        if (sector == 600 ) // NaI Lab FIFA crystal 2"x2" 905-3 NaI Scintillation Detector, 2- x 2-in. crystal, 2-in. tube
-        {
+		//peR_crs = etotR_crs * light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs;
 		peR_crs = G4Poisson(etotR_crs * light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs);
-        }
-        // cout<<" peR Poisson spread="<<peR_crs<<endl;
-        
-       // cout<<peR_crs<<" EtotL="<< etotL_crs<< " "<< peR_crs/etotL_crs<<endl;
-        //cout<<"Etot="<< Etot_crs<<endl;
-        
 		//
 		// integrating over the integration time (each sample 4.ns, see digi routine)
-        //cout <<"Light yield "<< light_yield_crs<<endl;
+        //cout <<"tre "<< light_yield_crs<<endl;
         //cout << peR_crs <<"  "<<light_yield_crs<< "  "<< sector<<endl;
         if (sector == 400 || sector == 402 ||sector == 500 ||sector == 502) // 400/402 = Panda Crystals Top/Bottom, 500/502 = FT crystals Top/Bottom
         {
@@ -336,11 +293,7 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
             test=test_pbwo;
             tim=tim_pbwo;
         }
-        
-        
-        
         else test = WaveForm(peR_crs, &tim);
-        
         
 		peR_int_crs = 0.;
 		for (unsigned int s = 0; s < Nsamp_int; s++)
@@ -351,12 +304,7 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 
 		//cout << "TDCR: " << tim << " Npe before digi " << peR_crs<< " Npe avter digi " <<peR_int_crs <<endl;
 		TDCR_crs = int(tim) + ((time_min_crs[1] + T_offset_crs + G4RandGauss::shoot(0.,sigmaTR_crs)) * tdc_conv_crs);
-		ADCR_crs = int(peR_int_crs*1000.);//in keV
-        if (sector == 600 ) // NaI Lab FIFA crystal 2"x2" 905-3 NaI Scintillation Detector, 2- x 2-in. crystal, 2-in. tube
-        {
-        ADCR_crs = int(peR_int_crs);
-        }
-
+		ADCR_crs = int(peR_int_crs);
 		//ADCL_crs=etotR_crs*1000;
 		//cout << "TDCR: " << tim << " Npe before digi " << peR_crs<< " Npe avter digi " <<peR_int_crs <<endl;
 
@@ -365,8 +313,8 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 		//cout <<time_min_crs[1]<<"  "<<TDCB<<endl;
 
 		// Left readout (small size side)
-		peL_crs = etotL_crs * light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs;
-		//peL_crs = G4Poisson(etotL_crs * light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs);
+		//peL_crs = etotL_crs * light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs;
+		peL_crs = G4Poisson(etotL_crs * light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs);
 		// integrating over the integration time (each sample 4.ns, see digi routine)
 
         if (sector == 400 || sector == 402 ||sector == 500 ||sector == 502) // 400/402 = Panda Crystals Top/Bottom, 500/502 = FT crystals Top/Bottom
@@ -384,16 +332,9 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 
 
 		//peL_int_crs = 0.63 * peL_crs;
-		//cout << "TDCL: " << tim << " Npe before digi " << peL_crs<< " Npe avter digi " <<peL_int_crs <<endl;
-
-	
-
+		//cout << "TDCR: " << tim << " Npe before digi " << peR_crs<< " Npe avter digi " <<peR_int_crs <<endl;
 		TDCL_crs = int(tim) + ((time_min_crs[0] + T_offset_crs + G4RandGauss::shoot(0.,sigmaTR_crs)) * tdc_conv_crs); // assigning to L the sipm2
-		if (sector == 400 || sector == 402 ||sector == 500 ||sector == 502){
-		  ADCL_crs = int(peL_int_crs*1000.); //in keV
-		}else{
-		  ADCL_crs = int(peL_int_crs);
-		}
+		ADCL_crs = int(peL_int_crs);
 		//   Old crystal readout by the 50um on thesmall size readout (Left side). No 100 um sipm implemented
 		// Parameters assigned at tghe beginning (qe, size, optical coupling)
 		// Reassigniong TDCR and ADCR for uniform readout
@@ -417,19 +358,12 @@ map<string, double> crs_HitProcess::integrateDgt(MHit* aHit, int hitn) {
 	dgtz["sector"] = sector;
 	dgtz["xch"] = xch;
 	dgtz["ych"] = ych;
-      if (sector == 400 || sector == 402 ||sector == 500 ||sector == 502)// for BDX-MINI crystals ADCL_crs is in keV ! only valid if no attenuation !
-     {
-        ADCL_crs=ADCL_crs /(light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs * 0.5);
-        ADCR_crs = ADCL_crs;
-        //cout <<ADCL_crs<<" " <<Etot_B_crs<<"Npe/MeV = " <<(light_yield_crs * sensor_qe_crs * optical_coupling * light_coll_crs * 0.5)<<endl;
-
-     }
 	dgtz["adcl"] = ADCL_crs;	  //
 	dgtz["adcr"] = ADCR_crs;	  //SIPM 25um -> large size for matrix, small size for single
 	dgtz["tdcl"] = TDCL_crs;	  //
 	dgtz["tdcr"] = TDCR_crs;	  // as per ADCR_crs
-	dgtz["adcb"] = Etot_B_crs;  // deposited energy with Birks
-	dgtz["adcf"] = Etot_noB_crs;
+	dgtz["adcb"] = 0;
+	dgtz["adcf"] = 0;
 	dgtz["tdcb"] = TDCB * 1000.;	  //original time in ps
 	dgtz["tdcf"] = 0;
 
@@ -519,7 +453,7 @@ double* crs_HitProcess::WaveForm(double npe, double* time) {
 	int Npe = frac * npe;
 //    cout << "Npe  " << Npe<<"  "<<npe << endl;
 
-	//Npe=1.;
+	Npe=20.;
 	//Npe=Npe/100.;
 	for (unsigned int s = 1; s <= Npe; s++) {
 		y = 1.;
@@ -549,6 +483,51 @@ double* crs_HitProcess::WaveForm(double npe, double* time) {
 		}
 	}
 
+    // adding thermal noise 0.3pe ~1MHz
+    // 1pe 1 MHz
+    double NR = 1; // 1 MHz
+    // NN2pe 10% N1pe, NN3pe 1% N1pe
+    double NN2pe = 5./100.;
+    double NN3pe = 0.05/100.;
+    
+    double NoiseRate = 1000./NR; //  in ns
+    double NoiseTStart[10];
+    double MultNpe=1;
+    int m = 0;
+    int NNoise = 0;
+    NoiseTStart[0] = - NoiseRate;
+    int ns = 0;
+//    cout << "First time "  << endl;
+    while (ns == 0){
+        NoiseTStart[m+1] = NoiseTStart[m]+G4Poisson(NoiseRate);
+  //      cout << "NoiseTstart " << NoiseTStart[m]  << "  " << NoiseTStart[m+1]  << endl;
+        m = m + 1;
+        NNoise = NNoise + 1;
+        if (NoiseTStart[m] > 4000) ns=1;
+    }
+    for (unsigned int s = 1; s <= m; s++) {
+     //   cout << "N " << s << " " << "NT " << NoiseTStart[s]  << "  " << endl;
+    }
+    for (unsigned int s = 1; s <= m; s++) {
+        
+        it = NoiseTStart[s] / smp_t / 1000.;
+        // Extracting 1pe, 2pe, 3pe ,... noise
+        rr = (rand() % 1000000 + 1) / 1000000.; // rnd number between 0-1
+        MultNpe = 1.;
+        if (rr < NN2pe) MultNpe=2.;
+        if (rr < NN3pe) MultNpe=3.;
+    //    cout << "it " << it<<"  MultNpe " << MultNpe  << " " << rr<< endl;
+        for (unsigned int s = 0; s < 80; s++) {
+            t = 1000. * s * smp_t;
+            func = MultNpe * AmpWF[s];
+            func = G4RandGauss::shoot(func,A_spread);
+            if ((s + it) < Nch_digi) WFsample[s + it] = WFsample[s + it] + func;
+            
+        }
+        
+    }
+    // Ended sipm thermal noise
+    
 	//for(unsigned int s=0; s<200; s++) cout << s  << " " <<  WFsample[s] << endl ;
 
 	// mimicking a CF discriminatorm at 1/3 of the max signal
@@ -607,7 +586,7 @@ double* crs_HitProcess::WaveFormPbwo(double npe, double* time_pbwo) {
     //    double threshold=10.*1./area/smp_t/1000.; //time threshold in pe - 1/55.41/smp_t*1000. is the funct max -
     
     double t_spread = 1. * 0.000; // pream time spread in us
-    double A_spread = 1. * 0.4 * A; // pream amp spread (in fraction of 1pe amplitude = A)
+    double A_spread = 1. * 0.05 * A; // pream amp spread (in fraction of 1pe amplitude = A)
     double func = 0.;
     // Building the waveform
     for (unsigned int s = 0; s < 1000; s++) {
@@ -627,7 +606,7 @@ double* crs_HitProcess::WaveFormPbwo(double npe, double* time_pbwo) {
     // fraction of pe in Nch_digi
     double frac = 1 - ((p[2] * exp(-smp_t * Nch_digi / p[1]) + p[4] * exp(-smp_t * Nch_digi / p[3])));
     int Npe = frac * npe;
-    //cout << "Npe  " << Npe<<"  "<<npe << endl;
+    //    cout << "Npe  " << Npe<<"  "<<npe << endl;
     
     //Npe=1.;
     //Npe=Npe/100.;
