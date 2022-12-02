@@ -158,9 +158,9 @@ map<string, double> det_HitProcess :: integrateDgt(MHit* aHit, int hitn)
        
 	dgtz["hitn"]    = hitn;
 	dgtz["sector"]  = sector;
-	dgtz["det"]    = det_id;
+	dgtz["det"]     = det_id;
 	dgtz["channel"] = channel;
-    dgtz["dig_Edep"]  = dig_Edep;
+    dgtz["dig_Edep"]= dig_Edep;
 	dgtz["adc1"]    = ADC1;// deposited energy in MeV
 	dgtz["adc2"]    = ADC2;//output in pe
   	dgtz["adc3"]    = ADC3;// ignore
