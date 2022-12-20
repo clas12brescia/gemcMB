@@ -44,7 +44,7 @@ sub define_cormo_hit
     $hit{"description"}     = "liquid argon";
     $hit{"identifiers"}     = "sector det channel";
     $hit{"signalThreshold"} = "200.0*KeV";
-    $hit{"timeWindow"}      = "1000*ns";
+    $hit{"timeWindow"}      = "5000*ns";
     $hit{"prodThreshold"}   = "0.01*um";	 			#se scendo al di sotto non lo considera
     $hit{"maxStep"}         = "1*mm";
     $hit{"delay"}           = "10*ns";
@@ -59,7 +59,7 @@ sub define_cormo_hit
     $hit{"description"}     = "BDX crystals";
     $hit{"identifiers"}     = "sector layer paddle";
     $hit{"signalThreshold"} = "200.0*KeV";
-    $hit{"timeWindow"}      = "1000*ns";
+    $hit{"timeWindow"}      = "4000*ns";
     $hit{"prodThreshold"}   = "10*um";
     $hit{"maxStep"}         = "1*mm";
     $hit{"delay"}           = "10*ns";
