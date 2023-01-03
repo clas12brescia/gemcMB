@@ -83,15 +83,15 @@ my $Crs_x =6./2;
 my $Crs_y =6./2; 
 my $Crs_z =32./2;
 
-my @Veto_thickness=(1./2, 5./2, 2./2, 5./2, 2./2);
-my @Veto_lx=(0,0,0,0,0);
-my @Veto_ly=(0,0,0,0,0);
-my @Veto_lz=(0,0,0,0,0);
+my @Veto_thickness=(2./2, 5./2, 2./2, 5./2, 2./2, 5./2);
+my @Veto_lx=(0,0,0,0,0,0);
+my @Veto_ly=(0,0,0,0,0,0);
+my @Veto_lz=(0,0,0,0,0,0);
 
 my $Veto_posx= $Crs_x ;
 my $Veto_posy= $Crs_y ;
 my $Veto_posz= $Crs_z ;
-my @mat= ("ScintillatorB","G4_Pb","ScintillatorB","G4_Pb","ScintillatorB");
+my @mat= ("ScintillatorB","G4_Pb","ScintillatorB","G4_Pb","ScintillatorB","G4_Pb");
 
 ################################### CsI_Tl ##################################### 
   
@@ -152,8 +152,8 @@ sub make_nVeto
              $Y[$i]  =0.;
              $Z[$i] = 0.;
         }
-        $detector{"name"}        = "right $i";
-        $detector{"description"} = "right side $i ";
+        $detector{"name"}        = "right_$i";
+        $detector{"description"} = "right side $i, $mat[$i]  ";
         $detector{"color"}       = "0000003"; #black + trasparency
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
@@ -162,6 +162,9 @@ sub make_nVeto
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
         $detector{"dimensions"}  = "$Veto_lx[$i]*cm $Veto_ly[$i]*cm $Veto_lz[$i]*cm";
         $detector{"material"}    = "$mat[$i]";
+        $detector{"sensitivity"} = "no";
+        $detector{"hit_type"}    = "no";
+        $detector{"identifiers"} = "no";
         if ($mat[$i]eq "ScintillatorB"){
             $detector{"color"}       = "ff00003"; #red + trasparency
             $detector{"sensitivity"} = "veto";
@@ -170,8 +173,8 @@ sub make_nVeto
         }
          print_det(\%configuration, \%detector);
 
-        $detector{"name"}        = "left $i";
-        $detector{"description"} = "left side $i ";
+        $detector{"name"}        = "left_$i";
+        $detector{"description"} = "left side $i, $mat[$i]  ";
         $detector{"color"}       = "0000003"; #black + trasparency
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
@@ -208,8 +211,8 @@ sub make_nVeto
             $Y[$i] = $Y[$i-1] + $Veto_thickness[$i-1] + $Veto_thickness[$i];
             $Z[$i] = 0.;
         }
-        $detector{"name"}        = "down $i";
-        $detector{"description"} = "down side $i ";
+        $detector{"name"}        = "down_$i";
+        $detector{"description"} = "down side $i, $mat[$i]  ";
         $detector{"color"}       = "0000003"; #black + trasparency
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
@@ -218,6 +221,9 @@ sub make_nVeto
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
         $detector{"dimensions"}  = "$Veto_lx[$i]*cm $Veto_ly[$i]*cm $Veto_lz[$i]*cm";
         $detector{"material"}    = "$mat[$i]"; 
+        $detector{"sensitivity"} = "no";
+        $detector{"hit_type"}    = "no";
+        $detector{"identifiers"} = "no";
         if ($mat[$i]eq "ScintillatorB"){
             $detector{"color"}       = "0000ff3"; #blue + trasparency
             $detector{"sensitivity"} = "veto";
@@ -226,8 +232,8 @@ sub make_nVeto
         }
          print_det(\%configuration, \%detector);  
 
-        $detector{"name"}        = "up $i";
-        $detector{"description"} = "up side $i ";
+        $detector{"name"}        = "up_$i";
+        $detector{"description"} = "up side $i, $mat[$i]  ";
         $detector{"color"}       = "0000003"; #black + trasparency
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
@@ -264,7 +270,7 @@ sub make_nVeto
             $Y[$i] = 0.;
             $Z[$i] = $Z[$i-1] + $Veto_thickness[$i-1] + $Veto_thickness[$i] ;
         }
-        $detector{"name"}        = "front $i";
+        $detector{"name"}        = "front_$i";
         $detector{"description"} = "front side $i ,$mat[$i]";
         $detector{"color"}       = "0000003"; #black + trasparency
         $detector{"style"}       = 1;
@@ -274,15 +280,18 @@ sub make_nVeto
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
         $detector{"dimensions"}  = "$Veto_lx[$i]*cm $Veto_ly[$i]*cm $Veto_lz[$i]*cm";
         $detector{"material"}    = "$mat[$i]";
+        $detector{"sensitivity"} = "no";
+        $detector{"hit_type"}    = "no";
+        $detector{"identifiers"} = "no";
         if ($mat[$i] eq "ScintillatorB"){
             $detector{"color"}       = "ffd7003"; #yellow + trasparency
             $detector{"sensitivity"} = "veto";
             $detector{"hit_type"}    = "veto";
-            $detector{"identifiers"} = "sector manual 3 veto manual 100 channel manual $i";
+            $detector{"identifiers"} = "sector manual 5 veto manual 100 channel manual $i";
         }
          print_det(\%configuration, \%detector);
 
-        $detector{"name"}        = "back $i";
+        $detector{"name"}        = "back_$i";
         $detector{"description"} = "back side $i, $mat[$i] ";
         $detector{"color"}       = "0000003"; #black + trasparency
         $detector{"style"}       = 1;
@@ -296,7 +305,7 @@ sub make_nVeto
             $detector{"color"}       = "ffd7003"; #yellow + trasparency
             $detector{"sensitivity"} = "veto";
             $detector{"hit_type"}    = "veto";
-            $detector{"identifiers"} = "sector manual 3 veto manual 100 channel manual $i";
+            $detector{"identifiers"} = "sector manual 6 veto manual 100 channel manual $i";
         }
          
          print_det(\%configuration, \%detector);

@@ -8,6 +8,7 @@
 #include <TCanvas.h>
 #include "iostream"
 #include <map>
+#include<fstream>
 using namespace std;
 
 bool Debug = false;
@@ -55,12 +56,12 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		Gen_Ek_crs->GetXaxis()->SetTitle("Kinetic Energy [GeV]");
  	  Gen_Ek_crs->GetYaxis()->SetTitle("Counts");
 
-	  TH1D *Edep_veto= new TH1D("Edep_veto","Edep_veto",10000,0,1);
+	  TH1D *Edep_veto= new TH1D("Edep_veto","Edep_veto",100000,0,1000);
 		Edep_veto->GetXaxis()->SetTitle("Kinetic Energy [MeV]");
  	  Edep_veto->GetYaxis()->SetTitle("Counts");
       
- 	  TH1D *Edep_crs= new TH1D("Edep_crs","Edep_crs",10000,0,1);
-		Edep_crs->GetXaxis()->SetTitle("Kinetic Energy [MeV]");
+ 	  TH1D *Edep_crs= new TH1D("Edep_crs","Edep_crs",190,10,200);
+		Edep_crs->GetXaxis()->SetTitle("Kinetic Energy [keV]");
  	  Edep_crs->GetYaxis()->SetTitle("Counts");
       
 	  TH1D *crs_time= new TH1D("crs_time","crs_time",100000,-0.5,99999.5);
@@ -71,7 +72,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		veto_time->GetXaxis()->SetTitle("Time [microseconds]");
     veto_time->GetYaxis()->SetTitle("Counts");
     
-    TH1D *crs_veto_dT= new TH1D("crs_veto_dT","crs_veto_dT",8000,-4000.5,3999.5);
+    TH1D *crs_veto_dT= new TH1D("crs_veto_dT","crs_veto_dT",20000,-10000.5,9999.5);
 		crs_veto_dT->GetXaxis()->SetTitle("Time [microseconds]");
     crs_veto_dT->GetYaxis()->SetTitle("Counts");
     
@@ -124,6 +125,11 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
   int number_hitVe=0;
   int number_hitCrs_thr=0;
   int number_hitVe_thr=0;
+  int single=0;
+  int Edep10_200_crs=0;
+  
+  const double crs_threshold = 10;
+  const double crs_maxEdep = 200;
 
 	for (int jentry=0; jentry<nentries; jentry++) {
 
@@ -132,7 +138,6 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		crs->GetEntry(jentry);
     
     
-    const double crs_threshold = 500;
     const double n_mass = 939.565378; // in MeV
 		
 		int crs_nhit = myCrs->hitn->size();	
@@ -151,45 +156,44 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
     nhit_crs->Fill(crs_nhit);
     
     
-    for (int ihit=0; ihit < crs_nhit; ihit++){
-       Edep_crs->Fill( myCrs->totEdep->at(ihit));
-       if (myCrs->totEdep->at(ihit)*1000> crs_threshold){
-         crs_time->Fill(myCrs->avg_t->at(ihit)/1000);
-         crs_nhit_thr=crs_nhit_thr+1;
+    for (int ihit=0; ihit < crs_nhit; ihit++){              // Loop on hit in the crs
+       Edep_crs->Fill( myCrs->totEdep->at(ihit)*1000);           // fill histogram with Deposited energy in crs
+       if (myCrs->totEdep->at(ihit)*1000> crs_threshold){   // Look only at deposited energy higher then thr=10keV (energy visible in experiment)
+         crs_time->Fill(myCrs->avg_t->at(ihit)/1000);       // fill with time information /1000 to be in microseconds
+         crs_nhit_thr=crs_nhit_thr+1;                       // count number of hit with deposited energy higher then thr=10keV 
        }  
     }
       
-    for (int jhit=0; jhit < veto_nhit; jhit++){
-      Edep_veto->Fill( myVe->totEdep->at(jhit));
-      if (myVe->totEdep->at(jhit)*1000> veto_threshold){
-        veto_time->Fill(myVe->avg_t->at(jhit)/1000);
-        veto_nhit_thr=veto_nhit_thr+1;
+    for (int jhit=0; jhit < veto_nhit; jhit++){           // Loop on hit in the veto
+      Edep_veto->Fill( myVe->totEdep->at(jhit));          // fill histogram with Deposited energy in veto
+      if (myVe->totEdep->at(jhit)*1000> veto_threshold){  // Look only at deposited energy higher then thr (energy visible in experiment)
+        veto_time->Fill(myVe->avg_t->at(jhit)/1000);      // fill with time information /1000 to be in microseconds
+        veto_nhit_thr=veto_nhit_thr+1;                    // count number of hit with deposited energy higher then thr
       }
     }
     
-    nhit_veto_thr->Fill(veto_nhit_thr);
+    nhit_veto_thr->Fill(veto_nhit_thr); // fill histo with total number of hit with deposited energy higher then thr
     nhit_crs_thr->Fill(crs_nhit_thr);
     
-    
+    //Time coincidence
     for (int ihit=0; ihit < crs_nhit; ihit++) {
       DeltaT_min=1E8;
       DeltaT_signed=1E8;
-      if (myCrs->totEdep->at(ihit)*1000> crs_threshold){
+      if (myCrs->totEdep->at(ihit)*1000> crs_threshold && myCrs->totEdep->at(ihit)*1000<crs_maxEdep){  // Look only at Edep between 10-200keV (neutrino Edep)
+        Edep10_200_crs =  Edep10_200_crs+1;
         for (int jhit=0; jhit < veto_nhit; jhit++) {
-          if ( myVe->totEdep->at(jhit)*1000> veto_threshold){ 
-            DeltaT=abs(myCrs->avg_t->at(ihit) - myVe->avg_t->at(jhit))/1000;// in micro
+          if ( myVe->totEdep->at(jhit)*1000> veto_threshold){     // Look only at deposited energy higher then thr (energy visible in experiment)
+            DeltaT=abs(myCrs->avg_t->at(ihit) - myVe->avg_t->at(jhit))/1000;// absoulute value of difference in time between veto and lAr in micros
             if (DeltaT<DeltaT_min){
-              DeltaT_min=DeltaT;
-              DeltaT_signed= (myCrs->avg_t->at(ihit) - myVe->avg_t->at(jhit))/1000;
+              DeltaT_min=DeltaT;        // find the minimum delta Time (to reject the event)
+              DeltaT_signed= (myCrs->avg_t->at(ihit) - myVe->avg_t->at(jhit))/1000;    //value of difference in time between veto-lAr in micros with sign
             }  
 		      }
         }
-        
-        crs_veto_dT->Fill(DeltaT_signed); // in micro 
+        if (DeltaT_signed==1E8) single=single+1;
+        crs_veto_dT->Fill(DeltaT_signed); // fill with minimum delta time with sign in micro 
       } 
 		}
-    
-
     
  
 		if ((jentry) % int(nentries / 100) == 0 || (jentry) % 100000 == 0) {
@@ -203,30 +207,39 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
      
 	}
 
-    for (int i=1; i<nhit_crs_thr->GetNbinsX(); i++){            // number of total hit in the veto over thr
+    for (int i=1; i<nhit_crs_thr->GetNbinsX(); i++){            // number of total hit in the crs over thr
        number_hitCrs_thr =  number_hitCrs_thr + (nhit_crs_thr->GetBinContent(i))*(i-1);
     }
      for (int i=1; i<nhit_veto_thr->GetNbinsX(); i++){            // number of total hit in the Veto over thr
        number_hitVe_thr = number_hitVe_thr + (nhit_veto_thr->GetBinContent(i))*(i-1);
     }
-    for (int i=1; i<nhit_crs->GetNbinsX(); i++){            // number of total hit in the veto over thr
+    for (int i=1; i<nhit_crs->GetNbinsX(); i++){            // number of total hit in the crs 
        number_hitCrs = number_hitCrs + (nhit_crs->GetBinContent(i))*(i-1);
     }
-     for (int i=1; i<nhit_veto->GetNbinsX(); i++){            // number of total hit in the Veto over thr
+     for (int i=1; i<nhit_veto->GetNbinsX(); i++){            // number of total hit in the Veto 
        number_hitVe = number_hitVe + (nhit_veto->GetBinContent(i))*(i-1);
     }
     
-     cout<< "number of total hit in the crystal: "<< number_hitCrs<<endl;
-     cout<< "number of hit in the crystal over thr: "<< number_hitCrs_thr<<endl;
-     cout<< "number of hit in the crystal that have hits in the veto = "<<crs_veto_dT->Integral()<<endl; //without overflow
-     cout<< "number of hit in the crystal without hit in the veto = "<<number_hitCrs_thr - crs_veto_dT->Integral(1,8000)<<endl;
-     cout<< "number of hit in the crystal within coincidence with veto = "<<crs_veto_dT->Integral(3996,4006)<<endl;
-	   cout<< "number of hit in the crystal outside coincidence (negative)  = "<<crs_veto_dT->Integral(1,3995)<<endl;
-     cout<< "number of hit in the crystal outside coincidence (positive)  = "<<crs_veto_dT->Integral(4007,8000)<<endl;
+     ofstream fout("Results_cosmics_veto1+2+2_Pb5+5.txt",ios::app);
+     fout<<inputname<<endl;
+     fout<<"Veto Thr ="<< veto_threshold<<endl;
+     fout<<"Crs Thr ="<< crs_threshold<<endl;
+     fout<<"Crs max Edep= "<<crs_maxEdep<<endl;
      
-     cout<< "number of total hit in the veto: "<< number_hitVe<<endl;
-     cout<< "number of hit in the veto over thr: "<< number_hitVe_thr<<endl;
-;
+     fout<< "number of total hit in the crystal: "<< number_hitCrs<<endl;
+     fout<< "number of hit in the crystal over thr: "<< number_hitCrs_thr<<endl;
+   
+     fout<< "number of hit in the crystal with Edep 10-200 keV = "<<Edep10_200_crs<<endl; 
+     fout<< "number of hit in the crystal that have hits in the veto = "<<Edep10_200_crs-single<<endl; //without overflow
+     fout<< "number of hit in the crystal without hit in the veto = "<<single<<endl;
+     fout<< "number of hit in the crystal within coincidence with veto = "<<crs_veto_dT->Integral(9996,10006)<<endl;
+	   fout<< "number of hit in the crystal outside coincidence (negative)  = "<<crs_veto_dT->Integral(1,9995)<<endl;
+     fout<< "number of hit in the crystal outside coincidence (positive)  = "<<crs_veto_dT->Integral(10007,20000)<<endl;
+     
+     fout<< "number of total hit in the veto: "<< number_hitVe<<endl;
+     fout<< "number of hit in the veto over thr: "<< number_hitVe_thr<<endl;
+     fout.close();
+
     //cout<<"hit crs over thr"<< crs_time->Integral()<<endl;
     
     
