@@ -99,7 +99,6 @@ void lAr_n_eff_cosmics(string inputname="Sci1cm_p33,6MeV", int veto_threshold =1
 	Long64_t nentries = det->GetEntries();
 	if (Debug){
 		nentries=1000;
-
     	cout << "Working in debug mode: " <<nentries<< endl;
   	}
 	

@@ -1,1 +1,7 @@
-"Cosmics_E100-1000MeV_veto2x30cm_Pb2x30cm+wall30cm"
+"cosmics_1meV_1eV_veto1+2+2_Pb5+5"
+"cosmics_1eV_1keV_veto1+2+2_Pb5+5"
+"cosmics_1keV_1MeV_veto1+2+2_Pb5+5"
+"cosmics_1_2MeV_veto1+2+2_Pb5+5"
+"cosmics_2_100MeV_veto1+2+2_Pb5+5"
+"cosmics_100_1000MeV_veto1+2+2_Pb5+5"
+"cosmics_1_10GeV_veto1+2+2_Pb5+5"

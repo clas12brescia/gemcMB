@@ -5,7 +5,7 @@
 <option name="DATABASE" value="clas12_simulation"/>
 <option name="HIT_PROCESS_LIST" value="BDX"/>
 <detector name="bdx" factory="TEXT" variation="CT"/>
-<option name="INTEGRATEDRAW" value=" veto crs "/>
+<option name="INTEGRATEDRAW" value="cormo flux veto det crs "/>
 <option name="geometry" value="900x600"/>
 <option name="OUTPUT" value="evio, out.evio"/>
 <option name="HALL_MATERIAL"   value="Vacuum" />
@@ -28,23 +28,21 @@
 
 <option name="CHECK_OVERLAPS"   value="1" />
 
-<option name="BEAM_P"   value="mu+,1696*MeV, 90*deg, -90*deg"/>
-<option name="SPREAD_P" value="0*MeV, 10*deg, 10*deg"/>
+<!--<option name="BEAM_P"   value="mu+,1696*MeV, 90*deg, -90*deg"/>-->
+<!--<option name="SPREAD_P" value="0*MeV, 10*deg, 10*deg"/>-->
 <!--<option name="SPREAD_V" value="(10.,0.)cm"/>-->
-<option name="BEAM_V" value="(0.,100., 0.)cm"/>
+<!--<option name="BEAM_V" value="(0.,100., 0.)cm"/>-->
 
 <!--momentum In GeV-->
 <!--<option name="COSMICRAYS"   value="default,0,0.955,neutron,default"/>--> <!--DUMP-->
 
-<option name="COSMICRAYS"   value="default,0.00000137,0.0000434,neutron,default"/>
+<!--<option name="COSMICRAYS"   value="default,0.00000137,0.0000434,neutron,default"/>-->
 <!--<option name="COSMICRAYS"   value="default,0.0000434,0.00137,neutron,default"/>-->
 <!--<option name="COSMICRAYS"   value="default,0.00137,0.0434,neutron,default"/>-->
 <!--<option name="COSMICRAYS"   value="default,0.0434,0.061,neutron,default"/>-->
 <!--<option name="COSMICRAYS"   value="default,0.061,0.44,neutron,default"/>-->
 <!--<option name="COSMICRAYS"   value="default,0.44,1.7,neutron,default"/>-->
-<!--<option name="COSMICRAYS"   value="default,1.7,10.9,neutron,default"/>-->
-
-<!--<option name="COSMICRAYS"   value="default,10,100.,muon,default"/>-->
+<option name="COSMICRAYS"   value="default,1.7,10.9,neutron,default"/>
 
 <option name="COSMICAREA"   value="0*cm, 0.*cm, 0.*cm, .55*m,sph"/>
 
