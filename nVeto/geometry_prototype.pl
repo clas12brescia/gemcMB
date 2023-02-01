@@ -83,15 +83,15 @@ my $Crs_x =6./2;
 my $Crs_y =6./2; 
 my $Crs_z =32./2;
 
-my @Veto_thickness=(2./2, 5./2, 2./2, 5./2, 2./2, 5./2);
-my @Veto_lx=(0,0,0,0,0,0);
-my @Veto_ly=(0,0,0,0,0,0);
-my @Veto_lz=(0,0,0,0,0,0);
+my @Veto_thickness=(2./2,2.5/2,2./2,2.5/2,2./2);
+my @Veto_lx;
+my @Veto_ly;
+my @Veto_lz;
 
 my $Veto_posx= $Crs_x ;
 my $Veto_posy= $Crs_y ;
 my $Veto_posz= $Crs_z ;
-my @mat= ("ScintillatorB","G4_Pb","ScintillatorB","G4_Pb","ScintillatorB","G4_Pb");
+my @mat= ("ScintillatorB","G4_Pb","ScintillatorB","G4_Pb","ScintillatorB");
 
 ################################### CsI_Tl ##################################### 
   
@@ -135,7 +135,7 @@ sub make_nVeto
  ################################### Scintillator ##################################### 
 # RIGHT-LeFt
 
-    for(my $i=0; $i<$nlayers; $i++){
+    for(my $i=0; $i<1; $i++){
         if ($i==0){
             $Veto_lx[$i] =$Veto_thickness[$i]; 
             $Veto_ly[$i] =$Veto_posy ; 
@@ -194,7 +194,7 @@ sub make_nVeto
     }
 
 # DOWN -Up
-   for(my $i=0; $i<$nlayers; $i++){
+   for(my $i=0; $i<1; $i++){
         if ($i==0){
             $Veto_lx[$i] =$Veto_posx + 2*$Veto_thickness[$i] ; 
             $Veto_ly[$i] =$Veto_thickness[$i] ; 
@@ -230,8 +230,26 @@ sub make_nVeto
             $detector{"hit_type"}    = "veto";
             $detector{"identifiers"} = "sector manual 4 veto manual 100 channel manual $i";
         }
-         print_det(\%configuration, \%detector);  
-
+         print_det(\%configuration, \%detector);    
+    }
+    
+    for(my $i=0; $i<$nlayers; $i++){
+        if ($i==0){
+            $Veto_lx[$i] =$Veto_posx + 2*$Veto_thickness[$i] ; 
+            $Veto_ly[$i] =$Veto_thickness[$i] ; 
+            $Veto_lz[$i] =$Veto_posz ;
+            $X[$i] =0; 
+            $Y[$i] =+$Veto_posy+ $Veto_thickness[$i]; 
+            $Z[$i] =0;
+        }
+        else{
+            $Veto_lx[$i] = $Veto_lx[$i-1] + 2*$Veto_thickness[$i];
+            $Veto_ly[$i] = $Veto_thickness[$i] ;
+            $Veto_lz[$i] = $Veto_lz[$i-1] + 2*$Veto_thickness[$i-1];
+            $X[$i] = 0.;
+            $Y[$i] = $Y[$i-1] + $Veto_thickness[$i-1] + $Veto_thickness[$i];
+            $Z[$i] = 0.;
+        }
         $detector{"name"}        = "up_$i";
         $detector{"description"} = "up side $i, $mat[$i]  ";
         $detector{"color"}       = "0000003"; #black + trasparency
@@ -253,7 +271,7 @@ sub make_nVeto
 
  
      # FRONT
-    for(my $i=0; $i<$nlayers; $i++){
+    for(my $i=0; $i<1; $i++){
         if ($i==0){
             $Veto_lx[$i] =$Veto_posx + 2*$Veto_thickness[$i] ; 
             $Veto_ly[$i] =$Veto_posy + 2*$Veto_thickness[$i]  ; 
@@ -312,7 +330,53 @@ sub make_nVeto
     }    
 } 
 
+sub make_passive
+{
+    my %detector = init_det();
+    if ($configuration{"variation"} eq "CT")
+    {$detector{"mother"}      = "bdx_main_volume";}
+    else
+    {$detector{"mother"}      = "Det_house_inner";} 
 
+# Up
+        my $lx =$Crs_x + 22./2;
+        my $ly = 50./2 ; #thickness lead
+        my $lz = $Crs_z + 22./2;
+        my $X = 0.;
+        my $Y = $Crs_y + 22./2 + $ly;
+        my $Z = 0.;
+        $detector{"name"}        = "up";
+        $detector{"description"} = "up side , water  ";
+        $detector{"color"}       = "08e8de4"; #black + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $detector{"pos"}         = "$X*cm $Y*cm $Z*cm"; #
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$lx*cm $ly*cm $lz*cm";
+        $detector{"material"}    = "G4_WATER";
+         print_det(\%configuration, \%detector); 
+                 
+  #s      my $lx_w =$Veto_posx + 2*$Veto_thickness[0]; ;
+  #      my $ly_w =100./2 ; #thickness water
+  #      my $lz_w = $Veto_posz + 2* $Veto_thickness[0];  ;
+  #      my $X_w = 0.;
+  #      my $Y_w = $Crs_y + 2* $Veto_thickness[0] + 2*$ly + $ly_w ;
+  #      my $Z_w = 0.;
+  #      $detector{"name"}        = "up2";
+  #      $detector{"description"} = "up side ,water  ";
+  #      $detector{"color"}       = "82b4b43"; #black + trasparency
+  #      $detector{"style"}       = 1;
+  #      $detector{"visible"}     = 1;
+  #      $detector{"type"}        = "Box";
+  #      $detector{"pos"}         = "$X_w*cm $Y_w*cm $Z_w*cm"; #
+  #      $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+  #      $detector{"dimensions"}  = "$lx_w*cm $ly_w*cm $lz_w*cm";
+  #      $detector{"material"}    = "G4_WATER";
+ #       print_det(\%configuration, \%detector);  
+      
+        
+} 
 
 sub make_flux_cosmic_sph
 {
@@ -338,7 +402,7 @@ sub make_flux_cosmic_sph
     $detector{"visible"}     = 1;
     $detector{"type"}        = "Sphere";
     $detector{"pos"}         = "$X*cm $Y*cm $Z*cm";
-    $detector{"rotation"}    = "90*deg 180*deg 0*deg";
+    $detector{"rotation"}    = "90*deg 0*deg 0*deg";
     $detector{"dimensions"}  = "$par1*cm $par2*cm $parz3*cm $par4*deg $par5*deg $par6*deg";
     $detector{"material"}    = "G4_AIR";
     $detector{"sensitivity"} = "flux";
@@ -353,7 +417,8 @@ sub make_bdx_CT
     make_main_volume();
     make_nVeto;
     make_crystal;
-    #make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
+    make_passive;
+   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
 }
 
 
