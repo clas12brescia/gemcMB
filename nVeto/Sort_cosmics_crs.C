@@ -92,12 +92,16 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		nhit_crs_thr->GetXaxis()->SetTitle("hit number per event");
     nhit_crs_thr->GetYaxis()->SetTitle("Counts");
  	
-/*  	
-  	TH1D *crs_pid_Edep= new TH1D("crs_pid_Edep","crs_pid_Edep",4000,-1000,3000);
-		crs_pid_Edep->GetXaxis()->SetTitle("Particle ID");
- 	  crs_pid_Edep->GetYaxis()->SetTitle("Counts"); 
+  	
+  	TH1D *crs_pid_single= new TH1D("crs_pid_single","crs_pid_single",4000,-1000,3000);
+		crs_pid_single->GetXaxis()->SetTitle("Particle ID");
+ 	  crs_pid_single->GetYaxis()->SetTitle("Counts"); 
+      
+   	TH1D *crs_pid_out_coinc= new TH1D("crs_pid_out_coinc","crs_pid_out_coinc",4000,-1000,3000);
+		crs_pid_out_coinc->GetXaxis()->SetTitle("Particle ID");
+ 	  crs_pid_out_coinc->GetYaxis()->SetTitle("Counts"); 
 
-	
+/*	
 
 	TH2F *crs_pid_trackE_Edep= new TH2F("crs_pid_trackE_Edep","crs_pid_trackE_Edep",4000,-1000,3000,40000,0,4000);
 		crs_pid_trackE_Edep->GetXaxis()->SetTitle("Particle ID");
@@ -126,10 +130,13 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
   int number_hitCrs_thr=0;
   int number_hitVe_thr=0;
   int single=0;
+  int out_coinc=0;
+  int out_coinc_x10=0;
   int Edep10_200_crs=0;
   
   const double crs_threshold = 10;
   const double crs_maxEdep = 200;
+  const double coinc_value=2.5; // in micorseconds
 
 	for (int jentry=0; jentry<nentries; jentry++) {
 
@@ -190,7 +197,16 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
             }  
 		      }
         }
-        if (DeltaT_signed==1E8) single=single+1;
+        if (DeltaT_signed==1E8){
+          single=single+1;
+          crs_pid_single->Fill(myCrs->pid->at(ihit));
+        }
+        if ((DeltaT_signed >= coinc_value || DeltaT_signed <= -coinc_value) && DeltaT_signed!=1E8 ){
+          out_coinc = out_coinc+1;
+          crs_pid_out_coinc->Fill(myCrs->pid->at(ihit));
+        } 
+        if ((DeltaT_signed >= coinc_value*10 || DeltaT_signed <= -coinc_value*10) && DeltaT_signed!=1E8 ) out_coinc_x10 = out_coinc_x10+1;
+               
         crs_veto_dT->Fill(DeltaT_signed); // fill with minimum delta time with sign in micro 
       } 
 		}
@@ -220,24 +236,52 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
        number_hitVe = number_hitVe + (nhit_veto->GetBinContent(i))*(i-1);
     }
     
-     ofstream fout("Results_cosmics_veto1+2+2_Pb5+5.txt",ios::app);
+     ofstream fout("Results_cosmics_veto2+2+2_Pb2.5+2.5up_water50up.txt",ios::app);
      fout<<inputname<<endl;
-     fout<<"Veto Thr ="<< veto_threshold<<endl;
-     fout<<"Crs Thr ="<< crs_threshold<<endl;
+     fout<<"Nentries = "<<nentries<<endl;
+     fout<<"Veto Thr = "<< veto_threshold<<endl;
+     fout<<"Crs Thr = "<< crs_threshold<<endl;
      fout<<"Crs max Edep= "<<crs_maxEdep<<endl;
+     fout<<"Coincidence = "<<coinc_value<<endl;
      
-     fout<< "number of total hit in the crystal: "<< number_hitCrs<<endl;
+     fout<<" "<<endl; 
+     fout<< "number of total hit in the veto:       "<< number_hitVe<<endl;
+     fout<< "number of hit in the veto over thr:    "<< number_hitVe_thr<<endl;
+     fout<< "number of total hit in the crystal:    "<< number_hitCrs<<endl;
      fout<< "number of hit in the crystal over thr: "<< number_hitCrs_thr<<endl;
-   
-     fout<< "number of hit in the crystal with Edep 10-200 keV = "<<Edep10_200_crs<<endl; 
-     fout<< "number of hit in the crystal that have hits in the veto = "<<Edep10_200_crs-single<<endl; //without overflow
-     fout<< "number of hit in the crystal without hit in the veto = "<<single<<endl;
-     fout<< "number of hit in the crystal within coincidence with veto = "<<crs_veto_dT->Integral(9996,10006)<<endl;
-	   fout<< "number of hit in the crystal outside coincidence (negative)  = "<<crs_veto_dT->Integral(1,9995)<<endl;
-     fout<< "number of hit in the crystal outside coincidence (positive)  = "<<crs_veto_dT->Integral(10007,20000)<<endl;
+     fout<<number_hitVe<<" "<<number_hitVe_thr<<" "<< number_hitCrs<<" "<<number_hitCrs_thr<<endl;
      
-     fout<< "number of total hit in the veto: "<< number_hitVe<<endl;
-     fout<< "number of hit in the veto over thr: "<< number_hitVe_thr<<endl;
+     fout<<" "<<endl; 
+     fout<< "number of hit in the crystal with Edep 10-200 keV      = "<<Edep10_200_crs<<endl; 
+     fout<< "number of hit in the crystal with hits in the veto     = "<<Edep10_200_crs-single<<endl; //without overflow
+     fout<< "number of hit in the crystal without hit in the veto   = "<<single<<endl;
+     fout<< "number of hit in the crystal in coincidence with veto  = "<<Edep10_200_crs-single-out_coinc<<endl;
+	   fout<< "number of hit in the crystal outside coincidence       = "<<out_coinc<<endl;
+     fout<< "number of hit in the crystal outside coincidence X10   = "<<out_coinc_x10<<endl;  
+       
+       
+     fout<<" "<<endl;    
+     fout<<"crs neutron single  = "<<crs_pid_single->Integral(3113,3113)<<endl; //pid+1001
+     fout<<"crs proton  single  = "<<crs_pid_single->Integral(3213,3213)<<endl;
+     fout<<"crs gamma single    = "<<crs_pid_single->Integral(1023,1023)<<endl;
+     fout<<"crs muon  single    = "<<crs_pid_single->Integral(1014,1014)<<endl;
+     fout<<"crs antimuon single = "<<crs_pid_single->Integral(988,988)<<endl; // 1001-pid
+     fout<<"crs electron single = "<<crs_pid_single->Integral(1012,1012)<<endl;
+     fout<<"crs positron single = "<<crs_pid_single->Integral(990,990)<<endl;
+     fout<<"crs pi+ single 	    = "<<crs_pid_single->Integral(1212,1212)<<endl;
+     fout<<"crs pi- single      = "<<crs_pid_single->Integral(790,790)<<endl;
+     fout<<" "<<endl; 
+     fout<<"crs neutron out coinc  = "<<crs_pid_out_coinc->Integral(3113,3113)<<endl; //pid+1001
+     fout<<"crs proton  out coinc  = "<<crs_pid_out_coinc->Integral(3213,3213)<<endl;
+     fout<<"crs gamma out coinc    = "<<crs_pid_out_coinc->Integral(1023,1023)<<endl;
+     fout<<"crs muon  out coinc    = "<<crs_pid_out_coinc->Integral(1014,1014)<<endl;
+     fout<<"crs antimuon out coinc = "<<crs_pid_out_coinc->Integral(988,988)<<endl; // 1001-pid
+     fout<<"crs electron out coinc = "<<crs_pid_out_coinc->Integral(1012,1012)<<endl;
+     fout<<"crs positron out coinc = "<<crs_pid_out_coinc->Integral(990,990)<<endl;
+     fout<<"crs pi+ out coinc 	   = "<<crs_pid_out_coinc->Integral(1212,1212)<<endl;
+     fout<<"crs pi- out coinc      = "<<crs_pid_out_coinc->Integral(790,790)<<endl;
+    
+     fout<<"--------------------------------------------------------------------"<<endl;
      fout.close();
 
     //cout<<"hit crs over thr"<< crs_time->Integral()<<endl;
@@ -296,6 +340,8 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
     nhit_veto->Write(0,TObject::kOverwrite);
     nhit_crs_thr->Write(0,TObject::kOverwrite);
     nhit_veto_thr->Write(0,TObject::kOverwrite);
+    crs_pid_out_coinc->Write(0,TObject::kOverwrite);
+    crs_pid_single->Write(0,TObject::kOverwrite);
 //	Veto_pid_trackE->Write(0,TObject::kOverwrite);
 //	crs_pid_trackE->Write(0,TObject::kOverwrite);
 //	crs_pid_trackE_Edep->Write(0,TObject::kOverwrite);
