@@ -3,6 +3,8 @@
 import os
 import sys
 import glob
+import argparse
+
 
 # Make sure you're running the C-shell
 current_real_shell = os.path.realpath(f'/proc/{os.getppid()}/exe')
@@ -20,6 +22,14 @@ lsf_res     = '-R "select[mem > 16000] rusage[mem=16000]" -M 16000'
 lsf_exe     = "bsub"
 
 output_dir  = f"/project/gruppo3/fiber7/{os.getlogin()}"
+
+
+# Arguments parsing
+parser = argparse.ArgumentParser()
+parser.add_argument("--nojobs", help=f"Run directly without submitting jobs", default=False,
+    action='store_true')
+parser.add_argument("--debug", help="debug to print the commands instead of running them (default is False)", default=False, action='store_true')
+args = parser.parse_args()
 
 # Get all the .evio file in the "output_dir" which has not been
 # converted to ROOT and use evio2root on them
@@ -42,6 +52,14 @@ for i,file_name in enumerate(evio_to_convert):
 
     command = f"{lsf_exe} -q {lsf_queue} -P {lsf_project} {lsf_res} {out_and_err} evio2root -B=bdx -INPUTF={file_name}"
 
+    # Run without submitting jobs if "--nojobs" is active
+    if args.nojobs:
+        command = f"evio2root -B=bdx -INPUTF={file_name}"
+
     # Launch the command (or print it for debug)
-    #print(command)
-    os.system(command)
+    #os.system("pwd")
+    if args.debug:
+        print(command)
+    else:
+        os.system(command)
+        
