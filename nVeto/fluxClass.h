@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Tue Mar  1 10:47:21 2022 by ROOT version 6.24/06
+// Mon Feb  6 10:06:05 2023 by ROOT version 6.20/04
 // from TTree flux/Geant4 flux digitized information
-// found on file: out.root
+// found on file: out_cosmics_1meV_1eV_fl+Pb5+fl+water50+fl+fl_conc.root
 //////////////////////////////////////////////////////////
 
 #ifndef fluxClass_h

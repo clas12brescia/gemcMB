@@ -8,6 +8,7 @@ fi
 
 while read -r line;
 do
+   # root -l -b -q "Sort_flux.C($line, $thr)";
     root -l -b -q "Sort_cosmics_crs.C($line, $thr)";
     #root -l -b -q "Sort_cosmics_lAr.C($line, $thr)";
    # root -l -b -q "nVeto_con_loop.C($line)";

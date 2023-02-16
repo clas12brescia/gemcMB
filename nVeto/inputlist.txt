@@ -1,2 +1,1 @@
-"cosmics_1meV_1eV_veto2+2+2_Pb2.5+2.5up_water50up"
-"cosmics_1eV_1keV_veto2+2+2_Pb2.5+2.5up_water50up"
+"cosmics_1meV_1eV_0.1Pb+6v+5Pb+50w+fl5"
