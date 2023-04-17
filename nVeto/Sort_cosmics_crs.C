@@ -109,11 +109,11 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		crs_trackE_vy_g_outc->GetXaxis()->SetTitle("Energy[keV]");
  	  crs_trackE_vy_g_outc->GetYaxis()->SetTitle("Vy[cm]");
       
-    TH2F *crs_trackE_vy_n_single= new TH2F("crs_trackE_vy_n_single","crs_trackE_vy_n_single",10000,0,10000,15501,-500,15000);
+    TH2F *crs_trackE_vy_n_single= new TH2F("crs_trackE_vy_n_single","crs_trackE_vy_n_single",2100,900,3000,15501,-500,15000);
 		crs_trackE_vy_n_single->GetXaxis()->SetTitle("Energy[MeV]");
  	  crs_trackE_vy_n_single->GetYaxis()->SetTitle("Vy[cm]");  	
 	
-	  TH2F *crs_trackE_vy_n_outc= new TH2F("crs_trackE_vy_n_outc","crs_trackE_vy_n_outc",10000,0,10000,15501,-500,15000);
+	  TH2F *crs_trackE_vy_n_outc= new TH2F("crs_trackE_vy_n_outc","crs_trackE_vy_n_outc",2100,900,3000,15501,-500,15000);
 		crs_trackE_vy_n_outc->GetXaxis()->SetTitle("Energy[MeV]");
  	  crs_trackE_vy_n_outc->GetYaxis()->SetTitle("Vy[cm]");
 
@@ -121,7 +121,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		flux_lat_trackE_g->GetYaxis()->SetTitle("Counts");
  	  flux_lat_trackE_g->GetXaxis()->SetTitle("Energy[keV]");
     
-    TH1D *flux_lat_trackE_n= new TH1D("flux_lat_trackE_n","flux_lat_trackE_n",10000,0,10000);
+    TH1D *flux_lat_trackE_n= new TH1D("flux_lat_trackE_n","flux_lat_trackE_n",91000,900,10000);
 		flux_lat_trackE_n->GetYaxis()->SetTitle("Counts");
  	  flux_lat_trackE_n->GetXaxis()->SetTitle("Energy[MeV]");
     
@@ -129,7 +129,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		flux2_trackE_g->GetYaxis()->SetTitle("Counts");
  	  flux2_trackE_g->GetXaxis()->SetTitle("Energy[keV]");
     
-    TH1D *flux2_trackE_n= new TH1D("flux2_trackE_n","flux2_trackE_n",10000,0,10000);
+    TH1D *flux2_trackE_n= new TH1D("flux2_trackE_n","flux2_trackE_n",91000,900,10000);
 		flux2_trackE_n->GetYaxis()->SetTitle("Counts");
  	  flux2_trackE_n->GetXaxis()->SetTitle("Energy[MeV]");
     
@@ -137,7 +137,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		flux3_trackE_g->GetYaxis()->SetTitle("Counts");
  	  flux3_trackE_g->GetXaxis()->SetTitle("Energy[keV]");
     
-    TH1D *flux3_trackE_n= new TH1D("flux3_trackE_n","flux3_trackE_n",10000,0,10000);
+    TH1D *flux3_trackE_n= new TH1D("flux3_trackE_n","flux3_trackE_n",91000,900,10000);
 		flux3_trackE_n->GetYaxis()->SetTitle("Counts");
  	  flux3_trackE_n->GetXaxis()->SetTitle("Energy[MeV]");
     
@@ -145,7 +145,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		flux5_trackE_g->GetYaxis()->SetTitle("Counts");
  	  flux5_trackE_g->GetXaxis()->SetTitle("Energy[keV]");
     
-    TH1D *flux5_trackE_n= new TH1D("flux5_trackE_n","flux5_trackE_n",10000,0,10000);
+    TH1D *flux5_trackE_n= new TH1D("flux5_trackE_n","flux5_trackE_n",91000,900,10000);
 		flux5_trackE_n->GetYaxis()->SetTitle("Counts");
  	  flux5_trackE_n->GetXaxis()->SetTitle("Energy[MeV]");    
     
@@ -153,7 +153,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		flux6_trackE_g->GetYaxis()->SetTitle("Counts");
  	  flux6_trackE_g->GetXaxis()->SetTitle("Energy[keV]");
     
-    TH1D *flux6_trackE_n= new TH1D("flux6_trackE_n","flux6_trackE_n",10000,0,10000);
+    TH1D *flux6_trackE_n= new TH1D("flux6_trackE_n","flux6_trackE_n",91000,900,10000);
 		flux6_trackE_n->GetYaxis()->SetTitle("Counts");
  	  flux6_trackE_n->GetXaxis()->SetTitle("Energy[MeV]"); 
     
@@ -161,7 +161,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
 		flux7_trackE_g->GetYaxis()->SetTitle("Counts");
  	  flux7_trackE_g->GetXaxis()->SetTitle("Energy[keV]");
     
-    TH1D *flux7_trackE_n= new TH1D("flux7_trackE_n","flux7_trackE_n",10000,0,10000);
+    TH1D *flux7_trackE_n= new TH1D("flux7_trackE_n","flux7_trackE_n",91000,900,10000);
 		flux7_trackE_n->GetYaxis()->SetTitle("Counts");
  	  flux7_trackE_n->GetXaxis()->SetTitle("Energy[MeV]"); 
       
@@ -295,6 +295,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
           }
           if(myCrs->pid->at(ihit)==2112){ // neutrons
             crs_trackE_vy_n_single-> Fill (myCrs->trackE->at(ihit),myCrs->vy->at(ihit)/10);
+            // cout<<"vertex: "<< myCrs->vy->at(ihit)/10<< " procID: "<<myCrs->procID->at(ihit)<<endl;
             for (int khit=0; khit < flux_nhit; khit++){
               if(myCrs->tid->at(ihit)==myFl->tid->at(khit))  crs_jentry_fluxid_n_single->Fill(single,myFl->id->at(khit));
             }
@@ -400,7 +401,7 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
        number_hitVe = number_hitVe + (nhit_veto->GetBinContent(i))*(i-1);
     }
     
-     ofstream fout("Results_cosmics_0.1Pb+6v+5Pb+50w+fl5.txt",ios::app);
+     ofstream fout("Results_cosmics_100_1000MeV_0.1Pb+6v+Pb+fl3.txt",ios::app);
      fout<<inputname<<endl;
      fout<<"Nentries = "<<nentries<<endl;
      fout<<"Veto Thr = "<< veto_threshold<<endl;
@@ -449,9 +450,9 @@ void Sort_cosmics_crs(string inputname="Sci1cm_p33,6MeV", int veto_threshold =10
      fout.close();
 
     //cout<<"hit crs over thr"<< crs_time->Integral()<<endl;
+ /*  
     
-    
-/* 
+ 
     cout<<"Veto neutron  = "<<Veto_pid->Integral(3113,3113)<<endl; //pid+1001
     cout<<"Veto proton   = "<<Veto_pid->Integral(3213,3213)<<endl;
     cout<<"Veto gamma    = "<<Veto_pid->Integral(1023,1023)<<endl;
