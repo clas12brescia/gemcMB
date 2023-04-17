@@ -24,7 +24,8 @@ using namespace std;
 #include "CLHEP/Units/PhysicalConstants.h"
 using namespace CLHEP;
 
-bool dumpNeutron = false;
+bool dumpNeutron = true;
+
 
 MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
 {
@@ -44,7 +45,6 @@ MPrimaryGeneratorAction::MPrimaryGeneratorAction(goptions *opts)
     Ntot = 0;
     
 
-    
 	particleTable = G4ParticleTable::GetParticleTable();
 
 	beamPol  = 0;
@@ -381,7 +381,8 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
 		                thisMom = sqrt((thisKinE + massNeut) * (thisKinE + massNeut) - massNeut * massNeut);
 		                thisMom = thisMom * GeV; // in GeV
 		                
-		                thisthe = -pi/100 + 2*pi/100 * G4UniformRand(); //  zenith angle
+		               //thisthe = -pi/38 + 2*pi/38 * G4UniformRand(); //  zenith angle
+		                thisthe = 0.;
 		               // cout<<"thisMom  "<<thisMom<< endl;
 		                thisPhi = -pi + 2 * pi * G4UniformRand();
 		              
@@ -550,9 +551,11 @@ void MPrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent)
             double pvz =0;
 
             if(dumpNeutron){
-	   			pvx = 0. ;
+            	//ofstream fout("Vertex_dump.txt",ios::app);
+	   			pvx = -500 + 2*500 * G4UniformRand(); 
 	            pvy = -6000. ;
-	            pvz = 0. ;    
+	            pvz = -500 + 2*500 * G4UniformRand(); 
+	            //fout<<"Vx "<<pvx<<" Vy "<<pvy<<" Vz "<<pvz<<endl; 
 	        }
             else
             {
