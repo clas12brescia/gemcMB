@@ -38,7 +38,8 @@ sub make_main_volume
         my $par2 = 400.+$wallthk;
         my $par3 = 600.+$wallthk;
         $detector{"dimensions"}  = "$par1*cm $par2*cm $par3*cm";
-        $detector{"material"}    = "G4_CONCRETE";
+        $detector{"material"}    = "G4_AIR";
+       # $detector{"material"}    = "G4_CONCRETE";
         print_det(\%configuration, \%detector);
  
 
@@ -164,7 +165,7 @@ sub make_nVeto
         $detector{"sensitivity"} = "flux";
         $detector{"hit_type"}    = "flux";
         $detector{"identifiers"} = "id manual 1$i";
-        if ($mat[$i]eq "G4_Pb"){
+        if ($mat[$i]eq "G4_Pb"  || $mat[$i]eq "G4_Gd"){
             $detector{"color"}       = "0000003"; #red + trasparency
             $detector{"sensitivity"} = "no";
             $detector{"hit_type"}    = "no";
@@ -188,7 +189,7 @@ sub make_nVeto
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
         $detector{"dimensions"}  = "$Veto_lx[$i]*cm $Veto_ly[$i]*cm $Veto_lz[$i]*cm";
         $detector{"material"}    = "$mat[$i]";
-        if ($mat[$i]eq "G4_Pb"){
+        if ($mat[$i]eq "G4_Pb" || $mat[$i]eq "G4_Gd" ){
             $detector{"color"}       = "0000003"; #red + trasparency
             $detector{"sensitivity"} = "no";
             $detector{"hit_type"}    = "no";
@@ -235,7 +236,7 @@ sub make_nVeto
         $detector{"sensitivity"} = "flux";
         $detector{"hit_type"}    = "flux";
         $detector{"identifiers"} = "id manual 2$i";
-        if ($mat[$i]eq "G4_Pb"){
+        if ($mat[$i]eq "G4_Pb" || $mat[$i]eq "G4_Gd"){
             $detector{"color"}       = "0000003"; 
             $detector{"sensitivity"} = "no";
             $detector{"hit_type"}    = "no";
@@ -280,7 +281,7 @@ sub make_nVeto
                 $detector{"sensitivity"} = "flux";
         $detector{"hit_type"}    = "flux";
         $detector{"identifiers"}  = "id manual 3$i";
-        if ($mat[$i]eq "G4_Pb"){
+        if ($mat[$i]eq "G4_Pb" || $mat[$i]eq "G4_Gd"){
             $detector{"color"}       = "0000003"; #red + trasparency
             $detector{"sensitivity"} = "no";
             $detector{"hit_type"}    = "no";
@@ -327,7 +328,7 @@ sub make_nVeto
         $detector{"sensitivity"} = "flux";
         $detector{"hit_type"}    = "flux";
         $detector{"identifiers"} = "id manual 4$i";
-        if ($mat[$i]eq "G4_Pb"){
+        if ($mat[$i]eq "G4_Pb" || $mat[$i]eq "G4_Gd"){
             $detector{"color"}       = "0000003"; #red + trasparency
             $detector{"sensitivity"} = "no";
             $detector{"hit_type"}    = "no";
@@ -351,7 +352,7 @@ sub make_nVeto
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
         $detector{"dimensions"}  = "$Veto_lx[$i]*cm $Veto_ly[$i]*cm $Veto_lz[$i]*cm";
         $detector{"material"}    = "$mat[$i]";
-        if ($mat[$i]eq "G4_Pb"){
+        if ($mat[$i]eq "G4_Pb" || $mat[$i]eq "G4_Gd"){
             $detector{"color"}       = "0000003"; #red + trasparency
             $detector{"sensitivity"} = "no";
             $detector{"hit_type"}    = "no";
@@ -377,89 +378,203 @@ sub make_passive
     {$detector{"mother"}      = "Det_house_inner";} 
 
 # Up
-        my $lx_Pb =$Crs_x + 12.6/2;
-        my $ly_Pb = 5./2 ; #thickness lead
-        my $lz_Pb = $Crs_z + 12.6/2;
-        my $X_Pb = 0.;
-        my $Y_Pb = $Crs_y + 12.6/2 + $ly_Pb;
-        my $Z_Pb = 0.;
-        $detector{"name"}        = "up Pb";
-        $detector{"description"} = "up side , Pb  ";
-        $detector{"color"}       = "0000004"; #black + trasparency
+
+        my $lx_1_up =$Crs_x + 12.8/2 ;
+        my $ly_1_up = 30./2 ; #thickness 
+        my $lz_1_up = $Crs_z + 12.8/2 ;
+        my $X_1_up = 0.;
+        my $Y_1_up = $Crs_y + 12.8/2 + $ly_1_up ;
+        my $Z_1_up = 0.;
+        $detector{"name"}        = "first pass up ";
+        $detector{"description"} = "first pass up";
+        $detector{"color"}       = "08e8de4"; 
+        #$detector{"color"}       = "0000004";#black + trasparency
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
         $detector{"type"}        = "Box";
-        $detector{"pos"}         = "$X_Pb*cm $Y_Pb*cm $Z_Pb*cm"; #
+        $detector{"pos"}         = "$X_1_up*cm $Y_1_up*cm $Z_1_up*cm"; #
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-        $detector{"dimensions"}  = "$lx_Pb*cm $ly_Pb*cm $lz_Pb*cm";
-        $detector{"material"}    = "G4_Pb";
+        $detector{"dimensions"}  = "$lx_1_up*cm $ly_1_up*cm $lz_1_up*cm";
+        $detector{"material"}    = "G4_WATER";
         $detector{"sensitivity"} = "no";
         $detector{"hit_type"}    = "no";
+         $detector{"identifiers"}= "no";
          print_det(\%configuration, \%detector); 
                  
-        my $lx_f5 =$Crs_x + 12.6/2;
-        my $ly_f5 =0.1/2 ;      #thickness flux
-        my $lz_f5 = $Crs_z + 12.6/2;
-        my $X_f5 = 0.;
-        my $Y_f5 = $Y_Pb + $ly_Pb+ $ly_f5;
-        my $Z_f5 = 0.;
-        $detector{"name"}        = "flux5";
-        $detector{"description"} = "flux5 , Pb  ";
+        my $lx_f5_up =$Crs_x + 12.8/2;
+        my $ly_f5_up =0.1/2 ;      #thickness flux
+        my $lz_f5_up = $Crs_z + 12.8/2;
+        my $X_f5_up = 0.;
+        my $Y_f5_up = $Y_1_up + $ly_1_up+ $ly_f5_up;
+        my $Z_f5_up = 0.;
+        $detector{"name"}        = "flux5 up";
+        $detector{"description"} = "flux5 , 1 up ";
         $detector{"color"}       = "ffd7003"; #black + trasparency
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
         $detector{"type"}        = "Box";
-        $detector{"pos"}         = "$X_f5*cm $Y_f5*cm $Z_f5*cm"; #
+        $detector{"pos"}         = "$X_f5_up*cm $Y_f5_up*cm $Z_f5_up*cm"; #
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-        $detector{"dimensions"}  = "$lx_f5*cm $ly_f5*cm $lz_f5*cm";
+        $detector{"dimensions"}  = "$lx_f5_up*cm $ly_f5_up*cm $lz_f5_up*cm";
         $detector{"material"}    = "G4_Galactic";
         $detector{"sensitivity"} = "flux";
         $detector{"hit_type"}    = "flux";
-        $detector{"identifiers"}  = "id manual 50";
+        $detector{"identifiers"}  = "id manual 55";
          print_det(\%configuration, \%detector); 
          
-        my $lx_w =$Crs_x + 12.6/2;
-        my $ly_w = 50./2 ; #thickness water
-        my $lz_w = $Crs_z + 12.6/2;
-        my $X_w = 0.;
-        my $Y_w = $Y_f5 + $ly_f5 +$ly_w;
-        my $Z_w = 0.;
-        $detector{"name"}        = "up water";
-        $detector{"description"} = "up side , water  ";
-        $detector{"color"}       = "08e8de4"; #black + trasparency
+        my $lx_2_up =$Crs_x + 12.8/2;
+        my $ly_2_up = 20./2 ; #thickness
+        my $lz_2_up = $Crs_z + 12.8/2 ;
+        my $X_2_up = 0.;
+        my $Y_2_up = $Y_f5_up + $ly_f5_up +$ly_2_up;
+        my $Z_2_up= 0.;
+        $detector{"name"}        = "second pass up ";
+        $detector{"description"} = "second pass up ";
+         #$detector{"color"}       = "08e8de4";
+        $detector{"color"}       = "0000004"; #black + trasparency
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
         $detector{"type"}        = "Box";
-        $detector{"pos"}         = "$X_w*cm $Y_w*cm $Z_w*cm"; #
+        $detector{"pos"}         = "$X_2_up*cm $Y_2_up*cm $Z_2_up*cm"; #
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-        $detector{"dimensions"}  = "$lx_w*cm $ly_w*cm $lz_w*cm";
-        $detector{"material"}    = "G4_WATER";
+        $detector{"dimensions"}  = "$lx_2_up*cm $ly_2_up*cm $lz_2_up*cm";
+        $detector{"material"}    = "G4_Pb";
         $detector{"sensitivity"} = "no";
         $detector{"hit_type"}    = "no";
         $detector{"identifiers"} = "no";
          print_det(\%configuration, \%detector); 
                  
-        my $lx_f6 =$Crs_x + 12.6/2;
-        my $ly_f6 =0.1/2 ;  #thickness flux on water
-        my $lz_f6 = $Crs_z +  12.6/2;
-        my $X_f6 = 0.;
-        my $Y_f6 = $Y_w +  $ly_w+  $ly_f6;
-        my $Z_f6 = 0.;
+        my $lx_f6_up =$Crs_x + 12.6/2 ;
+        my $ly_f6_up =0.1/2 ;  #thickness flux on water
+        my $lz_f6_up = $Crs_z +  12.6/2;
+        my $X_f6_up = 0.;
+        my $Y_f6_up = $Y_2_up +  $ly_2_up+  $ly_f6_up;
+        my $Z_f6_up = 0.;
         $detector{"name"}        = "flux6";
-        $detector{"description"} = "flux6 , water  ";
+        $detector{"description"} = "flux6   ";
         $detector{"color"}       = "ffd7003"; 
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
         $detector{"type"}        = "Box";
-        $detector{"pos"}         = "$X_f6*cm $Y_f6*cm $Z_f6*cm"; #
+        $detector{"pos"}         = "$X_f6_up*cm $Y_f6_up*cm $Z_f6_up*cm"; #
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
-        $detector{"dimensions"}  = "$lx_f6*cm $ly_f6*cm $lz_f6*cm";
+        $detector{"dimensions"}  = "$lx_f6_up*cm $ly_f6_up*cm $lz_f6_up*cm";
+        $detector{"material"}    = "G4_Galactic";
+        $detector{"sensitivity"} = "flux";
+        $detector{"hit_type"}    = "flux";
+        $detector{"identifiers"}  = "id manual 65";
+        print_det(\%configuration, \%detector);  
+        
+        my $lx_f7_up =600.;
+        my $ly_f7_up =0.1/2 ;  #thickness flux after concrete
+        my $lz_f7_up = 600.;
+        my $X_f7_up = 0.;
+        my $Y_f7_up = 370.;
+        my $Z_f7_up = 0.;
+        $detector{"name"}        = "flux7 _up";
+        $detector{"description"} = "flux7 , _up";
+        $detector{"color"}       = "ffd7003"; 
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $detector{"pos"}         = "$X_f7_up*cm $Y_f7_up*cm $Z_f7_up*cm"; #
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$lx_f7_up*cm $ly_f7_up*cm $lz_f7_up*cm";
+        $detector{"material"}    = "G4_Galactic";
+        $detector{"sensitivity"} = "flux";
+        $detector{"hit_type"}    = "flux";
+        $detector{"identifiers"}  = "id manual 75";
+         print_det(\%configuration, \%detector); 
+        
+ 
+#down         
+        my $lx_1_down =$Crs_x + 12.8/2+ 81.2/2 ;
+        my $ly_1_down = 1./2 ; #thickness 
+        my $lz_1_down = $Crs_z + 12.8/2 +55.2/2 ;
+        my $X_1_down = 0.;
+        my $Y_1_down = $Crs_y + 12.8/2 + $ly_1_down ;
+        my $Z_1_down = 0.;
+        $detector{"name"}        = "first pass ";
+        $detector{"description"} = "first pass ";
+        #$detector{"color"}       = "08e8de4"; 
+        $detector{"color"}       = "0000001";#black + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $detector{"pos"}         = "$X_1_down*cm -$Y_1_down*cm $Z_1_down*cm"; #
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$lx_1_down*cm $ly_1_down*cm $lz_1_down*cm";
+        $detector{"material"}    = "G4_Cd";
+        $detector{"sensitivity"} = "no";
+        $detector{"hit_type"}    = "no";
+         $detector{"identifiers"}= "no";
+         print_det(\%configuration, \%detector); 
+                 
+        my $lx_f5_down =$Crs_x + 12.8/2+ 81.2/2;
+        my $ly_f5_down =0.1/2 ;      #thickness flux
+        my $lz_f5_down = $Crs_z + 12.8/2 +55.2/2;
+        my $X_f5_down = 0.;
+        my $Y_f5_down = $Y_1_down + $ly_1_down+ $ly_f5_down;
+        my $Z_f5_down = 0.;
+        $detector{"name"}        = "flux5 down";
+        $detector{"description"} = "flux5 , 1 down ";
+        $detector{"color"}       = "ffd7003"; #black + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $detector{"pos"}         = "$X_f5_down*cm -$Y_f5_down*cm $Z_f5_down*cm"; #
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$lx_f5_down*cm $ly_f5_down*cm $lz_f5_down*cm";
+        $detector{"material"}    = "G4_Galactic";
+        $detector{"sensitivity"} = "flux";
+        $detector{"hit_type"}    = "flux";
+        $detector{"identifiers"}  = "id manual 50";
+         print_det(\%configuration, \%detector);    
+         
+        my $lx_2_down =$Crs_x + 12.8/2 + 81.2/2;
+        my $ly_2_down = 300./2 ; #thickness
+        my $lz_2_down = $Crs_z + 12.8/2  +55.2/2 ;
+        my $X_2_down = 0.;
+        my $Y_2_down = $Y_f5_down + $ly_f5_down +$ly_2_down;
+        my $Z_2_down= 0.;
+        $detector{"name"}        = "second pass down ";
+        $detector{"description"} = "second pass down ";
+         #$detector{"color"}       = "08e8de4";
+        $detector{"color"}       = "0000004"; #black + trasparency
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $detector{"pos"}         = "$X_2_down*cm -$Y_2_down*cm $Z_2_down*cm"; #
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$lx_2_down*cm $ly_2_down*cm $lz_2_down*cm";
+        $detector{"material"}    = "G4_Pb";
+        $detector{"sensitivity"} = "no";
+        $detector{"hit_type"}    = "no";
+        $detector{"identifiers"} = "no";
+         print_det(\%configuration, \%detector); 
+                 
+        my $lx_f6_down =$Crs_x + 12.6/2 + 81.2/2;
+        my $ly_f6_down =0.1/2 ;  #thickness flux on water
+        my $lz_f6_down = $Crs_z +  12.6/2 +55.2/2;
+        my $X_f6_down = 0.;
+        my $Y_f6_down = $Y_2_down +  $ly_2_down+  $ly_f6_down;
+        my $Z_f6_down = 0.;
+        $detector{"name"}        = "flux6 down";
+        $detector{"description"} = "flux6 down   ";
+        $detector{"color"}       = "ffd7003"; 
+        $detector{"style"}       = 1;
+        $detector{"visible"}     = 1;
+        $detector{"type"}        = "Box";
+        $detector{"pos"}         = "$X_f6_down*cm -$Y_f6_down*cm $Z_f6_down*cm"; #
+        $detector{"rotation"}    = "0*deg 0*deg 0*deg";
+        $detector{"dimensions"}  = "$lx_f6_down*cm $ly_f6_down*cm $lz_f6_down*cm";
         $detector{"material"}    = "G4_Galactic";
         $detector{"sensitivity"} = "flux";
         $detector{"hit_type"}    = "flux";
         $detector{"identifiers"}  = "id manual 60";
-         print_det(\%configuration, \%detector); 
-         
+        print_det(\%configuration, \%detector);  
+
+        
         my $lx_f7 =600.;
         my $ly_f7 =0.1/2 ;  #thickness flux after concrete
         my $lz_f7 = 600.;
@@ -472,7 +587,7 @@ sub make_passive
         $detector{"style"}       = 1;
         $detector{"visible"}     = 1;
         $detector{"type"}        = "Box";
-        $detector{"pos"}         = "$X_f7*cm $Y_f7*cm $Z_f7*cm"; #
+        $detector{"pos"}         = "$X_f7*cm -$Y_f7*cm $Z_f7*cm"; #
         $detector{"rotation"}    = "0*deg 0*deg 0*deg";
         $detector{"dimensions"}  = "$lx_f7*cm $ly_f7*cm $lz_f7*cm";
         $detector{"material"}    = "G4_Galactic";
@@ -486,7 +601,7 @@ sub make_passive
 sub make_flux_cosmic_sph
 {
     my %detector = init_det();
-    my $cosmicradius=55.;
+    my $cosmicradius=240.;
     
     my $X = $shX + 0. ;
     my $Y = $shY + 0. ;
@@ -523,9 +638,8 @@ sub make_bdx_CT
     make_nVeto;
     make_crystal;
     make_passive;
-   # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera
+  # make_flux_cosmic_sph;		#Crea la routine flux_cosmic che disegna la sfera 
 }
-
 
 1;
 

@@ -16,7 +16,7 @@ if current_real_shell != "/usr/bin/tcsh":
 
 
 lsf_host    = "farmuisl7"
-lsf_queue   = "short"
+lsf_queue   = "aiace"
 lsf_project = "sl7_64"
 lsf_res     = '-R "select[mem > 16000] rusage[mem=16000]" -M 16000'
 lsf_exe     = "bsub"
